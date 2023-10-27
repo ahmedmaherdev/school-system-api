@@ -10,16 +10,16 @@ import java.time.LocalDateTime;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    protected long id;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="created_at")
-    private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
     @CreatedDate
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="updated_at")
-    private LocalDateTime updatedAt;
+    protected LocalDateTime updatedAt;
 }
