@@ -1,2 +1,2 @@
-# school-system-api
-This repo for school system api with spring boot.
+# School System API:
+This repo is for school system API with spring boot.
