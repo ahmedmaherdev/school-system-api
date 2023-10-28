@@ -22,4 +22,5 @@ public class Classroom extends BaseEntity {
 
     @ManyToOne
     private School school;
+
 }
