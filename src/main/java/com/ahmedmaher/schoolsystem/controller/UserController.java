@@ -1,10 +1,10 @@
 package com.ahmedmaher.schoolsystem.controller;
 
+import com.ahmedmaher.schoolsystem.dto.CustomResponse;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +23,12 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<CustomResponse<List<UserDTO>>> getAllUsers() {
         List<UserDTO> users = this.userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        long allCount = this.userService.getAllUsersCount();
+        int count = users.size();
+        CustomResponse<List<UserDTO>> customResponse = new CustomResponse<>(users , count, allCount);
+        return ResponseEntity.ok(customResponse);
     }
 
     @GetMapping("/{userId}")
@@ -41,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody() UserDTO userDTO , @PathVariable("userId") long userId) {
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody() UserDTO userDTO , @PathVariable("userId") long userId) {
         UserDTO updatedUser = this.userService.updateUser(userId , userDTO);
         return ResponseEntity.ok(updatedUser);
     }

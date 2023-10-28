@@ -90,4 +90,8 @@ public class UserService {
         return true;
     }
 
+    public long getAllUsersCount() {
+        return this.userRepository.count();
+    }
+
 }

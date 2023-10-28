@@ -1,7 +1,9 @@
 package com.ahmedmaher.schoolsystem.util;
 
+import com.ahmedmaher.schoolsystem.dto.SchoolDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.model.Role;
+import com.ahmedmaher.schoolsystem.model.School;
 import com.ahmedmaher.schoolsystem.model.User;
 
 import java.util.Set;
@@ -16,6 +18,14 @@ public class Mapper {
                 Mapper.mapUserRoles(user.getRoles()),
                 user.getCreatedAt() ,
                 user.getUpdatedAt()
+        );
+    }
+    public static SchoolDTO mapSchoolToSchoolDTO(School school){
+        return new SchoolDTO(school.getId(),
+                school.getName(),
+                school.getAddress(),
+                school.getCreatedAt(),
+                school.getUpdatedAt()
         );
     }
 
