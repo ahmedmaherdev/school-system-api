@@ -7,18 +7,6 @@ Spring Boot School System is a Java web application built with Spring Boot and H
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Configuration](#configuration)
-- [Database Setup](#database-setup)
-- [Entities](#entities)
-- [Repositories](#repositories)
-- [Services](#services)
-- [Controllers](#controllers)
-- [Custom Exceptions](#custom-exceptions)
-- [Validation](#validation)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
