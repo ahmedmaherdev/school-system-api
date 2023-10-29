@@ -1,16 +1,13 @@
 package com.ahmedmaher.schoolsystem.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomErrorDTO {
     private String message;
     private String status;
+    private long timestamp;
 }

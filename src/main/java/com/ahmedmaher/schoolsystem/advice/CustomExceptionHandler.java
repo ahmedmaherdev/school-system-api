@@ -19,21 +19,21 @@ public class CustomExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<CustomErrorDTO> handleNotFoundException(NotFoundException ex){
-        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail");
+        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<CustomErrorDTO> handleValidationException(MethodArgumentNotValidException ex) {
-        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getBindingResult().getFieldError().getDefaultMessage(), "fail");
+        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getBindingResult().getFieldError().getDefaultMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 
     @ExceptionHandler(DuplicatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<CustomErrorDTO> handleValidationException(DuplicatedException ex) {
-        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail");
+        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 

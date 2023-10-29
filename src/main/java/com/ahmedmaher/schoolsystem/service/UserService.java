@@ -71,7 +71,6 @@ public class UserService {
         selectedUser.setEmail(userDTO.getEmail());
         selectedUser.setName(userDTO.getName());
         selectedUser.setUsername(userDTO.getUsername());
-
         selectedUser.setUpdatedAt(LocalDateTime.now());
 
         try {

@@ -1,6 +1,6 @@
 package com.ahmedmaher.schoolsystem.controller;
 
-import com.ahmedmaher.schoolsystem.dto.CustomResponse;
+import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.service.UserService;
 import jakarta.validation.Valid;
@@ -23,12 +23,12 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<CustomResponse<List<UserDTO>>> getAllUsers() {
+    public ResponseEntity<CustomResponseDTO<List<UserDTO>>> getAllUsers() {
         List<UserDTO> users = this.userService.getAllUsers();
         long allCount = this.userService.getAllUsersCount();
         int count = users.size();
-        CustomResponse<List<UserDTO>> customResponse = new CustomResponse<>(users , count, allCount);
-        return ResponseEntity.ok(customResponse);
+        CustomResponseDTO<List<UserDTO>> customResponseDTO = new CustomResponseDTO<>(users , count, allCount);
+        return ResponseEntity.ok(customResponseDTO);
     }
 
     @GetMapping("/{userId}")

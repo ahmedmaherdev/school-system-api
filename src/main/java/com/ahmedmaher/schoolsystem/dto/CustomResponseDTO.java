@@ -1,16 +1,12 @@
 package com.ahmedmaher.schoolsystem.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomResponse<T> {
+public class CustomResponseDTO<T> {
     private T data;
     private int count = 0;
     private long allCount = 0;

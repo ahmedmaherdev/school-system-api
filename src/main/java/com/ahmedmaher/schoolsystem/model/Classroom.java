@@ -1,17 +1,13 @@
 package com.ahmedmaher.schoolsystem.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import java.util.Set;
+import lombok.*;
+import java.time.LocalDateTime;
 
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "classroom")
 public class Classroom extends BaseEntity {
@@ -22,5 +18,25 @@ public class Classroom extends BaseEntity {
 
     @ManyToOne
     private School school;
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
 }
