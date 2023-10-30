@@ -37,4 +37,10 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<CustomErrorDTO> unhandleException(RuntimeException ex) {
+        CustomErrorDTO customErrorDTO = new CustomErrorDTO("Something, went wrong. please, try again later." , "error" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(customErrorDTO);
+    }
 }

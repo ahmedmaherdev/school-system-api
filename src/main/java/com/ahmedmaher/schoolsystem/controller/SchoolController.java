@@ -3,6 +3,7 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.SchoolDTO;
 import com.ahmedmaher.schoolsystem.service.SchoolService;
+import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,13 @@ public class SchoolController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<CustomResponseDTO<List<SchoolDTO>>> getAllSchools() {
-        List<SchoolDTO> schools = this.schoolService.getAllSchools();
+    public ResponseEntity<CustomResponseDTO<List<SchoolDTO>>> getAllSchools(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "-createdAt") String sort
+    ) {
+        AppFeatures appFeatures = new AppFeatures(sort , size , page);
+        List<SchoolDTO> schools = this.schoolService.getAllSchools(appFeatures.splitPageable());
         long allCount = this.schoolService.getAllSchoolsCount();
         int count = schools.size();
         CustomResponseDTO<List<SchoolDTO>> customResponseDTO = new CustomResponseDTO<>(schools , count, allCount);

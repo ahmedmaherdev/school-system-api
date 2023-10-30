@@ -5,8 +5,10 @@ import com.ahmedmaher.schoolsystem.dto.ClassroomDTO;
 import com.ahmedmaher.schoolsystem.dto.SchoolDTO;
 import com.ahmedmaher.schoolsystem.service.ClassroomService;
 import com.ahmedmaher.schoolsystem.service.SchoolService;
+import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,12 @@ public class ClassroomController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<CustomResponseDTO<List<ClassroomDTO>>> getAllClassrooms(@PathVariable("schoolId") long schoolId) {
-        List<ClassroomDTO> classrooms = this.classroomService.getAllClassrooms(schoolId);
+    public ResponseEntity<CustomResponseDTO<List<ClassroomDTO>>> getAllClassrooms(@PathVariable("schoolId") long schoolId ,
+                                                                                    @RequestParam(defaultValue = "0" ) int page ,
+                                                                                  @RequestParam(defaultValue = "10" ) int size,
+                                                                                  @RequestParam(defaultValue = "createdAt") String sort) {
+        AppFeatures appFeatures = new AppFeatures(sort , size , page);
+        List<ClassroomDTO> classrooms = this.classroomService.getAllClassrooms(schoolId , appFeatures.splitPageable());
         long allCount = this.classroomService.getAllClassroomsCount(schoolId);
         int count = classrooms.size();
         CustomResponseDTO<List<ClassroomDTO>> customResponseDTO = new CustomResponseDTO<>(classrooms , count, allCount);

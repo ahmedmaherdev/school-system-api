@@ -1,12 +1,10 @@
 package com.ahmedmaher.schoolsystem.util;
 
 import com.ahmedmaher.schoolsystem.dto.ClassroomDTO;
+import com.ahmedmaher.schoolsystem.dto.EnrollmentDTO;
 import com.ahmedmaher.schoolsystem.dto.SchoolDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
-import com.ahmedmaher.schoolsystem.model.Classroom;
-import com.ahmedmaher.schoolsystem.model.Role;
-import com.ahmedmaher.schoolsystem.model.School;
-import com.ahmedmaher.schoolsystem.model.User;
+import com.ahmedmaher.schoolsystem.model.*;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,13 +30,21 @@ public class Mapper {
     }
 
     public static ClassroomDTO mapClassroomToClassroomDTO(Classroom classroom) {
-        SchoolDTO schoolDTO = Mapper.mapSchoolToSchoolDTO(classroom.getSchool());
         return new ClassroomDTO(classroom.getId(),
                 classroom.getName(),
                 classroom.getCapacity(),
                 classroom.getSchool().getId() ,
                 classroom.getCreatedAt(),
                 classroom.getUpdatedAt());
+    }
+
+    public static EnrollmentDTO mapEnrollmentToEnrollmentDTO(Enrollment enrollment) {
+        return new EnrollmentDTO(
+                enrollment.getId(),
+                enrollment.getStudent().getId() ,
+                enrollment.getClassroom().getId() ,
+                enrollment.getCreatedAt(),
+                enrollment.getUpdatedAt());
     }
 
     public static Set<String> mapUserRoles(Set<Role> roles) {

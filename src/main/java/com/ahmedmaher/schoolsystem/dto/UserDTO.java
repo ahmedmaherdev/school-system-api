@@ -2,6 +2,7 @@ package com.ahmedmaher.schoolsystem.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class UserDTO {
     @Size(min = 5, max = 60 , message = "email must more than 5 and less than 60.")
     private String email;
 
+    @NotNull(message = "roles is required")
     private Set<String> roles;
 
     private LocalDateTime createdAt;

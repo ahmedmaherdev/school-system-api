@@ -9,6 +9,8 @@ import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
 import com.ahmedmaher.schoolsystem.util.Mapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,9 +28,9 @@ public class ClassroomService {
         this.schoolRepository = schoolRepository;
     }
 
-    public List<ClassroomDTO> getAllClassrooms( long schoolId) {
-        List<Classroom> classrooms = this.classroomRepository.findAllClassroomsBySchoolId(schoolId);
-        List<ClassroomDTO> classroomDTOs =  classrooms.stream().map(Mapper::mapClassroomToClassroomDTO).collect(Collectors.toList());
+    public List<ClassroomDTO> getAllClassrooms(long schoolId , Pageable pageable) {
+        Page<Classroom> classrooms = this.classroomRepository.findAllClassroomsBySchoolId(schoolId , pageable);
+        List<ClassroomDTO> classroomDTOs =  classrooms.getContent().stream().map(Mapper::mapClassroomToClassroomDTO).collect(Collectors.toList());
         return classroomDTOs;
     }
 

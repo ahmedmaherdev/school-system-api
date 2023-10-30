@@ -7,6 +7,9 @@ import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
 import com.ahmedmaher.schoolsystem.util.Mapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,9 +24,9 @@ public class SchoolService {
     public SchoolService(SchoolRepository schoolRepository){
         this.schoolRepository = schoolRepository;
     }
-    public List<SchoolDTO> getAllSchools() {
-        List<School> schools = this.schoolRepository.findAll();
-        List<SchoolDTO> schoolDTOs =  schools.stream().map(Mapper::mapSchoolToSchoolDTO).collect(Collectors.toList());
+    public List<SchoolDTO> getAllSchools(Pageable pageable) {
+        Page<School> schools = this.schoolRepository.findAll(pageable);
+        List<SchoolDTO> schoolDTOs = schools.getContent().stream().map(Mapper::mapSchoolToSchoolDTO).collect(Collectors.toList());
         return schoolDTOs;
     }
 

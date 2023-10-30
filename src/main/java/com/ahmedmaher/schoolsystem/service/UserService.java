@@ -5,11 +5,14 @@ import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.model.Role;
 import com.ahmedmaher.schoolsystem.model.User;
+import com.ahmedmaher.schoolsystem.repository.RoleRepository;
 import com.ahmedmaher.schoolsystem.repository.UserRepository;
 import com.ahmedmaher.schoolsystem.util.Mapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -20,15 +23,17 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository , RoleRepository roleRepository){
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
-    public List<UserDTO> getAllUsers() {
-        List<User> users = this.userRepository.findAll();
-        List<UserDTO> userDTOs =  users.stream().map(Mapper::mapUserToUserDTO).collect(Collectors.toList());
+    public List<UserDTO> getAllUsers(Pageable pageable) {
+        Page<User> users = this.userRepository.findAll(pageable);
+        List<UserDTO> userDTOs =  users.getContent().stream().map(Mapper::mapUserToUserDTO).collect(Collectors.toList());
         return userDTOs;
     }
 
@@ -45,13 +50,12 @@ public class UserService {
         user.setName(userDTO.getName());
         user.setUsername(userDTO.getUsername());
 
-        Set<Role> userSet = new HashSet<>();
-        Role userRole = new Role();
-        userRole.setId(1);
-        userRole.setName("ROLE_STUDENT");
-        userSet.add(userRole);
-        user.setRoles(userSet);
-
+        Set<Role> userRoles = new HashSet<>();
+        for (String role :userDTO.getRoles() ) {
+            Role userRole = this.roleRepository.getRoleByName(role);
+            if(userRole != null) userRoles.add(userRole);
+        }
+        user.setRoles(userRoles);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 

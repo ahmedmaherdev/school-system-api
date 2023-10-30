@@ -3,8 +3,11 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.service.UserService;
+import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +26,13 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<CustomResponseDTO<List<UserDTO>>> getAllUsers() {
-        List<UserDTO> users = this.userService.getAllUsers();
+    public ResponseEntity<CustomResponseDTO<List<UserDTO>>> getAllUsers(
+            @RequestParam(defaultValue = "0" ) int page ,
+            @RequestParam(defaultValue = "10" ) int size,
+            @RequestParam(defaultValue = "createdAt") String sort) {
+
+        AppFeatures appFeatures = new AppFeatures(sort , size , page);
+        List<UserDTO> users = this.userService.getAllUsers(appFeatures.splitPageable());
         long allCount = this.userService.getAllUsersCount();
         int count = users.size();
         CustomResponseDTO<List<UserDTO>> customResponseDTO = new CustomResponseDTO<>(users , count, allCount);
