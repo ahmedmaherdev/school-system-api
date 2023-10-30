@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/schools")
@@ -24,7 +26,7 @@ public class SchoolController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<CustomResponseDTO<List<SchoolDTO>>> getAllSchools(
+    public ResponseEntity<CustomResponseDTO<?>> getAllSchools(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "-createdAt") String sort
@@ -33,7 +35,9 @@ public class SchoolController {
         List<SchoolDTO> schools = this.schoolService.getAllSchools(appFeatures.splitPageable());
         long allCount = this.schoolService.getAllSchoolsCount();
         int count = schools.size();
-        CustomResponseDTO<List<SchoolDTO>> customResponseDTO = new CustomResponseDTO<>(schools , count, allCount);
+        Map<String , Object> res = new HashMap<>();
+        res.put("schools" , schools);
+        CustomResponseDTO<Map<String , Object>> customResponseDTO = new CustomResponseDTO<>(res , count, allCount);
         return ResponseEntity.ok(customResponseDTO);
     }
 

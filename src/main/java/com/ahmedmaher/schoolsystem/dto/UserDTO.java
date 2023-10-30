@@ -27,7 +27,10 @@ public class UserDTO {
     @Size(min = 5, max = 60 , message = "email must more than 5 and less than 60.")
     private String email;
 
-    @NotNull(message = "roles is required")
+    @NotBlank(message = "email is required")
+    @Size(min = 8, max = 100 , message = "password must more than 5 and less than 60.")
+    private String password;
+
     private Set<String> roles;
 
     private LocalDateTime createdAt;

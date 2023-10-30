@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -24,11 +25,13 @@ import java.util.stream.Collectors;
 public class UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository , RoleRepository roleRepository){
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public List<UserDTO> getAllUsers(Pageable pageable) {
@@ -49,6 +52,9 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setName(userDTO.getName());
         user.setUsername(userDTO.getUsername());
+
+        String hashedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
+        user.setPassword(hashedPassword);
 
         Set<Role> userRoles = new HashSet<>();
         for (String role :userDTO.getRoles() ) {
@@ -95,6 +101,14 @@ public class UserService {
 
     public long getAllUsersCount() {
         return this.userRepository.count();
+    }
+
+    public UserDTO registerUser(UserDTO userDTO) {
+        HashSet<String> studentRole = new HashSet<>();
+        studentRole.add("ROLE_STUDENT");
+        userDTO.setRoles(studentRole);
+        UserDTO registeredUser = this.createUser(userDTO);
+        return registeredUser;
     }
 
 }
