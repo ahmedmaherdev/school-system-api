@@ -14,29 +14,22 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 
 @Component
 public class JwtUtil {
-
     private final String JWT_SECRET = "EDkSgdGptvg70eQXVrt3MPt46e3qG0";
+    private final long JWT_EXPIRE_AT = 10;
 
-    private final long JWT_EXPIRE_AT = 259200000;
-
-    private JwtParser jwtParser;
-
-    public JwtUtil() {
-        this.jwtParser = Jwts.parser().setSigningKey(JWT_SECRET);
-    }
     public String signToken(UserDTO user) {
         Claims claims = Jwts.claims().setSubject(user.getUsername());
         claims.put("name" , user.getName());
         claims.setId(user.getId() + "");
 
         return Jwts.builder().setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + this.JWT_EXPIRE_AT))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .signWith(SignatureAlgorithm.ES512 , this.JWT_SECRET)
+                .setExpiration(new Date( new Date().getTime() + TimeUnit.DAYS.toMillis(this.JWT_EXPIRE_AT)))
+                .signWith(SignatureAlgorithm.HS256 , this.JWT_SECRET)
                 .compact();
     }
 
@@ -47,7 +40,7 @@ public class JwtUtil {
                 throw new UnauthorizedException("Invalid token.");
             }
             token = token.split(" ")[1];
-            return  (Claims) this.jwtParser.parse(token).getBody();
+            return  (Claims) Jwts.parser().setSigningKey(JWT_SECRET).parse(token).getBody();
         }catch (Exception ex) {
             throw new UnauthorizedException("Invalid token.");
         }
