@@ -33,11 +33,6 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody UserDTO userDTO) {
         UserDTO createdUser = this.userService.registerUser(userDTO);
-        UserDetails userDetails = User.builder()
-                .username(createdUser.getUsername())
-                .password(createdUser.getPassword())
-                .authorities((GrantedAuthority) createdUser.getRoles())
-                .build();
         String token = jwtUtil.signToken(createdUser);
         Map<String , Object> res = new HashMap<>();
         res.put("user" , createdUser);

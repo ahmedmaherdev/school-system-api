@@ -1,12 +1,14 @@
 package com.ahmedmaher.schoolsystem.util;
 
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
+import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
+import com.ahmedmaher.schoolsystem.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
-import com.ahmedmaher.schoolsystem.model.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +19,9 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String JWT_SECRET;
+    private final String JWT_SECRET = "EDkSgdGptvg70eQXVrt3MPt46e3qG0";
 
-    @Value("${jwt.expireAt}")
-    private long JWT_EXPIRE_AT;
+    private final long JWT_EXPIRE_AT = 259200000;
 
     private JwtParser jwtParser;
 
@@ -29,7 +29,7 @@ public class JwtUtil {
         this.jwtParser = Jwts.parser().setSigningKey(JWT_SECRET);
     }
     public String signToken(UserDTO user) {
-        Claims claims = (Claims) Jwts.builder().setSubject(user.getUsername());
+        Claims claims = Jwts.claims().setSubject(user.getUsername());
         claims.put("name" , user.getName());
         claims.setId(user.getId() + "");
 
@@ -40,17 +40,18 @@ public class JwtUtil {
                 .compact();
     }
 
-//    public UserDetails verifyToken(String token) {
-//
-//    }
-
-    public boolean isValidToken(String token) {
+    public Claims verifyToken(HttpServletRequest req) throws Exception {
         try {
-            Jwts.parser().setSigningKey(this.JWT_SECRET).parseClaimsJws(token);
-            return true;
+            String token = req.getHeader("Authorization");
+            if(token == null || !token.startsWith("Bearer")) {
+                throw new UnauthorizedException("Invalid token.");
+            }
+            token = token.split(" ")[1];
+            return  (Claims) this.jwtParser.parse(token).getBody();
         }catch (Exception ex) {
-            return false;
+            throw new UnauthorizedException("Invalid token.");
         }
     }
+
 
 }
