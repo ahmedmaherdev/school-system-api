@@ -1,8 +1,7 @@
 package com.ahmedmaher.schoolsystem.controller;
 
-import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
-import com.ahmedmaher.schoolsystem.service.TokenService;
+import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import com.ahmedmaher.schoolsystem.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.file.attribute.UserPrincipal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,10 +21,13 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthController {
     private UserService userService;
+    private JwtUtil jwtUtil;
 
     @Autowired
-    public AuthController(UserService userService) {
+
+    public AuthController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/signup")
@@ -37,7 +38,7 @@ public class AuthController {
                 .password(createdUser.getPassword())
                 .authorities((GrantedAuthority) createdUser.getRoles())
                 .build();
-        String token = TokenService.signToken(userDetails);
+        String token = jwtUtil.signToken(createdUser);
         Map<String , Object> res = new HashMap<>();
         res.put("user" , createdUser);
         res.put("token" , token);

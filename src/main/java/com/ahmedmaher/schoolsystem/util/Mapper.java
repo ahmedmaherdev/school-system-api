@@ -15,7 +15,7 @@ public class Mapper {
                 user.getName(),
                 user.getUsername() ,
                 user.getEmail() ,
-                null,
+                "",
                 Mapper.mapUserRoles(user.getRoles()),
                 user.getCreatedAt() ,
                 user.getUpdatedAt()

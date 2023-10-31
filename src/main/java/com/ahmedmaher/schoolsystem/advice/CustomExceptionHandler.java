@@ -3,8 +3,8 @@ package com.ahmedmaher.schoolsystem.advice;
 
 import com.ahmedmaher.schoolsystem.dto.CustomErrorDTO;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
+import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,6 +35,13 @@ public class CustomExceptionHandler {
     public ResponseEntity<CustomErrorDTO> handleValidationException(DuplicatedException ex) {
         CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<CustomErrorDTO> handleUnauthorizedException(UnauthorizedException ex) {
+        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDTO);
     }
 
     @ExceptionHandler(RuntimeException.class)
