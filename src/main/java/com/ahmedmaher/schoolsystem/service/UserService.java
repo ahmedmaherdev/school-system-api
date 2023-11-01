@@ -1,6 +1,7 @@
 package com.ahmedmaher.schoolsystem.service;
 
 import com.ahmedmaher.schoolsystem.dto.LoginDTO;
+import com.ahmedmaher.schoolsystem.dto.SignupDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
@@ -60,7 +61,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO createUser(UserDTO userDTO){
+    public UserDTO createUser(SignupDTO userDTO){
         User user =  new User();
         user.setEmail(userDTO.getEmail());
         user.setName(userDTO.getName());
@@ -69,15 +70,21 @@ public class UserService {
         String hashedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
         user.setPassword(hashedPassword);
 
+        Set<String> userDTORoles = userDTO.getRoles();
+        if( userDTORoles == null) {
+            // set student role as a default if not provided
+            userDTORoles = new HashSet<>();
+            userDTORoles.add("ROLE_STUDENT");
+        }
+
         Set<Role> userRoles = new HashSet<>();
-        for (String role :userDTO.getRoles() ) {
+        for (String role : userDTORoles ) {
             Role userRole = this.roleRepository.getRoleByName(role);
             if(userRole != null) userRoles.add(userRole);
         }
         user.setRoles(userRoles);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
-
         try {
             this.userRepository.save(user);
         }catch (DataIntegrityViolationException ex){
@@ -116,7 +123,7 @@ public class UserService {
         return this.userRepository.count();
     }
 
-    public UserDTO registerUser(UserDTO userDTO) {
+    public UserDTO registerUser(SignupDTO userDTO) {
         HashSet<String> studentRole = new HashSet<>();
         studentRole.add("ROLE_STUDENT");
         userDTO.setRoles(studentRole);

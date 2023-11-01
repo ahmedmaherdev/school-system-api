@@ -1,6 +1,7 @@
 package com.ahmedmaher.schoolsystem.controller;
 
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.SignupDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.service.UserService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody SignupDTO userDTO) {
         UserDTO createdUser = this.userService.createUser(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }

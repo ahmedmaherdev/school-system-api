@@ -1,6 +1,7 @@
 package com.ahmedmaher.schoolsystem.controller;
 
 import com.ahmedmaher.schoolsystem.dto.LoginDTO;
+import com.ahmedmaher.schoolsystem.dto.SignupDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import com.ahmedmaher.schoolsystem.service.UserService;
@@ -35,7 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> signup(@Valid @RequestBody SignupDTO userDTO) {
         UserDTO createdUser = this.userService.registerUser(userDTO);
         String token = jwtUtil.signToken(createdUser);
         return ResponseEntity.ok(UserToken.generateUserTokenResponse(createdUser , token));

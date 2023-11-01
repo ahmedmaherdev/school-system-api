@@ -29,14 +29,18 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        Claims claims = null;
         try {
-            claims = this.jwtUtil.verifyToken(request);
+            String token = this.jwtUtil.splitToken(request);
+            if(token == null) {
+                filterChain.doFilter(request,response);
+                return;
+            }
+            Claims claims = this.jwtUtil.verifyToken(token);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(claims.getSubject() , "" , new ArrayList<>());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request,response);
         } catch (Exception e) {
             throw new UnauthorizedException(e.getMessage());
         }
-        Authentication authentication = new UsernamePasswordAuthenticationToken(claims.getSubject() , "" , new ArrayList<>());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        filterChain.doFilter(request,response);
     }
 }

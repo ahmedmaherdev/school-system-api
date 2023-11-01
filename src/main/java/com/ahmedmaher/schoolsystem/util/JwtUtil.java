@@ -36,11 +36,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Claims verifyToken(HttpServletRequest req) throws Exception {
+    public Claims verifyToken(String token) throws Exception {
         try {
-            String token = this.splitToken(req);
-            if(token == null)
-                throw new UnauthorizedException("Invalid token.");
             Claims claims =  (Claims) Jwts.parser().setSigningKey(JWT_SECRET).parse(token).getBody();
             if(claims.getExpiration().before(new Date()))
                 throw new UnauthorizedException("Expired token");
@@ -50,7 +47,7 @@ public class JwtUtil {
         }
     }
 
-    private String splitToken(HttpServletRequest req) {
+    public String splitToken(HttpServletRequest req) {
         String token = req.getHeader("Authorization");
         if(token == null || !token.startsWith("Bearer")) {
             return null;

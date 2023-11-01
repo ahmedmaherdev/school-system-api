@@ -2,17 +2,18 @@ package com.ahmedmaher.schoolsystem.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.Set;
-
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class SignupDTO {
     private Long id;
 
     @NotBlank(message = "name is required")
@@ -27,9 +28,13 @@ public class UserDTO {
     @Size(min = 5, max = 60 , message = "email must more than 5 and less than 60.")
     private String email;
 
+
+    @NotBlank(message = "password is required")
+    @Size(min = 8, max = 100 , message = "password must more than 8 and less than 100.")
+    private String password;
+
     private Set<String> roles;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

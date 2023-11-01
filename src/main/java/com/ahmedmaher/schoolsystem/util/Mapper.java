@@ -18,7 +18,6 @@ public class Mapper {
                 user.getName(),
                 user.getUsername() ,
                 user.getEmail() ,
-                "",
                 Mapper.mapUserRoles(user.getRoles()),
                 user.getCreatedAt() ,
                 user.getUpdatedAt()
