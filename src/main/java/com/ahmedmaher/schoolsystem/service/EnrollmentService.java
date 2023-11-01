@@ -5,9 +5,11 @@ import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.model.Classroom;
 import com.ahmedmaher.schoolsystem.model.Enrollment;
+import com.ahmedmaher.schoolsystem.model.School;
 import com.ahmedmaher.schoolsystem.model.User;
 import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
 import com.ahmedmaher.schoolsystem.repository.EnrollmentRepository;
+import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
 import com.ahmedmaher.schoolsystem.repository.UserRepository;
 import com.ahmedmaher.schoolsystem.util.Mapper;
 import jakarta.transaction.Transactional;
@@ -23,12 +25,17 @@ public class EnrollmentService {
 
     private UserRepository userRepository;
     private ClassroomRepository classroomRepository;
+    private SchoolRepository schoolRepository;
 
     @Autowired
-    public EnrollmentService(EnrollmentRepository enrollmentRepository, UserRepository userRepository, ClassroomRepository classroomRepository) {
+    public EnrollmentService(EnrollmentRepository enrollmentRepository,
+                             UserRepository userRepository,
+                             ClassroomRepository classroomRepository,
+                             SchoolRepository schoolRepository) {
         this.enrollmentRepository = enrollmentRepository;
         this.userRepository = userRepository;
         this.classroomRepository = classroomRepository;
+        this.schoolRepository = schoolRepository;
     }
 
     @Transactional
@@ -39,14 +46,19 @@ public class EnrollmentService {
         Classroom classroom = this.classroomRepository.findById(enrollmentDTO.getClassroomId()).orElse(null);
         if(classroom == null) throw new NotFoundException("Classroom is not found");
 
+        School school = this.schoolRepository.findById(enrollmentDTO.getSchoolId()).orElse(null);
+        if(school == null) throw new NotFoundException("School is not found");
+
         Enrollment enrollment = new Enrollment();
         enrollment.setStudent(student);
         enrollment.setClassroom(classroom);
         enrollment.setCreatedAt(LocalDateTime.now());
         enrollment.setUpdatedAt(LocalDateTime.now());
 
+        classroom.setCapacity(classroom.getCapacity() + 1);
         try{
             this.enrollmentRepository.save(enrollment);
+            this.classroomRepository.save(classroom);
         }catch (DataIntegrityViolationException ex) {
             throw new DuplicatedException("Student enrolled already to this classroom.");
         }

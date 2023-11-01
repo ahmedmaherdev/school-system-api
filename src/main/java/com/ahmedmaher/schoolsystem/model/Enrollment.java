@@ -22,6 +22,10 @@ public class Enrollment extends BaseEntity{
     @JoinColumn(name = "classroom_id")
     private Classroom classroom;
 
+    @ManyToOne
+    @JoinColumn(name = "school_id")
+    private School school;
+
     public Long getId() {
         return this.id;
     }

@@ -46,6 +46,7 @@ public class Mapper {
                 enrollment.getId(),
                 enrollment.getStudent().getId() ,
                 enrollment.getClassroom().getId() ,
+                enrollment.getSchool().getId(),
                 enrollment.getCreatedAt(),
                 enrollment.getUpdatedAt());
     }
