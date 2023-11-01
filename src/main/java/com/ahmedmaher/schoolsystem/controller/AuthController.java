@@ -1,11 +1,16 @@
 package com.ahmedmaher.schoolsystem.controller;
 
+import com.ahmedmaher.schoolsystem.dto.LoginDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import com.ahmedmaher.schoolsystem.service.UserService;
+import com.ahmedmaher.schoolsystem.util.UserToken;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,8 +29,7 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @Autowired
-
-    public AuthController(UserService userService, JwtUtil jwtUtil) {
+    public AuthController(UserService userService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
@@ -34,9 +38,14 @@ public class AuthController {
     public ResponseEntity<?> signup(@Valid @RequestBody UserDTO userDTO) {
         UserDTO createdUser = this.userService.registerUser(userDTO);
         String token = jwtUtil.signToken(createdUser);
-        Map<String , Object> res = new HashMap<>();
-        res.put("user" , createdUser);
-        res.put("token" , token);
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(UserToken.generateUserTokenResponse(createdUser , token));
+
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
+        UserDTO user = this.userService.loginUser(loginDTO);
+        String token = this.jwtUtil.signToken(user);
+        return ResponseEntity.ok(UserToken.generateUserTokenResponse(user , token));
     }
 }

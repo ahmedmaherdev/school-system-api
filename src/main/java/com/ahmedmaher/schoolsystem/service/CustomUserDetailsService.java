@@ -23,10 +23,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.ahmedmaher.schoolsystem.model.User user = this.userRepository.getUserByUsername(username);
+        if(user == null)
+            throw new UsernameNotFoundException("Incorrect username and password");
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .authorities((GrantedAuthority) Mapper.mapUserRoles(user.getRoles()))
+                .authorities(Mapper.mapRolesSetToGrantedAuthority(user.getRoles()))
                 .build();
     }
 }

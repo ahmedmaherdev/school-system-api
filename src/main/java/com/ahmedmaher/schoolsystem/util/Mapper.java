@@ -5,7 +5,10 @@ import com.ahmedmaher.schoolsystem.dto.EnrollmentDTO;
 import com.ahmedmaher.schoolsystem.dto.SchoolDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.model.*;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,6 +51,10 @@ public class Mapper {
                 enrollment.getUpdatedAt());
     }
 
+    public static Collection<SimpleGrantedAuthority> mapRolesSetToGrantedAuthority(Set<Role> userRoles){
+        Set<String> roles = mapUserRoles(userRoles);
+        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+    }
     public static Set<String> mapUserRoles(Set<Role> roles) {
         return roles.stream().map(userRole -> userRole.getName()).collect(Collectors.toSet());
     }

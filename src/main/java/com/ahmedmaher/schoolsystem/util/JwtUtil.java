@@ -26,24 +26,37 @@ public class JwtUtil {
         Claims claims = Jwts.claims().setSubject(user.getUsername());
         claims.put("name" , user.getName());
         claims.setId(user.getId() + "");
-
-        return Jwts.builder().setClaims(claims)
-                .setExpiration(new Date( new Date().getTime() + TimeUnit.DAYS.toMillis(this.JWT_EXPIRE_AT)))
+        Date now = new Date();
+        Date expiredDate = new Date(now.getTime() + TimeUnit.DAYS.toMillis(this.JWT_EXPIRE_AT));
+        return Jwts.builder()
+                .setClaims(claims)
+                .setExpiration(expiredDate)
+                .setIssuedAt(now)
                 .signWith(SignatureAlgorithm.HS256 , this.JWT_SECRET)
                 .compact();
     }
 
     public Claims verifyToken(HttpServletRequest req) throws Exception {
         try {
-            String token = req.getHeader("Authorization");
-            if(token == null || !token.startsWith("Bearer")) {
+            String token = this.splitToken(req);
+            if(token == null)
                 throw new UnauthorizedException("Invalid token.");
-            }
-            token = token.split(" ")[1];
-            return  (Claims) Jwts.parser().setSigningKey(JWT_SECRET).parse(token).getBody();
+            Claims claims =  (Claims) Jwts.parser().setSigningKey(JWT_SECRET).parse(token).getBody();
+            if(claims.getExpiration().before(new Date()))
+                throw new UnauthorizedException("Expired token");
+            return claims;
         }catch (Exception ex) {
             throw new UnauthorizedException("Invalid token.");
         }
+    }
+
+    private String splitToken(HttpServletRequest req) {
+        String token = req.getHeader("Authorization");
+        if(token == null || !token.startsWith("Bearer")) {
+            return null;
+        }
+        token = token.split(" ")[1];
+        return token;
     }
 
 

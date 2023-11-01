@@ -7,6 +7,7 @@ import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,10 +45,16 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDTO);
     }
 
-//    @ExceptionHandler(RuntimeException.class)
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ResponseEntity<CustomErrorDTO> unhandleException(RuntimeException ex) {
-//        CustomErrorDTO customErrorDTO = new CustomErrorDTO("Something, went wrong. please, try again later." , "error" , System.currentTimeMillis());
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(customErrorDTO);
-//    }
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<CustomErrorDTO> handleBadCredentialsException(BadCredentialsException ex) {
+        CustomErrorDTO customErrorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorDTO);
+    }
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<CustomErrorDTO> unhandleException(RuntimeException ex) {
+        CustomErrorDTO customErrorDTO = new CustomErrorDTO(ex.getMessage(), "error" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(customErrorDTO);
+    }
 }

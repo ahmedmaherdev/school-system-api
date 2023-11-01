@@ -28,7 +28,7 @@ public class UserDTO {
     private String email;
 
     @NotBlank(message = "email is required")
-    @Size(min = 8, max = 100 , message = "password must more than 5 and less than 60.")
+    @Size(min = 8, max = 100 , message = "password must more than 8 and less than 100.")
     private String password;
 
     private Set<String> roles;
