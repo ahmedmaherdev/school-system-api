@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/enrollments")
+@RequestMapping("/api/schools/{schoolId}/enrollments")
 public class EnrollmentController {
     private EnrollmentService enrollmentService;
 
@@ -19,7 +19,10 @@ public class EnrollmentController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<EnrollmentDTO> createEnrollment(@Valid @RequestBody EnrollmentDTO enrollmentDTO) {
+    public ResponseEntity<EnrollmentDTO> createEnrollment(@Valid @RequestBody EnrollmentDTO enrollmentDTO ,
+                                                          @PathVariable("schoolId") long schoolId
+    ) {
+        enrollmentDTO.setSchoolId(schoolId);
         EnrollmentDTO createdEnrollment = this.enrollmentService.createEnrollment(enrollmentDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEnrollment);
     }

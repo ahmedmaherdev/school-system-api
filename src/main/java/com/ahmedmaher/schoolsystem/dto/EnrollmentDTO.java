@@ -16,9 +16,7 @@ public class EnrollmentDTO {
     private long studentId;
     @NotNull(message = "classroomId is required")
     private long classroomId;
-    @NotNull(message = "schoolId is required")
     private long schoolId;
-
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

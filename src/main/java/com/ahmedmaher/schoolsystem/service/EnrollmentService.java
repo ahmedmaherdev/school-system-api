@@ -43,15 +43,20 @@ public class EnrollmentService {
         User student = this.userRepository.findById(enrollmentDTO.getStudentId()).orElse(null);
         if(student == null) throw new NotFoundException("User is not found");
 
-        Classroom classroom = this.classroomRepository.findById(enrollmentDTO.getClassroomId()).orElse(null);
-        if(classroom == null) throw new NotFoundException("Classroom is not found");
-
         School school = this.schoolRepository.findById(enrollmentDTO.getSchoolId()).orElse(null);
         if(school == null) throw new NotFoundException("School is not found");
+
+        Classroom classroom = this.classroomRepository.findClassroomByIdAndSchoolId(
+                enrollmentDTO.getClassroomId(),
+                enrollmentDTO.getSchoolId()
+        );
+
+        if(classroom == null) throw new NotFoundException("Classroom is not found");
 
         Enrollment enrollment = new Enrollment();
         enrollment.setStudent(student);
         enrollment.setClassroom(classroom);
+        enrollment.setSchool(school);
         enrollment.setCreatedAt(LocalDateTime.now());
         enrollment.setUpdatedAt(LocalDateTime.now());
 

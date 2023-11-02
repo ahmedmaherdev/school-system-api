@@ -2,25 +2,30 @@ package com.ahmedmaher.schoolsystem.util;
 
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
 import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
-import com.ahmedmaher.schoolsystem.model.User;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 
 @Component
 public class JwtUtil {
-    private final String JWT_SECRET = "EDkSgdGptvg70eQXVrt3MPt46e3qG0";
-    private final long JWT_EXPIRE_AT = 10;
+
+    private  String JWT_SECRET;
+
+    private final long JWT_EXPIRE_AT;
+
+    public JwtUtil( @Value("${jwt.secret}")String jwtSecret,
+                   @Value("${jwt.expireAt}") long jwtExpireAt
+    ) {
+        this.JWT_SECRET = jwtSecret;
+        this.JWT_EXPIRE_AT = jwtExpireAt;
+    }
 
     public String signToken(UserDTO user) {
         Claims claims = Jwts.claims().setSubject(user.getUsername());
