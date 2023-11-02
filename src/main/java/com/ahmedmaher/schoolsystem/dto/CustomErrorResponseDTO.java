@@ -6,7 +6,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomErrorDTO {
+public class CustomErrorResponseDTO {
     private String message;
     private String status;
     private long timestamp;

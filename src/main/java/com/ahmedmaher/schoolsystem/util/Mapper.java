@@ -1,61 +1,61 @@
 package com.ahmedmaher.schoolsystem.util;
 
-import com.ahmedmaher.schoolsystem.dto.ClassroomDTO;
-import com.ahmedmaher.schoolsystem.dto.EnrollmentDTO;
-import com.ahmedmaher.schoolsystem.dto.SchoolDTO;
-import com.ahmedmaher.schoolsystem.dto.UserDTO;
-import com.ahmedmaher.schoolsystem.model.*;
+import com.ahmedmaher.schoolsystem.dto.ClassroomResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.EnrollmentResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.SchoolResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.entity.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Mapper {
-    public static UserDTO mapUserToUserDTO(User user){
-        return new UserDTO(user.getId(),
-                user.getName(),
-                user.getUsername() ,
-                user.getEmail() ,
-                Mapper.mapUserRoles(user.getRoles()),
-                user.getCreatedAt() ,
-                user.getUpdatedAt()
+    public static UserResponseDTO mapUserToUserDTO(UserEntity userEntity){
+        return new UserResponseDTO(userEntity.getId(),
+                userEntity.getName(),
+                userEntity.getUsername() ,
+                userEntity.getEmail() ,
+                Mapper.mapUserRoles(userEntity.getRoleEntities()),
+                userEntity.getPhoto(),
+                userEntity.getCreatedAt() ,
+                userEntity.getUpdatedAt()
         );
     }
-    public static SchoolDTO mapSchoolToSchoolDTO(School school){
-        return new SchoolDTO(school.getId(),
-                school.getName(),
-                school.getAddress(),
-                school.getCreatedAt(),
-                school.getUpdatedAt()
+    public static SchoolResponseDTO mapSchoolToSchoolDTO(SchoolEntity schoolEntity){
+        return new SchoolResponseDTO(schoolEntity.getId(),
+                schoolEntity.getName(),
+                schoolEntity.getAddress(),
+                schoolEntity.getCreatedAt(),
+                schoolEntity.getUpdatedAt()
         );
     }
 
-    public static ClassroomDTO mapClassroomToClassroomDTO(Classroom classroom) {
-        return new ClassroomDTO(classroom.getId(),
-                classroom.getName(),
-                classroom.getCapacity(),
-                classroom.getSchool().getId() ,
-                classroom.getCreatedAt(),
-                classroom.getUpdatedAt());
+    public static ClassroomResponseDTO mapClassroomToClassroomDTO(ClassroomEntity classroomEntity) {
+        return new ClassroomResponseDTO(classroomEntity.getId(),
+                classroomEntity.getName(),
+                classroomEntity.getCapacity(),
+                classroomEntity.getSchoolEntity().getId() ,
+                classroomEntity.getCreatedAt(),
+                classroomEntity.getUpdatedAt());
     }
 
-    public static EnrollmentDTO mapEnrollmentToEnrollmentDTO(Enrollment enrollment) {
-        return new EnrollmentDTO(
-                enrollment.getId(),
-                enrollment.getStudent().getId() ,
-                enrollment.getClassroom().getId() ,
-                enrollment.getSchool().getId(),
-                enrollment.getCreatedAt(),
-                enrollment.getUpdatedAt());
+    public static EnrollmentResponseDTO mapEnrollmentToEnrollmentDTO(EnrollmentEntity enrollmentEntity) {
+        return new EnrollmentResponseDTO(
+                enrollmentEntity.getId(),
+                enrollmentEntity.getStudent().getId() ,
+                enrollmentEntity.getClassroomEntity().getId() ,
+                enrollmentEntity.getSchoolEntity().getId(),
+                enrollmentEntity.getCreatedAt(),
+                enrollmentEntity.getUpdatedAt());
     }
 
-    public static Collection<SimpleGrantedAuthority> mapRolesSetToGrantedAuthority(Set<Role> userRoles){
-        Set<String> roles = mapUserRoles(userRoles);
+    public static Collection<SimpleGrantedAuthority> mapRolesSetToGrantedAuthority(Set<RoleEntity> userRoleEntities){
+        Set<String> roles = mapUserRoles(userRoleEntities);
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
-    public static Set<String> mapUserRoles(Set<Role> roles) {
-        return roles.stream().map(userRole -> userRole.getName()).collect(Collectors.toSet());
+    public static Set<String> mapUserRoles(Set<RoleEntity> roleEntities) {
+        return roleEntities.stream().map(userRoleEntity -> userRoleEntity.getName()).collect(Collectors.toSet());
     }
 }

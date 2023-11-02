@@ -1,6 +1,6 @@
 # School System API:
 
-Spring Boot School System is a Java web application built with Spring Boot and Hibernate. It provides an API for managing a school system, including users, schools, classrooms, and student enrollments.
+Spring Boot School System is a Java web application built with Spring Boot and Hibernate. It provides an API for managing a schoolEntity system, including users, schools, classrooms, and student enrollments.
 
 ## Table of Contents
 
@@ -26,11 +26,11 @@ Before you begin, ensure you have met the following requirements:
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/yourusername/spring-boot-school-system.git
+   git clone https://github.com/yourusername/spring-boot-schoolEntity-system.git
 
    # Spring Boot School System
 
-Spring Boot School System is a Java web application built with Spring Boot and Hibernate. It provides an API for managing a school system, including users, schools, classrooms, and student enrollments.
+Spring Boot School System is a Java web application built with Spring Boot and Hibernate. It provides an API for managing a schoolEntity system, including users, schools, classrooms, and student enrollments.
 
 For detailed API documentation and usage examples, please refer to the [Postman Documentation](https://documenter.getpostman.com/view/17068729/2s9YRGx9N7).
 

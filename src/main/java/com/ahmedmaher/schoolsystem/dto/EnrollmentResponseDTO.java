@@ -10,11 +10,9 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnrollmentDTO {
+public class EnrollmentResponseDTO {
     private long id;
-    @NotNull(message = "studentId is required")
     private long studentId;
-    @NotNull(message = "classroomId is required")
     private long classroomId;
     private long schoolId;
     private LocalDateTime createdAt;

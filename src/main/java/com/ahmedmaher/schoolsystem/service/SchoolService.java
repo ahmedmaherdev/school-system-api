@@ -1,15 +1,15 @@
 package com.ahmedmaher.schoolsystem.service;
 
-import com.ahmedmaher.schoolsystem.dto.SchoolDTO;
+import com.ahmedmaher.schoolsystem.dto.SchoolRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.SchoolResponseDTO;
+import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
-import com.ahmedmaher.schoolsystem.model.School;
 import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
 import com.ahmedmaher.schoolsystem.util.Mapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,47 +24,47 @@ public class SchoolService {
     public SchoolService(SchoolRepository schoolRepository){
         this.schoolRepository = schoolRepository;
     }
-    public List<SchoolDTO> getAllSchools(Pageable pageable) {
-        Page<School> schools = this.schoolRepository.findAll(pageable);
-        List<SchoolDTO> schoolDTOs = schools.getContent().stream().map(Mapper::mapSchoolToSchoolDTO).collect(Collectors.toList());
-        return schoolDTOs;
+    public List<SchoolResponseDTO> getAllSchools(Pageable pageable) {
+        Page<SchoolEntity> schools = this.schoolRepository.findAll(pageable);
+        List<SchoolResponseDTO> schoolResponseDTOS = schools.getContent().stream().map(Mapper::mapSchoolToSchoolDTO).collect(Collectors.toList());
+        return schoolResponseDTOS;
     }
 
-    public SchoolDTO getSchoolById(Long schoolId) throws NotFoundException {
-        School school = this.schoolRepository.findById(schoolId).orElse(null);
-        if(school == null) throw new NotFoundException("School not found with id: " + schoolId);
-        return Mapper.mapSchoolToSchoolDTO(school);
-    }
-
-    @Transactional
-    public SchoolDTO createSchool(SchoolDTO schoolDTO){
-        School school =  new School();
-        school.setName(schoolDTO.getName());
-        school.setAddress(schoolDTO.getAddress());
-        school.setCreatedAt(LocalDateTime.now());
-        school.setUpdatedAt(LocalDateTime.now());
-
-        this.schoolRepository.save(school);
-        return Mapper.mapSchoolToSchoolDTO(school);
+    public SchoolResponseDTO getSchoolById(Long schoolId) throws NotFoundException {
+        SchoolEntity schoolEntity = this.schoolRepository.findById(schoolId).orElse(null);
+        if(schoolEntity == null) throw new NotFoundException("School not found with id: " + schoolId);
+        return Mapper.mapSchoolToSchoolDTO(schoolEntity);
     }
 
     @Transactional
-    public SchoolDTO updateSchool(long schoolId, SchoolDTO schoolDTO) throws NotFoundException{
-        School selectedSchool = this.schoolRepository.findById(schoolId).orElse(null);
-        if(selectedSchool == null) throw new NotFoundException("School not found with id: " + schoolId);
+    public SchoolResponseDTO createSchool(SchoolRequestDTO schoolRequestDTO){
+        SchoolEntity schoolEntity =  new SchoolEntity();
+        schoolEntity.setName(schoolRequestDTO.getName());
+        schoolEntity.setAddress(schoolRequestDTO.getAddress());
+        schoolEntity.setCreatedAt(LocalDateTime.now());
+        schoolEntity.setUpdatedAt(LocalDateTime.now());
 
-        selectedSchool.setName(schoolDTO.getName());
-        selectedSchool.setAddress(schoolDTO.getAddress());
-        selectedSchool.setUpdatedAt(LocalDateTime.now());
+        this.schoolRepository.save(schoolEntity);
+        return Mapper.mapSchoolToSchoolDTO(schoolEntity);
+    }
 
-        return Mapper.mapSchoolToSchoolDTO(selectedSchool);
+    @Transactional
+    public SchoolResponseDTO updateSchool(long schoolId, SchoolRequestDTO schoolRequestDTO) throws NotFoundException{
+        SchoolEntity selectedSchoolEntity = this.schoolRepository.findById(schoolId).orElse(null);
+        if(selectedSchoolEntity == null) throw new NotFoundException("School not found with id: " + schoolId);
+
+        selectedSchoolEntity.setName(schoolRequestDTO.getName());
+        selectedSchoolEntity.setAddress(schoolRequestDTO.getAddress());
+        selectedSchoolEntity.setUpdatedAt(LocalDateTime.now());
+
+        return Mapper.mapSchoolToSchoolDTO(selectedSchoolEntity);
     }
 
     @Transactional
     public boolean deleteSchool(long schoolId) throws NotFoundException{
-        School deletedSchool = this.schoolRepository.findById(schoolId).orElse(null);
-        if(deletedSchool == null) throw new NotFoundException("School not found with id: " + schoolId);
-        this.schoolRepository.delete(deletedSchool);
+        SchoolEntity deletedSchoolEntity = this.schoolRepository.findById(schoolId).orElse(null);
+        if(deletedSchoolEntity == null) throw new NotFoundException("School not found with id: " + schoolId);
+        this.schoolRepository.delete(deletedSchoolEntity);
         return true;
     }
 

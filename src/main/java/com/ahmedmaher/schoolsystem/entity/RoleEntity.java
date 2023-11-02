@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.model;
+package com.ahmedmaher.schoolsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,7 @@ import lombok.*;
 @Table(name = "role", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name")
 })
-public class Role {
+public class RoleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

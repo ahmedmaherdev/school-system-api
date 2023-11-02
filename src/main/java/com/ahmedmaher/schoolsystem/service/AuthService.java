@@ -1,11 +1,8 @@
 package com.ahmedmaher.schoolsystem.service;
 
-import com.ahmedmaher.schoolsystem.dto.LoginDTO;
-import com.ahmedmaher.schoolsystem.dto.SignupDTO;
-import com.ahmedmaher.schoolsystem.dto.UserDTO;
-import com.ahmedmaher.schoolsystem.model.User;
-import com.ahmedmaher.schoolsystem.repository.UserRepository;
-import com.ahmedmaher.schoolsystem.util.Mapper;
+import com.ahmedmaher.schoolsystem.dto.LoginRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.SignupRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,8 +15,8 @@ import java.util.HashSet;
 @Service
 public class AuthService {
 
-    private UserService userService;
-    private AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
     public AuthService(UserService userService, AuthenticationManager authenticationManager) {
@@ -27,23 +24,21 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    public UserDTO registerUser(SignupDTO userDTO) {
+    public UserResponseDTO registerUser(SignupRequestDTO userDTO) {
         HashSet<String> studentRole = new HashSet<>();
         studentRole.add("ROLE_STUDENT");
         userDTO.setRoles(studentRole);
-        UserDTO registeredUser = this.userService.createUser(userDTO);
-        return registeredUser;
+        return this.userService.createUser(userDTO);
     }
 
-    public UserDTO loginUser(LoginDTO loginDTO){
+    public UserResponseDTO loginUser(LoginRequestDTO loginRequestDTO){
         try {
             UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
-                    loginDTO.getUsername(),
-                    loginDTO.getPassword()
+                    loginRequestDTO.getUsername(),
+                    loginRequestDTO.getPassword()
             );
             Authentication authentication = this.authenticationManager.authenticate(usernamePassword);
-            UserDTO user = this.userService.getUserByUsername(authentication.getName());
-            return user;
+            return this.userService.getUserByUsername(authentication.getName());
         }
         catch (BadCredentialsException ex) {
             throw new BadCredentialsException("Incorrect username or password");

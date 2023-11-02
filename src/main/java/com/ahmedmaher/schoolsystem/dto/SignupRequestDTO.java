@@ -13,9 +13,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupDTO {
-    private Long id;
-
+public class SignupRequestDTO {
     @NotBlank(message = "name is required")
     private String name;
 
@@ -34,7 +32,4 @@ public class SignupDTO {
     private String password;
 
     private Set<String> roles;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

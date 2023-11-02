@@ -1,8 +1,6 @@
-package com.ahmedmaher.schoolsystem.model;
+package com.ahmedmaher.schoolsystem.entity;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -12,13 +10,11 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
-    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="created_at")
     protected LocalDateTime createdAt;
 
-    @CreatedDate
-    @LastModifiedDate
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="updated_at")
     protected LocalDateTime updatedAt;

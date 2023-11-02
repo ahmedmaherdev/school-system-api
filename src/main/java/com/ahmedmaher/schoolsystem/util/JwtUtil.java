@@ -1,6 +1,6 @@
 package com.ahmedmaher.schoolsystem.util;
 
-import com.ahmedmaher.schoolsystem.dto.UserDTO;
+import com.ahmedmaher.schoolsystem.dto.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,7 +27,7 @@ public class JwtUtil {
         this.JWT_EXPIRE_AT = jwtExpireAt;
     }
 
-    public String signToken(UserDTO user) {
+    public String signToken(UserResponseDTO user) {
         Claims claims = Jwts.claims().setSubject(user.getUsername());
         claims.put("name" , user.getName());
         claims.setId(user.getId() + "");

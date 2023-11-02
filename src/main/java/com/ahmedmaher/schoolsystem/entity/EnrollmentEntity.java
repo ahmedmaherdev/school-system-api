@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.model;
+package com.ahmedmaher.schoolsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,19 +12,19 @@ import java.time.LocalDateTime;
 @Table(name = "enrollment" , uniqueConstraints = @UniqueConstraint(columnNames = {
         "student_id" , "classroom_id"
 }))
-public class Enrollment extends BaseEntity{
+public class EnrollmentEntity extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private User student;
+    private UserEntity student;
 
     @ManyToOne
     @JoinColumn(name = "classroom_id")
-    private Classroom classroom;
+    private ClassroomEntity classroomEntity;
 
     @ManyToOne
     @JoinColumn(name = "school_id")
-    private School school;
+    private SchoolEntity schoolEntity;
 
     public Long getId() {
         return this.id;

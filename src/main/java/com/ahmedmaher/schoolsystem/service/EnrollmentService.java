@@ -1,12 +1,13 @@
 package com.ahmedmaher.schoolsystem.service;
 
-import com.ahmedmaher.schoolsystem.dto.EnrollmentDTO;
+import com.ahmedmaher.schoolsystem.dto.EnrollmentRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.EnrollmentResponseDTO;
+import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
-import com.ahmedmaher.schoolsystem.model.Classroom;
-import com.ahmedmaher.schoolsystem.model.Enrollment;
-import com.ahmedmaher.schoolsystem.model.School;
-import com.ahmedmaher.schoolsystem.model.User;
+import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
+import com.ahmedmaher.schoolsystem.entity.EnrollmentEntity;
+import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
 import com.ahmedmaher.schoolsystem.repository.EnrollmentRepository;
 import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
@@ -21,11 +22,11 @@ import java.time.LocalDateTime;
 
 @Service
 public class EnrollmentService {
-    private EnrollmentRepository enrollmentRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
-    private UserRepository userRepository;
-    private ClassroomRepository classroomRepository;
-    private SchoolRepository schoolRepository;
+    private final UserRepository userRepository;
+    private final ClassroomRepository classroomRepository;
+    private final SchoolRepository schoolRepository;
 
     @Autowired
     public EnrollmentService(EnrollmentRepository enrollmentRepository,
@@ -39,34 +40,34 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public EnrollmentDTO createEnrollment(EnrollmentDTO enrollmentDTO) {
-        User student = this.userRepository.findById(enrollmentDTO.getStudentId()).orElse(null);
-        if(student == null) throw new NotFoundException("User is not found");
+    public EnrollmentResponseDTO createEnrollment(long schoolId, EnrollmentRequestDTO enrollmentRequestDTO) {
+        UserEntity studentEntity = this.userRepository.findById(enrollmentRequestDTO.getStudentId()).orElse(null);
+        if(studentEntity == null) throw new NotFoundException("User is not found");
 
-        School school = this.schoolRepository.findById(enrollmentDTO.getSchoolId()).orElse(null);
-        if(school == null) throw new NotFoundException("School is not found");
+        SchoolEntity schoolEntity = this.schoolRepository.findById(schoolId).orElse(null);
+        if(schoolEntity == null) throw new NotFoundException("School is not found");
 
-        Classroom classroom = this.classroomRepository.findClassroomByIdAndSchoolId(
-                enrollmentDTO.getClassroomId(),
-                enrollmentDTO.getSchoolId()
+        ClassroomEntity classroomEntity = this.classroomRepository.findClassroomByIdAndSchoolId(
+                enrollmentRequestDTO.getClassroomId(),
+                schoolId
         );
 
-        if(classroom == null) throw new NotFoundException("Classroom is not found");
+        if(classroomEntity == null) throw new NotFoundException("Classroom is not found");
 
-        Enrollment enrollment = new Enrollment();
-        enrollment.setStudent(student);
-        enrollment.setClassroom(classroom);
-        enrollment.setSchool(school);
-        enrollment.setCreatedAt(LocalDateTime.now());
-        enrollment.setUpdatedAt(LocalDateTime.now());
+        EnrollmentEntity enrollmentEntity = new EnrollmentEntity();
+        enrollmentEntity.setStudent(studentEntity);
+        enrollmentEntity.setClassroomEntity(classroomEntity);
+        enrollmentEntity.setSchoolEntity(schoolEntity);
+        enrollmentEntity.setCreatedAt(LocalDateTime.now());
+        enrollmentEntity.setUpdatedAt(LocalDateTime.now());
 
-        classroom.setCapacity(classroom.getCapacity() + 1);
+        classroomEntity.setCapacity(classroomEntity.getCapacity() + 1);
         try{
-            this.enrollmentRepository.save(enrollment);
-            this.classroomRepository.save(classroom);
+            this.enrollmentRepository.save(enrollmentEntity);
+            this.classroomRepository.save(classroomEntity);
         }catch (DataIntegrityViolationException ex) {
             throw new DuplicatedException("Student enrolled already to this classroom.");
         }
-        return Mapper.mapEnrollmentToEnrollmentDTO(enrollment);
+        return Mapper.mapEnrollmentToEnrollmentDTO(enrollmentEntity);
     }
 }

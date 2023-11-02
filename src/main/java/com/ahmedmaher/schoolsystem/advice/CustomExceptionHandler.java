@@ -1,7 +1,7 @@
 package com.ahmedmaher.schoolsystem.advice;
 
 
-import com.ahmedmaher.schoolsystem.dto.CustomErrorDTO;
+import com.ahmedmaher.schoolsystem.dto.CustomErrorResponseDTO;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
@@ -21,49 +21,49 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<CustomErrorDTO> handleNotFoundException(NotFoundException ex){
-        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+    public ResponseEntity<CustomErrorResponseDTO> handleNotFoundException(NotFoundException ex){
+        CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<CustomErrorDTO> handleValidationException(MethodArgumentNotValidException ex) {
-        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getBindingResult().getFieldError().getDefaultMessage(), "fail" , System.currentTimeMillis());
+    public ResponseEntity<CustomErrorResponseDTO> handleValidationException(MethodArgumentNotValidException ex) {
+        CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getBindingResult().getFieldError().getDefaultMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 
     @ExceptionHandler(DuplicatedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<CustomErrorDTO> handleValidationException(DuplicatedException ex) {
-        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+    public ResponseEntity<CustomErrorResponseDTO> handleValidationException(DuplicatedException ex) {
+        CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<CustomErrorDTO> handleUnauthorizedException(UnauthorizedException ex) {
-        CustomErrorDTO errorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+    public ResponseEntity<CustomErrorResponseDTO> handleUnauthorizedException(UnauthorizedException ex) {
+        CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDTO);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<CustomErrorDTO> handleBadCredentialsException(BadCredentialsException ex) {
-        CustomErrorDTO customErrorDTO = new CustomErrorDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorDTO);
+    public ResponseEntity<CustomErrorResponseDTO> handleBadCredentialsException(BadCredentialsException ex) {
+        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorResponseDTO);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<CustomErrorDTO> handleAccessDeniedException(AccessDeniedException ex) {
-        CustomErrorDTO customErrorDTO = new CustomErrorDTO("you dn not have permission to make this action.", "fail" , System.currentTimeMillis());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(customErrorDTO);
+    public ResponseEntity<CustomErrorResponseDTO> handleAccessDeniedException(AccessDeniedException ex) {
+        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO("you dn not have permission to make this action.", "fail" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(customErrorResponseDTO);
     }
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<CustomErrorDTO> unhandleException(RuntimeException ex) {
-        CustomErrorDTO customErrorDTO = new CustomErrorDTO(ex.getMessage(), "error" , System.currentTimeMillis());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(customErrorDTO);
+    public ResponseEntity<CustomErrorResponseDTO> unhandleException(RuntimeException ex) {
+        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO(ex.getMessage(), "error" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(customErrorResponseDTO);
     }
 }

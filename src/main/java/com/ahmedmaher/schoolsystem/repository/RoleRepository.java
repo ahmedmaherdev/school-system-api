@@ -1,11 +1,11 @@
 package com.ahmedmaher.schoolsystem.repository;
 
-import com.ahmedmaher.schoolsystem.model.Role;
+import com.ahmedmaher.schoolsystem.entity.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface RoleRepository extends JpaRepository<Role , Long> {
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 
-    @Query("SELECT r FROM Role r WHERE r.name = :name")
-    Role getRoleByName(String name);
+    @Query("SELECT r FROM RoleEntity r WHERE r.name = :name")
+    RoleEntity getRoleByName(String name);
 }

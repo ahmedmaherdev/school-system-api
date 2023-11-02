@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.model;
+package com.ahmedmaher.schoolsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,14 +10,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "classroom")
-public class Classroom extends BaseEntity {
+public class ClassroomEntity extends BaseEntity {
     private String name;
 
     @Column(nullable = false , columnDefinition = "integer default 0")
     private int capacity;
 
     @ManyToOne
-    private School school;
+    private SchoolEntity schoolEntity;
 
     public Long getId() {
         return this.id;

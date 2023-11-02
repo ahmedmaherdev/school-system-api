@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.model;
+package com.ahmedmaher.schoolsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "school")
-public class School extends BaseEntity {
+public class SchoolEntity extends BaseEntity {
     private String name;
     private String address;
 

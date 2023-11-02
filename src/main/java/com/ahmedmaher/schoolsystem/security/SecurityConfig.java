@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/userPhotos/**").permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS

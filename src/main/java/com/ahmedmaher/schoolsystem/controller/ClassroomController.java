@@ -1,8 +1,9 @@
 package com.ahmedmaher.schoolsystem.controller;
 
+import com.ahmedmaher.schoolsystem.dto.ClassroomRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.ClassroomDTO;
-import com.ahmedmaher.schoolsystem.dto.SchoolDTO;
+import com.ahmedmaher.schoolsystem.dto.ClassroomResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.SchoolResponseDTO;
 import com.ahmedmaher.schoolsystem.service.ClassroomService;
 import com.ahmedmaher.schoolsystem.service.SchoolService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
@@ -21,8 +22,8 @@ import java.util.Map;
 @RequestMapping("/api/schools/{schoolId}/classrooms")
 public class ClassroomController {
 
-    private  ClassroomService classroomService;
-    private SchoolService schoolService;
+    private final ClassroomService classroomService;
+    private final SchoolService schoolService;
 
 
     @Autowired
@@ -32,13 +33,14 @@ public class ClassroomController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<CustomResponseDTO<?>> getAllClassrooms(@PathVariable("schoolId") long schoolId ,
-                                                                 @RequestParam(defaultValue = "0" ) int page ,
-                                                                 @RequestParam(defaultValue = "10" ) int size,
-                                                                 @RequestParam(defaultValue = "createdAt") String sort
+    public ResponseEntity<CustomResponseDTO<?>> getAllClassrooms(
+            @PathVariable("schoolId") long schoolId ,
+            @RequestParam(defaultValue = "0" ) int page ,
+            @RequestParam(defaultValue = "10" ) int size,
+            @RequestParam(defaultValue = "createdAt") String sort
     ) {
         AppFeatures appFeatures = new AppFeatures(sort , size , page);
-        List<ClassroomDTO> classrooms = this.classroomService.getAllClassrooms(schoolId , appFeatures.splitPageable());
+        List<ClassroomResponseDTO> classrooms = this.classroomService.getAllClassrooms(schoolId , appFeatures.splitPageable());
         long allCount = this.classroomService.getAllClassroomsCount(schoolId);
         int count = classrooms.size();
         Map<String , Object> res = new HashMap<>();
@@ -48,34 +50,36 @@ public class ClassroomController {
     }
 
     @GetMapping("/{classroomId}")
-    public ResponseEntity<ClassroomDTO> getClassroom(@PathVariable("classroomId") Long classroomId){
-        ClassroomDTO classroom = this.classroomService.getClassroomById(classroomId);
+    public ResponseEntity<ClassroomResponseDTO> getClassroom(@PathVariable("classroomId") Long classroomId){
+        ClassroomResponseDTO classroom = this.classroomService.getClassroomById(classroomId);
         return ResponseEntity.ok(classroom);
     }
 
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @PostMapping("/")
-    public ResponseEntity<ClassroomDTO> createClassroom(@PathVariable("schoolId") long schoolId, @Valid @RequestBody ClassroomDTO classroomDTO) {
-        SchoolDTO schoolDTO = this.schoolService.getSchoolById(schoolId);
-        classroomDTO.setSchoolId(schoolDTO.getId());
-        ClassroomDTO createdClassroom = this.classroomService.createClassroom(classroomDTO);
+    public ResponseEntity<ClassroomResponseDTO> createClassroom(
+            @PathVariable("schoolId") long schoolId,
+            @Valid @RequestBody ClassroomRequestDTO classroomRequestDTO
+    ) {
+        SchoolResponseDTO schoolResponseDTO = this.schoolService.getSchoolById(schoolId);
+        ClassroomResponseDTO createdClassroom = this.classroomService.createClassroom(schoolId ,  classroomRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdClassroom);
     }
     @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @PutMapping("/{classroomId}")
-    public ResponseEntity<ClassroomDTO> updateUser(@Valid @RequestBody() ClassroomDTO classroomDTO ,
-                                                   @PathVariable("classroomId") long classroomId,
-                                                   @PathVariable("schoolId") long schoolId) {
-        SchoolDTO schoolDTO = this.schoolService.getSchoolById(schoolId);
-        classroomDTO.setSchoolId(schoolDTO.getId());
-        ClassroomDTO updatedClassroom = this.classroomService.updateClassroom(classroomId , classroomDTO);
+    public ResponseEntity<ClassroomResponseDTO> updateClassroom(
+            @Valid @RequestBody() ClassroomRequestDTO classroomRequestDTO,
+            @PathVariable("classroomId") long classroomId,
+            @PathVariable("schoolId") long schoolId
+    ) {
+        ClassroomResponseDTO updatedClassroom = this.classroomService.updateClassroom(classroomId , schoolId, classroomRequestDTO);
         return ResponseEntity.ok(updatedClassroom);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @DeleteMapping("/{classroomId}")
-    public ResponseEntity<?> deleteUser( @PathVariable("classroomId") long classroomId) {
+    public ResponseEntity<?> deleteClassroom( @PathVariable("classroomId") long classroomId) {
         this.classroomService.deleteClassroom(classroomId);
         return ResponseEntity.noContent().build();
     }

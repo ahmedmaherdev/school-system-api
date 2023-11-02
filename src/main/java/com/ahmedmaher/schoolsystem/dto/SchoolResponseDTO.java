@@ -1,20 +1,23 @@
 package com.ahmedmaher.schoolsystem.dto;
 
-import com.ahmedmaher.schoolsystem.model.School;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassroomDTO {
+public class SchoolResponseDTO {
     private long id;
+
+    @NotBlank(message = "name is required.")
     private String name;
-    private int capacity;
-    private long schoolId;
+
+    @NotBlank(message = "address is required.")
+    private String address;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

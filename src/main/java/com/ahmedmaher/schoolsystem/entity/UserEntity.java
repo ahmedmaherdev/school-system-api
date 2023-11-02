@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.model;
+package com.ahmedmaher.schoolsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,13 +14,14 @@ import java.util.Set;
         @UniqueConstraint(columnNames = "username"),
         @UniqueConstraint(columnNames = "email")
 })
-public class User extends BaseEntity {
+public class UserEntity extends BaseEntity {
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
     private String email;
     private String name;
     private String password;
+    private String photo;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -28,7 +29,7 @@ public class User extends BaseEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<RoleEntity> roleEntities;
 
     public Long getId() {
         return this.id;
