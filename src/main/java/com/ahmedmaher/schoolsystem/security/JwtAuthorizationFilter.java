@@ -1,6 +1,7 @@
 package com.ahmedmaher.schoolsystem.security;
 
 import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
+import com.ahmedmaher.schoolsystem.service.CustomUserDetailsService;
 import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,10 +22,12 @@ import java.util.ArrayList;
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public JwtAuthorizationFilter(JwtUtil jwtUtil) {
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -36,7 +40,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 return;
             }
             Claims claims = this.jwtUtil.verifyToken(token);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(claims.getSubject() , "" , new ArrayList<>());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails.getUsername(),
+                    userDetails.getPassword() ,
+                    userDetails.getAuthorities()
+            );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request,response);
         } catch (Exception e) {

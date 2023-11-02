@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,9 +33,10 @@ public class ClassroomController {
 
     @GetMapping("/")
     public ResponseEntity<CustomResponseDTO<?>> getAllClassrooms(@PathVariable("schoolId") long schoolId ,
-                                                                                    @RequestParam(defaultValue = "0" ) int page ,
-                                                                                  @RequestParam(defaultValue = "10" ) int size,
-                                                                                  @RequestParam(defaultValue = "createdAt") String sort) {
+                                                                 @RequestParam(defaultValue = "0" ) int page ,
+                                                                 @RequestParam(defaultValue = "10" ) int size,
+                                                                 @RequestParam(defaultValue = "createdAt") String sort
+    ) {
         AppFeatures appFeatures = new AppFeatures(sort , size , page);
         List<ClassroomDTO> classrooms = this.classroomService.getAllClassrooms(schoolId , appFeatures.splitPageable());
         long allCount = this.classroomService.getAllClassroomsCount(schoolId);
@@ -51,6 +53,8 @@ public class ClassroomController {
         return ResponseEntity.ok(classroom);
     }
 
+
+    @PreAuthorize("hasRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @PostMapping("/")
     public ResponseEntity<ClassroomDTO> createClassroom(@PathVariable("schoolId") long schoolId, @Valid @RequestBody ClassroomDTO classroomDTO) {
         SchoolDTO schoolDTO = this.schoolService.getSchoolById(schoolId);
@@ -58,7 +62,7 @@ public class ClassroomController {
         ClassroomDTO createdClassroom = this.classroomService.createClassroom(classroomDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdClassroom);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @PutMapping("/{classroomId}")
     public ResponseEntity<ClassroomDTO> updateUser(@Valid @RequestBody() ClassroomDTO classroomDTO ,
                                                    @PathVariable("classroomId") long classroomId,
@@ -69,6 +73,7 @@ public class ClassroomController {
         return ResponseEntity.ok(updatedClassroom);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @DeleteMapping("/{classroomId}")
     public ResponseEntity<?> deleteUser( @PathVariable("classroomId") long classroomId) {
         this.classroomService.deleteClassroom(classroomId);
