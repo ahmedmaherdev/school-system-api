@@ -60,6 +60,12 @@ public class UserService {
         return Mapper.mapUserToUserDTO(user);
     }
 
+    public UserDTO getUserByUsername(String username) throws NotFoundException {
+        User user = this.userRepository.findByUsername(username);
+        if(user == null) throw new NotFoundException("User not found with username: " + username);
+        return Mapper.mapUserToUserDTO(user);
+    }
+
     @Transactional
     public UserDTO createUser(SignupDTO userDTO){
         User user =  new User();
@@ -123,27 +129,5 @@ public class UserService {
         return this.userRepository.count();
     }
 
-    public UserDTO registerUser(SignupDTO userDTO) {
-        HashSet<String> studentRole = new HashSet<>();
-        studentRole.add("ROLE_STUDENT");
-        userDTO.setRoles(studentRole);
-        UserDTO registeredUser = this.createUser(userDTO);
-        return registeredUser;
-    }
-
-    public UserDTO loginUser(LoginDTO loginDTO){
-        try {
-            UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
-                    loginDTO.getUsername(),
-                    loginDTO.getPassword()
-            );
-            Authentication authentication = this.authenticationManager.authenticate(usernamePassword);
-            User user = this.userRepository.getUserByUsername(authentication.getName());
-            return Mapper.mapUserToUserDTO(user);
-        }
-        catch (BadCredentialsException ex) {
-            throw new BadCredentialsException("Incorrect username or password");
-        }
-    }
 
 }

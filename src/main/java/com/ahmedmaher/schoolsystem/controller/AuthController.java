@@ -3,6 +3,7 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.LoginDTO;
 import com.ahmedmaher.schoolsystem.dto.SignupDTO;
 import com.ahmedmaher.schoolsystem.dto.UserDTO;
+import com.ahmedmaher.schoolsystem.service.AuthService;
 import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import com.ahmedmaher.schoolsystem.service.UserService;
 import com.ahmedmaher.schoolsystem.util.UserToken;
@@ -26,18 +27,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private UserService userService;
+    private AuthService authService;
     private JwtUtil jwtUtil;
 
     @Autowired
-    public AuthController(UserService userService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
-        this.userService = userService;
+    public AuthController(AuthService authService, JwtUtil jwtUtil) {
+        this.authService = authService;
         this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupDTO userDTO) {
-        UserDTO createdUser = this.userService.registerUser(userDTO);
+        UserDTO createdUser = this.authService.registerUser(userDTO);
         String token = jwtUtil.signToken(createdUser);
         return ResponseEntity.ok(UserToken.generateUserTokenResponse(createdUser , token));
 
@@ -45,7 +46,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
-        UserDTO user = this.userService.loginUser(loginDTO);
+        UserDTO user = this.authService.loginUser(loginDTO);
         String token = this.jwtUtil.signToken(user);
         return ResponseEntity.ok(UserToken.generateUserTokenResponse(user , token));
     }

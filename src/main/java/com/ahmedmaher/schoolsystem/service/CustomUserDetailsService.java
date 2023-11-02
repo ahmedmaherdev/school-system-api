@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.ahmedmaher.schoolsystem.model.User user = this.userRepository.getUserByUsername(username);
+        com.ahmedmaher.schoolsystem.model.User user = this.userRepository.findByUsername(username);
         if(user == null)
             throw new UsernameNotFoundException("Incorrect username and password");
         return User.builder()

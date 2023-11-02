@@ -54,7 +54,7 @@ public class ClassroomController {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @PostMapping("/")
     public ResponseEntity<ClassroomDTO> createClassroom(@PathVariable("schoolId") long schoolId, @Valid @RequestBody ClassroomDTO classroomDTO) {
         SchoolDTO schoolDTO = this.schoolService.getSchoolById(schoolId);
@@ -62,7 +62,7 @@ public class ClassroomController {
         ClassroomDTO createdClassroom = this.classroomService.createClassroom(classroomDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdClassroom);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @PutMapping("/{classroomId}")
     public ResponseEntity<ClassroomDTO> updateUser(@Valid @RequestBody() ClassroomDTO classroomDTO ,
                                                    @PathVariable("classroomId") long classroomId,
@@ -73,7 +73,7 @@ public class ClassroomController {
         return ResponseEntity.ok(updatedClassroom);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @DeleteMapping("/{classroomId}")
     public ResponseEntity<?> deleteUser( @PathVariable("classroomId") long classroomId) {
         this.classroomService.deleteClassroom(classroomId);
