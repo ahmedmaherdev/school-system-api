@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class ClassroomRequestDTO {
     @NotBlank(message = "name is required.")
     private String name;
+
+    private long schoolId;
+
 }

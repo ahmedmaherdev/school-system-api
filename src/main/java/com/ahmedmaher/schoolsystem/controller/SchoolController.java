@@ -5,6 +5,7 @@ import com.ahmedmaher.schoolsystem.dto.school.SchoolRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
 import com.ahmedmaher.schoolsystem.service.school.SchoolService;
+import com.ahmedmaher.schoolsystem.util.APIRoutes;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.SchoolMapper;
 import jakarta.validation.Valid;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/schools")
+@RequestMapping(APIRoutes.SCHOOL)
 public class SchoolController {
     private final SchoolService schoolService;
     @Autowired

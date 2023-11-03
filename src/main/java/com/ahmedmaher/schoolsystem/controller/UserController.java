@@ -5,6 +5,7 @@ import com.ahmedmaher.schoolsystem.dto.auth.SignupRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
+import com.ahmedmaher.schoolsystem.util.APIRoutes;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(APIRoutes.USER)
 public class UserController {
 
     private final UserService userService;

@@ -22,6 +22,10 @@ public class ClassroomEntity extends BaseEntity {
     public Long getId() {
         return this.id;
     }
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
     public LocalDateTime getCreatedAt() {
         return this.createdAt;
