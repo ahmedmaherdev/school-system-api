@@ -5,15 +5,17 @@ import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
 import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
-import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+@Service
 public class ClassroomServiceImpl implements ClassroomService{
     private final ClassroomRepository classroomRepository;
     private final SchoolRepository schoolRepository;

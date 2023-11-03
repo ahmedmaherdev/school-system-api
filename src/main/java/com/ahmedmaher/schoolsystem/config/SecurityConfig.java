@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         HttpMethod.POST ,
                                         "/api/schools/**"
-                                ).hasAuthority(UserRole.ROLE_SUPERADMIN.name())
+                                ).hasAuthority(UserRole.SUPERADMIN.name())
                                 .anyRequest().authenticated()
                 ).sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS

@@ -26,7 +26,8 @@ public class UserEntity extends BaseEntity {
     private String photo;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    @ElementCollection(targetClass = UserRole.class)
+    private Set<UserRole> roles;
 
     public Long getId() {
         return this.id;

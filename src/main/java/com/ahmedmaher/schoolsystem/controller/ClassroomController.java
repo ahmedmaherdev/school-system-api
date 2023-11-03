@@ -27,7 +27,7 @@ public class ClassroomController {
     private final ClassroomService classroomService;
 
     @Autowired
-    public ClassroomController(ClassroomService classroomService , SchoolService schoolService) {
+    public ClassroomController(ClassroomService classroomService) {
         this.classroomService = classroomService;
     }
 

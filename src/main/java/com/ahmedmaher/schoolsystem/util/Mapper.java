@@ -8,13 +8,17 @@ import com.ahmedmaher.schoolsystem.entity.*;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class Mapper {
     public static UserResponseDTO mapUserToUserDTO(UserEntity userEntity){
         return new UserResponseDTO(userEntity.getId(),
                 userEntity.getName(),
                 userEntity.getUsername() ,
                 userEntity.getEmail() ,
-                userEntity.getRole(),
+                mapUserRolesToStringSet(userEntity.getRoles()),
                 userEntity.getPhoto(),
                 userEntity.getCreatedAt() ,
                 userEntity.getUpdatedAt()
@@ -40,7 +44,11 @@ public class Mapper {
                 enrollmentEntity.getUpdatedAt());
     }
 
-    public static SimpleGrantedAuthority mapRoleToGrantedAuthority(UserRole userRole){
-        return new SimpleGrantedAuthority(userRole.name());
+    public static List<SimpleGrantedAuthority> mapRolesToGrantedAuthority(Set<UserRole> userRoles){
+        return userRoles.stream().map(userRole -> new SimpleGrantedAuthority(userRole.name())).collect(Collectors.toList());
+    }
+
+    public static Set<String> mapUserRolesToStringSet(Set<UserRole> userRoles) {
+        return userRoles.stream().map(Enum::name).collect(Collectors.toSet());
     }
 }

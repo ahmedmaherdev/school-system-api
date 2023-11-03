@@ -17,7 +17,7 @@ public class UserResponseDTO {
     private String name;
     private String username;
     private String email;
-    private UserRole role;
+    private Set<String> roles;
     private String photo;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

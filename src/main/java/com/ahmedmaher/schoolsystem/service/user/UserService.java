@@ -17,7 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,21 +61,6 @@ public class UserService {
 
         String hashedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword());
         userEntity.setPassword(hashedPassword);
-
-//        Set<String> userDTORoles = userDTO.getRoles();
-//        if( userDTORoles == null) {
-//            // set student role as a default if not provided
-//            userDTORoles = new HashSet<>();
-//            userDTORoles.add("ROLE_STUDENT");
-//        }
-
-//        Set<RoleEntity> userRoleEntities = new HashSet<>();
-//        for (String role : userDTORoles ) {
-//            RoleEntity userRoleEntity = this.roleRepository.getRoleByName(role);
-//            if(userRoleEntity != null) userRoleEntities.add(userRoleEntity);
-//        }
-
-        userEntity.setRole(UserRole.ROLE_STUDENT);
         userEntity.setPhoto("default.jpg");
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setUpdatedAt(LocalDateTime.now());
