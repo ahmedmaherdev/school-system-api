@@ -1,7 +1,7 @@
 package com.ahmedmaher.schoolsystem.service;
 
-import com.ahmedmaher.schoolsystem.dto.ClassroomRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.ClassroomResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomResponseDTO;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;

@@ -1,5 +1,6 @@
 package com.ahmedmaher.schoolsystem.entity;
 
+import com.ahmedmaher.schoolsystem.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,7 @@ import java.util.Set;
         @UniqueConstraint(columnNames = "email")
 })
 public class UserEntity extends BaseEntity {
+
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
@@ -23,13 +25,8 @@ public class UserEntity extends BaseEntity {
     private String password;
     private String photo;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<RoleEntity> roleEntities;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     public Long getId() {
         return this.id;

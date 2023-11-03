@@ -1,7 +1,7 @@
 package com.ahmedmaher.schoolsystem.service;
 
-import com.ahmedmaher.schoolsystem.dto.EnrollmentRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.EnrollmentResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.enrollment.EnrollmentRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.enrollment.EnrollmentResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;

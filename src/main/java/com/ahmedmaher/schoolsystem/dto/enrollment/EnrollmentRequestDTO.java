@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.dto;
+package com.ahmedmaher.schoolsystem.dto.enrollment;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.dto;
+package com.ahmedmaher.schoolsystem.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

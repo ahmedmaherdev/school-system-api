@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public CustomUserDetailsService(UserRepository userRepository) {
@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
-                .authorities(Mapper.mapRolesSetToGrantedAuthority(userEntity.getRoleEntities()))
+                .authorities(Mapper.mapRoleToGrantedAuthority(userEntity.getRole()))
                 .build();
     }
 }

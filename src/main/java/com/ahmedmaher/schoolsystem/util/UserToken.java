@@ -1,6 +1,6 @@
 package com.ahmedmaher.schoolsystem.util;
 
-import com.ahmedmaher.schoolsystem.dto.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 
 import java.util.HashMap;
 import java.util.Map;

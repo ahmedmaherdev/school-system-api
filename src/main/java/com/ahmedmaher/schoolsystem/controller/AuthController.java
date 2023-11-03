@@ -1,8 +1,8 @@
 package com.ahmedmaher.schoolsystem.controller;
 
-import com.ahmedmaher.schoolsystem.dto.LoginRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.SignupRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.auth.LoginRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.auth.SignupRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.service.AuthService;
 import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import com.ahmedmaher.schoolsystem.util.UserToken;

@@ -1,8 +1,9 @@
 package com.ahmedmaher.schoolsystem.service;
 
-import com.ahmedmaher.schoolsystem.dto.LoginRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.SignupRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.auth.LoginRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.auth.SignupRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

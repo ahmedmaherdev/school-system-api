@@ -15,6 +15,10 @@ public class SchoolEntity extends BaseEntity {
     private String name;
     private String address;
 
+    public void setId(long id) {
+         this.id = id;
+    }
+
     public Long getId() {
         return this.id;
     }

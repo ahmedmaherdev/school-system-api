@@ -1,7 +1,7 @@
 package com.ahmedmaher.schoolsystem.controller;
 
-import com.ahmedmaher.schoolsystem.dto.EnrollmentRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.EnrollmentResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.enrollment.EnrollmentRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.enrollment.EnrollmentResponseDTO;
 import com.ahmedmaher.schoolsystem.service.EnrollmentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

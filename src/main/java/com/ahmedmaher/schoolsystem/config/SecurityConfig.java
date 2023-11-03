@@ -1,9 +1,12 @@
-package com.ahmedmaher.schoolsystem.security;
+package com.ahmedmaher.schoolsystem.config;
 
+import com.ahmedmaher.schoolsystem.enums.UserRole;
+import com.ahmedmaher.schoolsystem.security.JwtAuthorizationFilter;
 import com.ahmedmaher.schoolsystem.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,8 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    private CustomUserDetailsService userDetailsService;
-    private JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final CustomUserDetailsService userDetailsService;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @Autowired
     public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthorizationFilter jwtAuthorizationFilter) {
@@ -43,6 +46,10 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/userPhotos/**").permitAll()
+                                .requestMatchers(
+                                        HttpMethod.POST ,
+                                        "/api/schools/**"
+                                ).hasAuthority(UserRole.ROLE_SUPERADMIN.name())
                                 .anyRequest().authenticated()
                 ).sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS

@@ -1,10 +1,10 @@
 package com.ahmedmaher.schoolsystem.controller;
 
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.SignupRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.UserRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.UserResponseDTO;
-import com.ahmedmaher.schoolsystem.service.UserService;
+import com.ahmedmaher.schoolsystem.dto.auth.SignupRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.service.user.UserService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

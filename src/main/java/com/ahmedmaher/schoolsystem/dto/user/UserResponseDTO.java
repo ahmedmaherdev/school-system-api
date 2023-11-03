@@ -1,5 +1,6 @@
-package com.ahmedmaher.schoolsystem.dto;
+package com.ahmedmaher.schoolsystem.dto.user;
 
+import com.ahmedmaher.schoolsystem.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,9 +17,8 @@ public class UserResponseDTO {
     private String name;
     private String username;
     private String email;
-    private Set<String> roles;
+    private UserRole role;
     private String photo;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

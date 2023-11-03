@@ -1,20 +1,20 @@
-package com.ahmedmaher.schoolsystem.dto;
+package com.ahmedmaher.schoolsystem.dto.enrollment;
 
+
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassroomResponseDTO {
+public class EnrollmentResponseDTO {
     private long id;
-    private String name;
-    private int capacity;
+    private long studentId;
+    private long classroomId;
     private long schoolId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

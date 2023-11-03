@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.dto;
+package com.ahmedmaher.schoolsystem.dto.classroom;
 
 
 import jakarta.validation.constraints.NotBlank;

@@ -1,11 +1,11 @@
 package com.ahmedmaher.schoolsystem.controller;
 
-import com.ahmedmaher.schoolsystem.dto.ClassroomRequestDTO;
+import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.ClassroomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.SchoolResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
 import com.ahmedmaher.schoolsystem.service.ClassroomService;
-import com.ahmedmaher.schoolsystem.service.SchoolService;
+import com.ahmedmaher.schoolsystem.service.school.SchoolService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
