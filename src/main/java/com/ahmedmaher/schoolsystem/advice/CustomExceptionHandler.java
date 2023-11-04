@@ -57,7 +57,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<CustomErrorResponseDTO> handleAccessDeniedException(AccessDeniedException ex) {
-        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO("you dn not have permission to make this action.", "fail" , System.currentTimeMillis());
+        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO("you do not have permission to make this action.", "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(customErrorResponseDTO);
     }
     @ExceptionHandler(RuntimeException.class)

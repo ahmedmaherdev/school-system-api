@@ -1,17 +1,18 @@
 package com.ahmedmaher.schoolsystem.controller;
 
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.auth.SignupRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserUpdateRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
-import com.ahmedmaher.schoolsystem.util.APIRoutes;
+import com.ahmedmaher.schoolsystem.config.EndpointConfig;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(APIRoutes.USER)
+@RequestMapping(EndpointConfig.USER)
 public class UserController {
 
     private final UserService userService;
@@ -33,9 +34,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<CustomResponseDTO<?>> getAllUsers(
             @RequestParam(defaultValue = "0" ) int page ,
             @RequestParam(defaultValue = "10" ) int size,
@@ -54,12 +54,12 @@ public class UserController {
         return ResponseEntity.ok(customResponseDTO);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable("userId") Long userId){
-        UserEntity user = this.userService.getOne(userId);
         return ResponseEntity.ok(
-                UserMapper.mapUserEntityToUserResponseDTO(user)
+                UserMapper.mapUserEntityToUserResponseDTO(
+                        this.userService.getOne(userId)
+                )
         );
     }
 
@@ -72,17 +72,31 @@ public class UserController {
         );
     }
 
-    @PreAuthorize("'hasRole('ROLE_SUPERADMIN')")
-    @PostMapping("/")
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
-        UserEntity userEntity = UserMapper.mapUserRequestDTOToUserEntity(userDTO);
-        UserEntity createdUser = this.userService.createOne(userEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                UserMapper.mapUserEntityToUserResponseDTO(createdUser)
+    @PutMapping("/updateMe")
+    public ResponseEntity<UserResponseDTO> updateMe(
+            @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
+            Authentication authentication
+    ) {
+        String username = (String) authentication.getPrincipal();
+        UserEntity userEntity = this.userService.getByUsername(username);
+        UserEntity user = UserMapper.mapUserUpdateRequestDTOToUserEntity(userUpdateRequestDTO);
+        return ResponseEntity.ok(
+                UserMapper.mapUserEntityToUserResponseDTO(
+                        this.userService.updateOne(userEntity.getId(), user)
+                )
         );
     }
 
-    @PreAuthorize("'hasRole('ROLE_SUPERADMIN')")
+    @PostMapping
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
+        UserEntity userEntity = UserMapper.mapUserRequestDTOToUserEntity(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                UserMapper.mapUserEntityToUserResponseDTO(
+                        this.userService.createOne(userEntity)
+                )
+        );
+    }
+
 
     @PutMapping("/{userId}")
     public ResponseEntity<UserResponseDTO> updateUser(
@@ -90,17 +104,29 @@ public class UserController {
             @PathVariable("userId") long userId
     ) {
         UserEntity user = UserMapper.mapUserUpdateRequestDTOToUserEntity(userUpdateRequestDTO);
-        UserEntity updatedUser = this.userService.updateOne(userId , user);
         return ResponseEntity.ok(
-                UserMapper.mapUserEntityToUserResponseDTO(updatedUser)
+                UserMapper.mapUserEntityToUserResponseDTO(
+                        this.userService.updateOne(userId , user)
+                )
         );
     }
 
-    @PreAuthorize("'hasRole('ROLE_SUPERADMIN')")
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser( @PathVariable("userId") long userId) {
         this.userService.deleteOne(userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResponseDTO>> searchUser(
+            @RequestParam String s
+    ) {
+        Pageable pageable = PageRequest.of(0 , 10);
+        return ResponseEntity.ok(
+                UserMapper.mapUserEntitiesToUserResponseDTOs(
+                        this.userService.search(s , pageable)
+                )
+        );
     }
 }

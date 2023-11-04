@@ -5,7 +5,7 @@ import com.ahmedmaher.schoolsystem.dto.auth.SignupRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.service.AuthService;
-import com.ahmedmaher.schoolsystem.util.APIRoutes;
+import com.ahmedmaher.schoolsystem.config.EndpointConfig;
 import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import com.ahmedmaher.schoolsystem.util.UserToken;
 import com.ahmedmaher.schoolsystem.util.mapper.AuthMapper;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(APIRoutes.AUTH)
+@RequestMapping(EndpointConfig.AUTH)
 public class AuthController {
     private final AuthService authService;
     private final JwtUtil jwtUtil;

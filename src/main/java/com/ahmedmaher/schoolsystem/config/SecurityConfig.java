@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -46,10 +44,22 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/userPhotos/**").permitAll()
-                                .requestMatchers(
-                                        HttpMethod.POST ,
-                                        "/api/schools/**"
-                                ).hasAuthority(UserRole.SUPERADMIN.name())
+
+                                // make create, update and delete school to super admin
+                                .requestMatchers(HttpMethod.POST , EndpointConfig.SCHOOL).hasAuthority(UserRole.SUPERADMIN.name())
+                                .requestMatchers(HttpMethod.PUT , EndpointConfig.SCHOOL_ID).hasAuthority(UserRole.SUPERADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE , EndpointConfig.SCHOOL_ID).hasAuthority(UserRole.SUPERADMIN.name())
+
+                                // make create, update and delete classroom to admin
+                                .requestMatchers(HttpMethod.POST , EndpointConfig.CLASSROOM).hasAuthority(UserRole.ADMIN.name())
+                                .requestMatchers(HttpMethod.PUT , EndpointConfig.CLASSROOM_ID).hasAuthority(UserRole.ADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE , EndpointConfig.CLASSROOM_ID).hasAuthority(UserRole.ADMIN.name())
+
+                                // make create, update and delete user to admin
+                                .requestMatchers(HttpMethod.POST , EndpointConfig.USER).hasAuthority(UserRole.SUPERADMIN.name())
+                                .requestMatchers(HttpMethod.PUT , EndpointConfig.USER_ID).hasAuthority(UserRole.SUPERADMIN.name())
+                                .requestMatchers(HttpMethod.DELETE , EndpointConfig.USER_ID).hasAuthority(UserRole.SUPERADMIN.name())
+
                                 .anyRequest().authenticated()
                 ).sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS

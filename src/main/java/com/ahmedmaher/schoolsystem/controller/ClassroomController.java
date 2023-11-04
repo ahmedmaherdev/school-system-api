@@ -3,14 +3,17 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
-import com.ahmedmaher.schoolsystem.service.school.SchoolService;
-import com.ahmedmaher.schoolsystem.util.APIRoutes;
+import com.ahmedmaher.schoolsystem.config.EndpointConfig;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
+import com.ahmedmaher.schoolsystem.util.mapper.SchoolMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(APIRoutes.CLASSROOM)
+@RequestMapping(EndpointConfig.CLASSROOM)
 public class ClassroomController {
 
     private final ClassroomService classroomService;
@@ -31,7 +34,7 @@ public class ClassroomController {
         this.classroomService = classroomService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<CustomResponseDTO<?>> getAllClassrooms(
             @PathVariable("schoolId") long schoolId ,
             @RequestParam(defaultValue = "0" ) int page ,
@@ -63,8 +66,7 @@ public class ClassroomController {
     }
 
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<ClassroomResponseDTO> createClassroom(
             @PathVariable("schoolId") long schoolId,
             @Valid @RequestBody ClassroomRequestDTO classroomRequestDTO
@@ -77,7 +79,6 @@ public class ClassroomController {
                 ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(createdClassroom)
         );
     }
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
     @PutMapping("/{classroomId}")
     public ResponseEntity<ClassroomResponseDTO> updateClassroom(
             @Valid @RequestBody() ClassroomRequestDTO classroomRequestDTO,
@@ -94,7 +95,18 @@ public class ClassroomController {
         );
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN' , 'ROLE_SUPERADMIN')")
+    @GetMapping("/search")
+    public ResponseEntity<List<ClassroomResponseDTO>> searchSchool(
+            @RequestParam String s
+    ) {
+        Pageable pageable = PageRequest.of(0 , 10);
+        return ResponseEntity.ok(
+                ClassroomMapper.mapClassroomEntitiesToClassroomResponseDTOs(
+                        this.classroomService.search(s , pageable)
+                )
+        );
+    }
+
     @DeleteMapping("/{classroomId}")
     public ResponseEntity<?> deleteClassroom( @PathVariable("classroomId") long classroomId) {
         this.classroomService.deleteOne(classroomId);

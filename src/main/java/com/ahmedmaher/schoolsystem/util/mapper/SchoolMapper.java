@@ -19,8 +19,8 @@ public class SchoolMapper {
 
     public static SchoolEntity mapSchoolRequestToSchoolEntity(SchoolRequestDTO schoolRequestDTO){
         SchoolEntity schoolEntity = new SchoolEntity();
-        schoolEntity.setName(schoolEntity.getName());
-        schoolEntity.setAddress(schoolEntity.getAddress());
+        schoolEntity.setName(schoolRequestDTO.getName());
+        schoolEntity.setAddress(schoolRequestDTO.getAddress());
         return schoolEntity;
     }
 

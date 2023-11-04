@@ -15,4 +15,6 @@ public interface BaseService<T> {
     T updateOne(long id, T entity) throws NotFoundException;
 
     void deleteOne(long id) throws NotFoundException;
+
+    List<T> search(String word , Pageable pageable);
 }

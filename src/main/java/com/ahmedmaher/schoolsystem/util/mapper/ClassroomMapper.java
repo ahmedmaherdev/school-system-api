@@ -14,7 +14,7 @@ public class ClassroomMapper {
                 classroomEntity.getId(),
                 classroomEntity.getName(),
                 classroomEntity.getCapacity(),
-                classroomEntity.getSchoolEntity().getId(),
+                classroomEntity.getSchool().getId(),
                 classroomEntity.getCreatedAt(),
                 classroomEntity.getUpdatedAt()
         );

@@ -1,6 +1,7 @@
 package com.ahmedmaher.schoolsystem.service.school;
 
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
+import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,12 @@ public class SchoolServiceImp implements SchoolService {
     @Transactional
     @Override
     public SchoolEntity updateOne(long id, SchoolEntity entity) throws NotFoundException {
-        if(!this.schoolRepository.existsById(id))
+        SchoolEntity schoolEntity = this.schoolRepository.findById(id).orElse(null);
+        if(schoolEntity == null)
             throw new NotFoundException("School not found with id: " + id);
         entity.setId(id);
         entity.setUpdatedAt(LocalDateTime.now());
+        entity.setCreatedAt(schoolEntity.getCreatedAt());
         this.schoolRepository.save(entity);
         return entity;
     }
@@ -63,6 +66,10 @@ public class SchoolServiceImp implements SchoolService {
         this.schoolRepository.delete(deletedSchoolEntity);
     }
 
+    @Override
+    public List<SchoolEntity> search(String word , Pageable pageable) {
+        return this.schoolRepository.searchBy(word, pageable);
+    }
     @Override
     public long getAllSchoolsCount() {
         return this.schoolRepository.count();

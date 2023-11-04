@@ -67,10 +67,12 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserEntity updateOne(long id, UserEntity entity) throws NotFoundException {
-        if(!this.userRepository.existsById(id))
+        UserEntity userEntity = this.userRepository.findById(id).orElse(null);
+        if(userEntity == null)
             throw new NotFoundException("User not found with id: " + id);
         entity.setId(id);
         entity.setUpdatedAt(LocalDateTime.now());
+        entity.setCreatedAt(userEntity.getCreatedAt());
         try {
             this.userRepository.save(entity);
         }catch (DataIntegrityViolationException ex){
@@ -84,6 +86,11 @@ public class UserServiceImp implements UserService {
         UserEntity deletedUserEntity = this.userRepository.findById(id).orElse(null);
         if(deletedUserEntity == null) throw new NotFoundException("User not found with id: " + id);
         this.userRepository.delete(deletedUserEntity);
+    }
+
+    @Override
+    public List<UserEntity> search(String word , Pageable pageable) {
+        return this.userRepository.searchBy(word, pageable);
     }
 
     @Override

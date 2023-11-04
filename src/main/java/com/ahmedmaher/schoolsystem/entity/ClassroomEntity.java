@@ -17,7 +17,8 @@ public class ClassroomEntity extends BaseEntity {
     private int capacity;
 
     @ManyToOne
-    private SchoolEntity schoolEntity;
+    @JoinColumn(name = "school_id")
+    private SchoolEntity school;
 
     public Long getId() {
         return this.id;

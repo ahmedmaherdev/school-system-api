@@ -2,6 +2,7 @@ package com.ahmedmaher.schoolsystem.service.classroom;
 
 import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
+import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
 import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
@@ -48,12 +49,12 @@ public class ClassroomServiceImpl implements ClassroomService{
     @Transactional
     @Override
     public ClassroomEntity createOne(ClassroomEntity entity) {
-        long schoolId = entity.getSchoolEntity().getId();
+        long schoolId = entity.getSchool().getId();
         SchoolEntity schoolEntity = this.schoolRepository.findById(schoolId).orElse(null);
         if(schoolEntity == null) throw new NotFoundException("School not found with id: " + schoolId);
 
         entity.setCapacity(0);
-        entity.setSchoolEntity(schoolEntity);
+        entity.setSchool(schoolEntity);
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
 
@@ -66,11 +67,13 @@ public class ClassroomServiceImpl implements ClassroomService{
         ClassroomEntity selectedClassroomEntity = this.classroomRepository.findById(id).orElse(null);
         if(selectedClassroomEntity == null) throw new NotFoundException("Classroom not found with id: " + id);
 
-        long schoolId = selectedClassroomEntity.getSchoolEntity().getId();
+        long schoolId = selectedClassroomEntity.getSchool().getId();
         if(!this.schoolRepository.existsById(schoolId))
             throw new NotFoundException("School not found with id: " + schoolId);
+
         entity.setId(id);
         entity.setUpdatedAt(LocalDateTime.now());
+        entity.setCreatedAt(selectedClassroomEntity.getCreatedAt());
         this.classroomRepository.save(entity);
         return entity;
     }
@@ -82,7 +85,10 @@ public class ClassroomServiceImpl implements ClassroomService{
         this.classroomRepository.delete(deletedClassroomEntity);
     }
 
-
+    @Override
+    public List<ClassroomEntity> search(String word , Pageable pageable) {
+        return this.classroomRepository.searchBy(word, pageable);
+    }
 
     @Override
     public long getAllClassroomsCount(long schoolId) {

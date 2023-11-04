@@ -3,16 +3,19 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
 import com.ahmedmaher.schoolsystem.service.school.SchoolService;
-import com.ahmedmaher.schoolsystem.util.APIRoutes;
+import com.ahmedmaher.schoolsystem.config.EndpointConfig;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.SchoolMapper;
+import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(APIRoutes.SCHOOL)
+@RequestMapping(EndpointConfig.SCHOOL)
 public class SchoolController {
     private final SchoolService schoolService;
     @Autowired
@@ -28,7 +31,7 @@ public class SchoolController {
         this.schoolService = schoolService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<CustomResponseDTO<?>> getAllSchools(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -55,8 +58,7 @@ public class SchoolController {
         );
     }
 
-    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<SchoolResponseDTO> createSchool(@Valid @RequestBody SchoolRequestDTO schoolRequestDTO) {
         SchoolEntity schoolEntity = SchoolMapper.mapSchoolRequestToSchoolEntity(schoolRequestDTO);
         SchoolEntity createdSchool = this.schoolService.createOne(schoolEntity);
@@ -66,7 +68,6 @@ public class SchoolController {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
     @PutMapping("/{schoolId}")
     public ResponseEntity<SchoolResponseDTO> updateSchool(
             @Valid @RequestBody() SchoolRequestDTO schoolRequestDTO,
@@ -81,10 +82,21 @@ public class SchoolController {
                 SchoolMapper.mapSchoolEntityToSchoolResponseDTO(updatedSchool)
         );
     }
-    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
     @DeleteMapping("/{schoolId}")
     public ResponseEntity<?> deleteSchool( @PathVariable("schoolId") long schoolId) {
        this.schoolService.deleteOne(schoolId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<SchoolResponseDTO>> searchSchool(
+            @RequestParam String s
+    ) {
+        Pageable pageable = PageRequest.of(0 , 10);
+        return ResponseEntity.ok(
+                SchoolMapper.mapSchoolEntitiesToSchoolResponseDTOs(
+                        this.schoolService.search(s , pageable)
+                )
+        );
     }
 }

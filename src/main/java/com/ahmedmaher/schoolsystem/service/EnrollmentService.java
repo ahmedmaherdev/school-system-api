@@ -12,7 +12,7 @@ import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
 import com.ahmedmaher.schoolsystem.repository.EnrollmentRepository;
 import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
 import com.ahmedmaher.schoolsystem.repository.UserRepository;
-import com.ahmedmaher.schoolsystem.util.Mapper;
+import com.ahmedmaher.schoolsystem.util.mapper.EnrollmentMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -68,6 +68,6 @@ public class EnrollmentService {
         }catch (DataIntegrityViolationException ex) {
             throw new DuplicatedException("Student enrolled already to this classroom.");
         }
-        return Mapper.mapEnrollmentToEnrollmentDTO(enrollmentEntity);
+        return EnrollmentMapper.mapEnrollmentToEnrollmentDTO(enrollmentEntity);
     }
 }
