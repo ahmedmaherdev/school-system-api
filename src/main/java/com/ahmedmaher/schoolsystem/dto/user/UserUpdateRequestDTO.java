@@ -7,12 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDTO {
+public class UserUpdateRequestDTO {
     @NotBlank(message = "name is required")
     private String name;
 
@@ -24,11 +22,4 @@ public class UserRequestDTO {
     @Email(message = "Please, provide a valid email.")
     @Size(min = 5, max = 60 , message = "email must more than 5 and less than 60.")
     private String email;
-
-
-    @NotBlank(message = "password is required")
-    @Size(min = 8, max = 100 , message = "password must more than 8 and less than 100.")
-    private String password;
-
-    private Set<String> roles;
 }

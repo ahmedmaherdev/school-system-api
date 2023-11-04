@@ -31,5 +31,4 @@ public class SignupRequestDTO {
     @Size(min = 8, max = 100 , message = "password must more than 8 and less than 100.")
     private String password;
 
-    private Set<String> roles;
 }

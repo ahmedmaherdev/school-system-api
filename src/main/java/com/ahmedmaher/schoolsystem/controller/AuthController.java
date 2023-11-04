@@ -3,10 +3,13 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.auth.LoginRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.auth.SignupRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.service.AuthService;
 import com.ahmedmaher.schoolsystem.util.APIRoutes;
 import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import com.ahmedmaher.schoolsystem.util.UserToken;
+import com.ahmedmaher.schoolsystem.util.mapper.AuthMapper;
+import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +31,21 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDTO userDTO) {
-        UserResponseDTO createdUser = this.authService.registerUser(userDTO);
-        String token = jwtUtil.signToken(createdUser);
-        return ResponseEntity.ok(UserToken.generateUserTokenResponse(createdUser , token));
-
+    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDTO signupRequestDTO) {
+        UserEntity userEntity = AuthMapper.mapSignupDTOToUserEntity(signupRequestDTO);
+        UserResponseDTO user = UserMapper.mapUserEntityToUserResponseDTO(
+                this.authService.registerUser(userEntity)
+        );
+        String token = jwtUtil.signToken(user);
+        return ResponseEntity.ok(UserToken.generateUserTokenResponse(user , token));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
-        UserResponseDTO user = this.authService.loginUser(loginRequestDTO);
+        UserEntity userEntity = AuthMapper.mapLoginDTOToUserEntity(loginRequestDTO);
+        UserResponseDTO user = UserMapper.mapUserEntityToUserResponseDTO(
+                this.authService.loginUser(userEntity)
+        );
         String token = this.jwtUtil.signToken(user);
         return ResponseEntity.ok(UserToken.generateUserTokenResponse(user , token));
     }
