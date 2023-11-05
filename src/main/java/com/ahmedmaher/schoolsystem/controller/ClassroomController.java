@@ -3,20 +3,16 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
-import com.ahmedmaher.schoolsystem.config.EndpointConfig;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
-import com.ahmedmaher.schoolsystem.util.mapper.SchoolMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(EndpointConfig.CLASSROOM)
+@RequestMapping("${app.config.backend.classroom.base-uri}")
 public class ClassroomController {
 
     private final ClassroomService classroomService;
@@ -34,7 +30,7 @@ public class ClassroomController {
         this.classroomService = classroomService;
     }
 
-    @GetMapping
+    @GetMapping("${app.config.backend.classroom.api.load-all-classrooms-uri}")
     public ResponseEntity<CustomResponseDTO<?>> getAllClassrooms(
             @PathVariable("schoolId") long schoolId ,
             @RequestParam(defaultValue = "0" ) int page ,
@@ -57,7 +53,7 @@ public class ClassroomController {
         return ResponseEntity.ok(customResponseDTO);
     }
 
-    @GetMapping("/{classroomId}")
+    @GetMapping("${app.config.backend.classroom.api.load-classroom-by-id-uri}")
     public ResponseEntity<ClassroomResponseDTO> getClassroom(@PathVariable("classroomId") Long classroomId){
         ClassroomEntity classroom = this.classroomService.getOne(classroomId);
         return ResponseEntity.ok(
@@ -65,8 +61,7 @@ public class ClassroomController {
         );
     }
 
-
-    @PostMapping
+    @PostMapping("${app.config.backend.classroom.api.create-classroom-uri}")
     public ResponseEntity<ClassroomResponseDTO> createClassroom(
             @PathVariable("schoolId") long schoolId,
             @Valid @RequestBody ClassroomRequestDTO classroomRequestDTO
@@ -79,7 +74,7 @@ public class ClassroomController {
                 ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(createdClassroom)
         );
     }
-    @PutMapping("/{classroomId}")
+    @PutMapping("${app.config.backend.classroom.api.load-classroom-by-id-uri}")
     public ResponseEntity<ClassroomResponseDTO> updateClassroom(
             @Valid @RequestBody() ClassroomRequestDTO classroomRequestDTO,
             @PathVariable("classroomId") long classroomId,
@@ -95,7 +90,7 @@ public class ClassroomController {
         );
     }
 
-    @GetMapping("/search")
+    @GetMapping("${app.config.backend.classroom.api.load-search-classrooms-uri}")
     public ResponseEntity<List<ClassroomResponseDTO>> searchSchool(
             @RequestParam String s
     ) {
@@ -107,7 +102,7 @@ public class ClassroomController {
         );
     }
 
-    @DeleteMapping("/{classroomId}")
+    @DeleteMapping("${app.config.backend.classroom.api.load-classroom-by-id-uri}")
     public ResponseEntity<?> deleteClassroom( @PathVariable("classroomId") long classroomId) {
         this.classroomService.deleteOne(classroomId);
         return ResponseEntity.noContent().build();

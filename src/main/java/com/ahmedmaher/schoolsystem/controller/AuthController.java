@@ -5,7 +5,6 @@ import com.ahmedmaher.schoolsystem.dto.auth.SignupRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.service.AuthService;
-import com.ahmedmaher.schoolsystem.config.EndpointConfig;
 import com.ahmedmaher.schoolsystem.util.JwtUtil;
 import com.ahmedmaher.schoolsystem.util.UserToken;
 import com.ahmedmaher.schoolsystem.util.mapper.AuthMapper;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(EndpointConfig.AUTH)
+@RequestMapping("${app.config.backend.auth.base-uri}")
 public class AuthController {
     private final AuthService authService;
     private final JwtUtil jwtUtil;
@@ -30,7 +29,7 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("/signup")
+    @PostMapping("${app.config.backend.auth.api.signup-uri}")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDTO signupRequestDTO) {
         UserEntity userEntity = AuthMapper.mapSignupDTOToUserEntity(signupRequestDTO);
         UserResponseDTO user = UserMapper.mapUserEntityToUserResponseDTO(
@@ -40,7 +39,7 @@ public class AuthController {
         return ResponseEntity.ok(UserToken.generateUserTokenResponse(user , token));
     }
 
-    @PostMapping("/login")
+    @PostMapping("${app.config.backend.auth.api.login-uri}")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         UserEntity userEntity = AuthMapper.mapLoginDTOToUserEntity(loginRequestDTO);
         UserResponseDTO user = UserMapper.mapUserEntityToUserResponseDTO(

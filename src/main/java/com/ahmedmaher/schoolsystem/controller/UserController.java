@@ -6,7 +6,6 @@ import com.ahmedmaher.schoolsystem.dto.user.UserUpdateRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
-import com.ahmedmaher.schoolsystem.config.EndpointConfig;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
 import jakarta.validation.Valid;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(EndpointConfig.USER)
+@RequestMapping("${app.config.backend.user.base-uri}")
 public class UserController {
 
     private final UserService userService;
@@ -35,7 +33,7 @@ public class UserController {
     }
 
 
-    @GetMapping
+    @GetMapping("${app.config.backend.user.api.load-all-users-uri}")
     public ResponseEntity<CustomResponseDTO<?>> getAllUsers(
             @RequestParam(defaultValue = "0" ) int page ,
             @RequestParam(defaultValue = "10" ) int size,
@@ -54,7 +52,7 @@ public class UserController {
         return ResponseEntity.ok(customResponseDTO);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable("userId") Long userId){
         return ResponseEntity.ok(
                 UserMapper.mapUserEntityToUserResponseDTO(
@@ -63,7 +61,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("/getMe")
+    @GetMapping("${app.config.backend.user.api.load-me-uri}")
     public ResponseEntity<UserResponseDTO> getMe(Authentication authentication) {
         String username = (String) authentication.getPrincipal();
         UserEntity user = this.userService.getByUsername(username);
@@ -72,7 +70,7 @@ public class UserController {
         );
     }
 
-    @PutMapping("/updateMe")
+    @PutMapping("${app.config.backend.user.base-uri}")
     public ResponseEntity<UserResponseDTO> updateMe(
             @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
             Authentication authentication
@@ -87,7 +85,7 @@ public class UserController {
         );
     }
 
-    @PostMapping
+    @PostMapping("${app.config.backend.user.api.create-user-uri}")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
         UserEntity userEntity = UserMapper.mapUserRequestDTOToUserEntity(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -98,7 +96,7 @@ public class UserController {
     }
 
 
-    @PutMapping("/{userId}")
+    @PutMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
             @PathVariable("userId") long userId
@@ -112,13 +110,13 @@ public class UserController {
     }
 
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<?> deleteUser( @PathVariable("userId") long userId) {
         this.userService.deleteOne(userId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
+    @GetMapping("${app.config.backend.user.api.load-search-users-uri}")
     public ResponseEntity<List<UserResponseDTO>> searchUser(
             @RequestParam String s
     ) {

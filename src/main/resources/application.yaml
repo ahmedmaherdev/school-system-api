@@ -1,0 +1,69 @@
+server:
+  port: 3000
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/school_system
+    username: school_system_user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl:
+        auto: update
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+logging:
+  file: app.log
+  level:
+    root: INFO
+  org:
+    springframework: WARN
+
+jwt:
+  secret: EDkSgdGptvg70eQXVrt3MPt46e3qG0
+  expireAt: 30
+upload:
+  location: /src/main/resources/static/userPhotos
+
+
+app:
+  config:
+    backend:
+      auth:
+        base-uri: /api/v1/auth
+        api:
+          login-uri: /login
+          signup-uri: /signup
+      user:
+        base-uri: /api/v1/users
+        api:
+          load-all-users-uri: /all
+          load-user-by-id-uri: /{userId}
+          load-me-uri: /getMe
+          load-search-users-uri: /search
+          create-user-uri: /createUser
+          update-me-uri: /updateMe
+      school:
+        base-uri: /api/v1/schools
+        api:
+          load-all-schools-uri: /all
+          load-school-by-id-uri: /{schoolId}
+          load-search-schools-uri: /search
+          create-school-uri: /createSchool
+      classroom:
+        base-uri: /api/v1/classrooms
+        api:
+          load-all-classrooms-uri: /all
+          load-classroom-by-id-uri: /{classroomId}
+          load-search-classrooms-uri: /search
+          create-classroom-uri: /createClassroom
+      enrollment:
+        base-uri: /api/v1/enrollments
+        api:
+          create-enrollment-uri: /createEnrollment

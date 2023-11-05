@@ -8,11 +8,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(EndpointConfig.ENROLLMENT)
+@RequestMapping("${app.config.backend.enrollment.base-uri}")
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
@@ -21,9 +20,8 @@ public class EnrollmentController {
         this.enrollmentService = enrollmentService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN' , 'SUPERADMIN')")
 
-    @PostMapping
+    @PostMapping("${app.config.backend.enrollment.api.create-enrollment-uri}")
     public ResponseEntity<EnrollmentResponseDTO> createEnrollment(@Valid @RequestBody EnrollmentRequestDTO enrollmentRequestDTO,
                                                                   @PathVariable("schoolId") long schoolId
     ) {

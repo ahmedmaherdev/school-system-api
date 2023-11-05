@@ -3,13 +3,10 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
 import com.ahmedmaher.schoolsystem.service.school.SchoolService;
-import com.ahmedmaher.schoolsystem.config.EndpointConfig;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.SchoolMapper;
-import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(EndpointConfig.SCHOOL)
+@RequestMapping("${app.config.backend.school.base-uri}")
 public class SchoolController {
     private final SchoolService schoolService;
     @Autowired
@@ -31,7 +28,7 @@ public class SchoolController {
         this.schoolService = schoolService;
     }
 
-    @GetMapping
+    @GetMapping("${app.config.backend.school.api.load-all-schools-uri}")
     public ResponseEntity<CustomResponseDTO<?>> getAllSchools(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -50,7 +47,7 @@ public class SchoolController {
         return ResponseEntity.ok(customResponseDTO);
     }
 
-    @GetMapping("/{schoolId}")
+    @GetMapping("${app.config.backend.school.api.load-school-by-id-uri}")
     public ResponseEntity<SchoolResponseDTO> getSchool(@PathVariable("schoolId") Long schoolId){
         SchoolEntity schoolEntity = this.schoolService.getOne(schoolId);
         return ResponseEntity.ok(
@@ -58,37 +55,37 @@ public class SchoolController {
         );
     }
 
-    @PostMapping
+    @PostMapping("${app.config.backend.school.api.create-school-uri}")
     public ResponseEntity<SchoolResponseDTO> createSchool(@Valid @RequestBody SchoolRequestDTO schoolRequestDTO) {
         SchoolEntity schoolEntity = SchoolMapper.mapSchoolRequestToSchoolEntity(schoolRequestDTO);
-        SchoolEntity createdSchool = this.schoolService.createOne(schoolEntity);
+        this.schoolService.createOne(schoolEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                SchoolMapper.mapSchoolEntityToSchoolResponseDTO(createdSchool)
+                SchoolMapper.mapSchoolEntityToSchoolResponseDTO(schoolEntity)
         );
     }
 
 
-    @PutMapping("/{schoolId}")
+    @PutMapping("${app.config.backend.school.api.load-school-by-id-uri}")
     public ResponseEntity<SchoolResponseDTO> updateSchool(
             @Valid @RequestBody() SchoolRequestDTO schoolRequestDTO,
             @PathVariable("schoolId") long schoolId
     ) {
         SchoolEntity schoolEntity = SchoolMapper.mapSchoolRequestToSchoolEntity(schoolRequestDTO);
-        SchoolEntity updatedSchool = this.schoolService.updateOne(
+        this.schoolService.updateOne(
                 schoolId,
                 schoolEntity
         );
         return ResponseEntity.ok(
-                SchoolMapper.mapSchoolEntityToSchoolResponseDTO(updatedSchool)
+                SchoolMapper.mapSchoolEntityToSchoolResponseDTO(schoolEntity)
         );
     }
-    @DeleteMapping("/{schoolId}")
+    @DeleteMapping("${app.config.backend.school.api.load-school-by-id-uri}")
     public ResponseEntity<?> deleteSchool( @PathVariable("schoolId") long schoolId) {
        this.schoolService.deleteOne(schoolId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
+    @GetMapping("${app.config.backend.school.api.load-search-schools-uri}")
     public ResponseEntity<List<SchoolResponseDTO>> searchSchool(
             @RequestParam String s
     ) {
