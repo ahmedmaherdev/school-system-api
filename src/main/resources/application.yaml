@@ -57,13 +57,13 @@ app:
           load-search-schools-uri: /search
           create-school-uri: /createSchool
       classroom:
-        base-uri: /api/v1/classrooms
+        base-uri: /api/v1/schools/{schoolId}/classrooms
         api:
           load-all-classrooms-uri: /all
           load-classroom-by-id-uri: /{classroomId}
           load-search-classrooms-uri: /search
           create-classroom-uri: /createClassroom
       enrollment:
-        base-uri: /api/v1/enrollments
+        base-uri: /api/v1/schools/{schoolId}/enrollments
         api:
           create-enrollment-uri: /createEnrollment

@@ -4,9 +4,11 @@ import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
+import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.school.SchoolService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.SchoolMapper;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -54,6 +56,7 @@ public class SchoolController {
                 SchoolMapper.mapSchoolEntityToSchoolResponseDTO(schoolEntity)
         );
     }
+    @RolesAllowed( UserRole.Names.SUPERADMIN)
 
     @PostMapping("${app.config.backend.school.api.create-school-uri}")
     public ResponseEntity<SchoolResponseDTO> createSchool(@Valid @RequestBody SchoolRequestDTO schoolRequestDTO) {
@@ -64,6 +67,7 @@ public class SchoolController {
         );
     }
 
+    @RolesAllowed( UserRole.Names.SUPERADMIN)
 
     @PutMapping("${app.config.backend.school.api.load-school-by-id-uri}")
     public ResponseEntity<SchoolResponseDTO> updateSchool(
@@ -79,6 +83,8 @@ public class SchoolController {
                 SchoolMapper.mapSchoolEntityToSchoolResponseDTO(schoolEntity)
         );
     }
+    @RolesAllowed( UserRole.Names.SUPERADMIN)
+
     @DeleteMapping("${app.config.backend.school.api.load-school-by-id-uri}")
     public ResponseEntity<?> deleteSchool( @PathVariable("schoolId") long schoolId) {
        this.schoolService.deleteOne(schoolId);

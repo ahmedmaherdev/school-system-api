@@ -5,9 +5,11 @@ import com.ahmedmaher.schoolsystem.dto.user.UserRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserUpdateRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.entity.UserEntity;
+import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -70,7 +72,9 @@ public class UserController {
         );
     }
 
-    @PutMapping("${app.config.backend.user.base-uri}")
+    @RolesAllowed( UserRole.Names.SUPERADMIN)
+
+    @PutMapping("${app.config.backend.user.api.update-me-uri}")
     public ResponseEntity<UserResponseDTO> updateMe(
             @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
             Authentication authentication
@@ -84,6 +88,7 @@ public class UserController {
                 )
         );
     }
+    @RolesAllowed( UserRole.Names.SUPERADMIN)
 
     @PostMapping("${app.config.backend.user.api.create-user-uri}")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
@@ -95,6 +100,7 @@ public class UserController {
         );
     }
 
+    @RolesAllowed( UserRole.Names.SUPERADMIN)
 
     @PutMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<UserResponseDTO> updateUser(
@@ -109,6 +115,7 @@ public class UserController {
         );
     }
 
+    @RolesAllowed( UserRole.Names.SUPERADMIN)
 
     @DeleteMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<?> deleteUser( @PathVariable("userId") long userId) {

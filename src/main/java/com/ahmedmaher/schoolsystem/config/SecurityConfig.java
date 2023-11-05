@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,47 +22,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true , jsr250Enabled = true)
 public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @Value("${app.config.backend.auth.base-uri}")
     private String authBaseURI;
-    @Value("${app.config.backend.user.base-uri}")
-    private String userBaseURI;
-
-    @Value("${app.config.backend.user.api.load-user-by-id-uri}")
-    private String userLoadByIdURI;
-
-    @Value("${app.config.backend.user.api.create-user-uri}")
-    private String userCreateURI;
-
-    @Value("${app.config.backend.school.base-uri}")
-    private String schoolBaseURI;
-
-    @Value("${app.config.backend.school.api.load-school-by-id-uri}")
-    private String schoolLoadByIdURI;
-
-    @Value("${app.config.backend.school.api.create-school-uri}")
-    private String schoolCreateURI;
-
-    @Value("${app.config.backend.classroom.base-uri}")
-    private String classroomBaseURI;
-
-    @Value("${app.config.backend.classroom.api.load-classroom-by-id-uri}")
-    private String classroomLoadByIdURI;
-
-    @Value("${app.config.backend.classroom.api.create-classroom-uri}")
-    private String classroomCreateURI;
-
-    @Value("${app.config.backend.enrollment.base-uri}")
-    private String enrollmentBaseURI;
-
-    @Value("${app.config.backend.enrollment.api.create-enrollment-uri}")
-    private String enrollmentCreateURI;
-
-
     @Autowired
     public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.userDetailsService = userDetailsService;
@@ -79,27 +46,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
-                                .requestMatchers(this.authBaseURI + "/**").permitAll()
+                                .requestMatchers( authBaseURI + "/**").permitAll()
                                 .requestMatchers("/userPhotos/**").permitAll()
-
-                                // make create, update and delete school to super admin
-                                .requestMatchers(HttpMethod.POST , schoolBaseURI + schoolCreateURI).hasAuthority(UserRole.SUPERADMIN.name())
-                                .requestMatchers(HttpMethod.PUT , schoolBaseURI + schoolLoadByIdURI).hasAuthority(UserRole.SUPERADMIN.name())
-                                .requestMatchers(HttpMethod.DELETE , schoolBaseURI + schoolLoadByIdURI).hasAuthority(UserRole.SUPERADMIN.name())
-
-                                // make create, update and delete classroom to admin
-                                .requestMatchers(HttpMethod.POST , classroomBaseURI + classroomCreateURI).hasAuthority(UserRole.ADMIN.name())
-                                .requestMatchers(HttpMethod.PUT , classroomBaseURI + classroomLoadByIdURI).hasAuthority(UserRole.ADMIN.name())
-                                .requestMatchers(HttpMethod.DELETE , classroomBaseURI + classroomLoadByIdURI).hasAuthority(UserRole.ADMIN.name())
-
-                                // make create, update and delete user to admin
-                                .requestMatchers(HttpMethod.POST , userBaseURI + userCreateURI).hasAuthority(UserRole.SUPERADMIN.name())
-                                .requestMatchers(HttpMethod.PUT , userBaseURI + userLoadByIdURI).hasAuthority(UserRole.SUPERADMIN.name())
-                                .requestMatchers(HttpMethod.DELETE , userBaseURI + userLoadByIdURI).hasAuthority(UserRole.SUPERADMIN.name())
-
-                                // make create enrollment to admin
-                                .requestMatchers(HttpMethod.DELETE , enrollmentBaseURI + enrollmentCreateURI).hasAuthority(UserRole.ADMIN.name())
-
                                 .anyRequest().authenticated()
                 ).sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS
@@ -111,5 +59,10 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public GrantedAuthorityDefaults grantedAuthorityDefaults() {
+        return new GrantedAuthorityDefaults("");
     }
 }
