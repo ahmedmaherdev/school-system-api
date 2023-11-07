@@ -73,7 +73,6 @@ public class UserController {
         );
     }
 
-    @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PutMapping("${app.config.backend.user.api.update-me-uri}")
     public ResponseEntity<UserResponseDTO> updateMe(
             @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
