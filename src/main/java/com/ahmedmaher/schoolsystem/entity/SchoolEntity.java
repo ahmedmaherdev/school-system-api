@@ -39,5 +39,4 @@ public class SchoolEntity extends BaseEntity {
         this.updatedAt = updatedAt;
     }
 
-
 }

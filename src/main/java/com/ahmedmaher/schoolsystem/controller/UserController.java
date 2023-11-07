@@ -39,7 +39,8 @@ public class UserController {
     public ResponseEntity<CustomResponseDTO<?>> getAllUsers(
             @RequestParam(defaultValue = "0" ) int page ,
             @RequestParam(defaultValue = "10" ) int size,
-            @RequestParam(defaultValue = "createdAt") String sort) {
+            @RequestParam(defaultValue = "createdAt") String sort
+    ) {
 
         AppFeatures appFeatures = new AppFeatures(sort , size , page);
         List<UserEntity> userEntities = this.userService.getAll(appFeatures.splitPageable());
@@ -73,7 +74,6 @@ public class UserController {
     }
 
     @RolesAllowed( UserRole.Names.SUPERADMIN)
-
     @PutMapping("${app.config.backend.user.api.update-me-uri}")
     public ResponseEntity<UserResponseDTO> updateMe(
             @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
@@ -89,7 +89,6 @@ public class UserController {
         );
     }
     @RolesAllowed( UserRole.Names.SUPERADMIN)
-
     @PostMapping("${app.config.backend.user.api.create-user-uri}")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
         UserEntity userEntity = UserMapper.mapUserRequestDTOToUserEntity(userDTO);
@@ -101,7 +100,6 @@ public class UserController {
     }
 
     @RolesAllowed( UserRole.Names.SUPERADMIN)
-
     @PutMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
@@ -116,7 +114,6 @@ public class UserController {
     }
 
     @RolesAllowed( UserRole.Names.SUPERADMIN)
-
     @DeleteMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<?> deleteUser( @PathVariable("userId") long userId) {
         this.userService.deleteOne(userId);

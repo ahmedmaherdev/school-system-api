@@ -70,15 +70,16 @@ public class UserServiceImp implements UserService {
         UserEntity userEntity = this.userRepository.findById(id).orElse(null);
         if(userEntity == null)
             throw new NotFoundException("User not found with id: " + id);
-        entity.setId(id);
-        entity.setUpdatedAt(LocalDateTime.now());
-        entity.setCreatedAt(userEntity.getCreatedAt());
+        userEntity.setName(entity.getName());
+        userEntity.setEmail(entity.getEmail());
+        userEntity.setUsername(entity.getUsername());
+        userEntity.setUpdatedAt(LocalDateTime.now());
         try {
-            this.userRepository.save(entity);
+            this.userRepository.save(userEntity);
         }catch (DataIntegrityViolationException ex){
             throw new DuplicatedException("Duplicated fields: please, provide another value for username or email.");
         }
-        return entity;
+        return userEntity;
     }
 
     @Override

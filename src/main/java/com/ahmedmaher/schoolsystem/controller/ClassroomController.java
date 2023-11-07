@@ -64,22 +64,19 @@ public class ClassroomController {
     }
 
     @RolesAllowed({UserRole.Names.ADMIN , UserRole.Names.SUPERADMIN})
-
     @PostMapping("${app.config.backend.classroom.api.create-classroom-uri}")
     public ResponseEntity<ClassroomResponseDTO> createClassroom(
             @PathVariable("schoolId") long schoolId,
             @Valid @RequestBody ClassroomRequestDTO classroomRequestDTO
     ) {
         classroomRequestDTO.setSchoolId(schoolId);
-        ClassroomEntity createdClassroom = this.classroomService.createOne(
-            ClassroomMapper.mapClassroomRequestToClassroomEntity(classroomRequestDTO)
-        );
+        ClassroomEntity classroomEntity = ClassroomMapper.mapClassroomRequestToClassroomEntity(classroomRequestDTO);
+        this.classroomService.createOne(classroomEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(createdClassroom)
+                ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(classroomEntity)
         );
     }
     @RolesAllowed({UserRole.Names.ADMIN , UserRole.Names.SUPERADMIN})
-
     @PutMapping("${app.config.backend.classroom.api.load-classroom-by-id-uri}")
     public ResponseEntity<ClassroomResponseDTO> updateClassroom(
             @Valid @RequestBody() ClassroomRequestDTO classroomRequestDTO,
@@ -87,12 +84,13 @@ public class ClassroomController {
             @PathVariable("schoolId") long schoolId
     ) {
         classroomRequestDTO.setSchoolId(schoolId);
-        ClassroomEntity updatedClassroom = this.classroomService.updateOne(
+        ClassroomEntity classroomEntity = ClassroomMapper.mapClassroomRequestToClassroomEntity(classroomRequestDTO);
+        this.classroomService.updateOne(
                 classroomId ,
-                ClassroomMapper.mapClassroomRequestToClassroomEntity(classroomRequestDTO)
+               classroomEntity
         );
         return ResponseEntity.ok(
-                ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(updatedClassroom)
+                ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(classroomEntity)
         );
     }
 
