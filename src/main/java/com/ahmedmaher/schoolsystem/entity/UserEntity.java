@@ -29,6 +29,10 @@ public class UserEntity extends BaseEntity {
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     private Set<UserRole> roles;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_detail_id")
+    private StudentDetail studentDetail;
+
     public Long getId() {
         return this.id;
     }

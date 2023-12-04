@@ -1,6 +1,5 @@
 package com.ahmedmaher.schoolsystem.advice;
 
-
 import com.ahmedmaher.schoolsystem.dto.CustomErrorResponseDTO;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
-
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
