@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "studentDetail")
 public class StudentDetail extends BaseEntity {
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "school_id")
     private SchoolEntity school;
 }

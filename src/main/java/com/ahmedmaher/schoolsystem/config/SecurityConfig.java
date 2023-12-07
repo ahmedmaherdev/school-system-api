@@ -43,13 +43,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                        authorizationManagerRequestMatcherRegistry
-                                .requestMatchers( authBaseURI + "/**").permitAll()
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers( authBaseURI + "/**").permitAll()
                                 .requestMatchers("/userPhotos/**").permitAll()
                                 .anyRequest().authenticated()
-                ).sessionManagement(httpSecuritySessionManagementConfigurer ->
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS
+                ).sessionManagement(httpConf ->
+                        httpConf.sessionCreationPolicy(SessionCreationPolicy.STATELESS
                         )
                 ).addFilterBefore(jwtAuthorizationFilter , UsernamePasswordAuthenticationFilter.class);
         return http.build();

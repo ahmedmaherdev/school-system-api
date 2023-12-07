@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "classroom")
 public class ClassroomEntity extends BaseEntity {
+
+    @Column(name = "name")
     private String name;
 
     @Column(nullable = false , columnDefinition = "integer default 0")
