@@ -8,5 +8,5 @@ public class SchoolsystemApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SchoolsystemApplication.class, args);
 	}
-	
+
 }

@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -31,13 +33,24 @@ public class UserEntity extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "student_detail_id")
-    private StudentDetail studentDetail;
+    private StudentDetailEntity studentDetailEntity;
+
+    @ManyToMany(cascade = {CascadeType.MERGE , CascadeType.MERGE , CascadeType.PERSIST , CascadeType.REFRESH})
+    @JoinTable(name = "enrollment" ,joinColumns = @JoinColumn(name = "student_id") ,
+            inverseJoinColumns = @JoinColumn(name = "classroom_id"))
+    private List<ClassroomEntity> classrooms;
+
 
     public Long getId() {
         return this.id;
     }
     public void setId(long id) {
         this.id = id;
+    }
+
+    public void addClassroom(ClassroomEntity classroom) {
+        if(classrooms == null) classrooms = new ArrayList<>();
+        classrooms.add(classroom);
     }
 
     public LocalDateTime getCreatedAt() {

@@ -2,7 +2,6 @@ package com.ahmedmaher.schoolsystem.service;
 
 import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.repository.UserRepository;
-import com.ahmedmaher.schoolsystem.util.mapper.EnrollmentMapper;
 import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;

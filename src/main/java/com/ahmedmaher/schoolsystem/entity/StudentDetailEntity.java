@@ -10,8 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "studentDetail")
-public class StudentDetail extends BaseEntity {
+public class StudentDetailEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @OneToOne
     @JoinColumn(name = "school_id")
     private SchoolEntity school;

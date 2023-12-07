@@ -3,6 +3,8 @@ package com.ahmedmaher.schoolsystem.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -22,6 +24,11 @@ public class ClassroomEntity extends BaseEntity {
     @JoinColumn(name = "school_id")
     private SchoolEntity school;
 
+    @ManyToMany(cascade = {CascadeType.MERGE , CascadeType.MERGE , CascadeType.PERSIST , CascadeType.REFRESH, CascadeType.REMOVE})
+    @JoinTable(name = "enrollment" ,joinColumns = @JoinColumn(name = "classroom_id") ,
+            inverseJoinColumns = @JoinColumn(name= "student_id"))
+    private List<UserEntity> students;
+
     public Long getId() {
         return this.id;
     }
@@ -29,6 +36,11 @@ public class ClassroomEntity extends BaseEntity {
         this.id = id;
     }
 
+
+    public void addStudent(UserEntity student) {
+        if(students == null) students = new ArrayList<>();
+        students.add(student);
+    }
 
     public LocalDateTime getCreatedAt() {
         return this.createdAt;

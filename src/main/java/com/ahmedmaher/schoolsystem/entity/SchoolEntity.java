@@ -21,7 +21,7 @@ public class SchoolEntity extends BaseEntity {
     @Column(name = "address")
     private String address;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "school" ,cascade = CascadeType.ALL)
     private List<ClassroomEntity> classrooms;
 
     public void addClassroom(ClassroomEntity classroom) {
