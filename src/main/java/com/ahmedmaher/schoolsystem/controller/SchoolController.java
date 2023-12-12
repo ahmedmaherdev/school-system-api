@@ -38,7 +38,7 @@ public class SchoolController {
     ) {
         AppFeatures appFeatures = new AppFeatures(sort , size , page);
         List<SchoolEntity> schoolEntities = this.schoolService.getAll(appFeatures.splitPageable());
-        List<SchoolResponseDTO> schools = SchoolMapper.mapSchoolEntitiesToSchoolResponseDTOs(schoolEntities);
+        List<SchoolResponseDTO> schools = SchoolMapper.mapToSchoolResponseDTOs(schoolEntities);
         long allCount = this.schoolService.getAllSchoolsCount();
         int count = schools.size();
 
@@ -53,17 +53,17 @@ public class SchoolController {
     public ResponseEntity<SchoolResponseDTO> getSchool(@PathVariable("schoolId") Long schoolId){
         SchoolEntity schoolEntity = this.schoolService.getOne(schoolId);
         return ResponseEntity.ok(
-                SchoolMapper.mapSchoolEntityToSchoolResponseDTO(schoolEntity)
+                SchoolMapper.mapToSchoolResponseDTO(schoolEntity)
         );
     }
 
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PostMapping("${app.config.backend.school.api.create-school-uri}")
     public ResponseEntity<SchoolResponseDTO> createSchool(@Valid @RequestBody SchoolRequestDTO schoolRequestDTO) {
-        SchoolEntity schoolEntity = SchoolMapper.mapSchoolRequestToSchoolEntity(schoolRequestDTO);
+        SchoolEntity schoolEntity = SchoolMapper.mapToSchoolEntity(schoolRequestDTO);
         this.schoolService.createOne(schoolEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                SchoolMapper.mapSchoolEntityToSchoolResponseDTO(schoolEntity)
+                SchoolMapper.mapToSchoolResponseDTO(schoolEntity)
         );
     }
 
@@ -73,13 +73,13 @@ public class SchoolController {
             @Valid @RequestBody() SchoolRequestDTO schoolRequestDTO,
             @PathVariable("schoolId") long schoolId
     ) {
-        SchoolEntity schoolEntity = SchoolMapper.mapSchoolRequestToSchoolEntity(schoolRequestDTO);
+        SchoolEntity schoolEntity = SchoolMapper.mapToSchoolEntity(schoolRequestDTO);
         this.schoolService.updateOne(
                 schoolId,
                 schoolEntity
         );
         return ResponseEntity.ok(
-                SchoolMapper.mapSchoolEntityToSchoolResponseDTO(schoolEntity)
+                SchoolMapper.mapToSchoolResponseDTO(schoolEntity)
         );
     }
     @RolesAllowed( UserRole.Names.SUPERADMIN)
@@ -95,7 +95,7 @@ public class SchoolController {
     ) {
         Pageable pageable = PageRequest.of(0 , 10);
         return ResponseEntity.ok(
-                SchoolMapper.mapSchoolEntitiesToSchoolResponseDTOs(
+                SchoolMapper.mapToSchoolResponseDTOs(
                         this.schoolService.search(s , pageable)
                 )
         );

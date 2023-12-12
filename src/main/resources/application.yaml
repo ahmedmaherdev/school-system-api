@@ -49,6 +49,9 @@ app:
           load-search-users-uri: /search
           create-user-uri: /createUser
           update-me-uri: /updateMe
+          load-student-enrollments-uri: /{studentId}/enrollments
+          create-student-enrollment-uri: /{studentId}/enrollments/{classroomId}
+          remove-student-enrollment-uri: /{studentId}/enrollments/{classroomId}
       school:
         base-uri: /api/v1/schools
         api:

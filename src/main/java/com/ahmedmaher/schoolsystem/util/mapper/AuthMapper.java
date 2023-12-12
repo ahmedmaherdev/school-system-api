@@ -6,7 +6,7 @@ import com.ahmedmaher.schoolsystem.entity.UserEntity;
 
 public class AuthMapper {
 
-    public static UserEntity mapSignupDTOToUserEntity(SignupRequestDTO signupRequestDTO){
+    public static UserEntity mapToUserEntity(SignupRequestDTO signupRequestDTO){
         UserEntity userEntity = new UserEntity();
         userEntity.setName(signupRequestDTO.getName());
         userEntity.setEmail(signupRequestDTO.getEmail());
@@ -15,7 +15,7 @@ public class AuthMapper {
         return userEntity;
     }
 
-    public static UserEntity mapLoginDTOToUserEntity(LoginRequestDTO loginRequestDTO){
+    public static UserEntity mapToUserEntity(LoginRequestDTO loginRequestDTO){
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(loginRequestDTO.getUsername());
         userEntity.setPassword(loginRequestDTO.getPassword());

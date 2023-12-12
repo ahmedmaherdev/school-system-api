@@ -53,6 +53,10 @@ public class UserEntity extends BaseEntity {
         classrooms.add(classroom);
     }
 
+    public void removeClassroom(ClassroomEntity classroom) {
+        classrooms.remove(classroom);
+    }
+
     public LocalDateTime getCreatedAt() {
         return this.createdAt;
     }

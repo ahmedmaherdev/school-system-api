@@ -14,20 +14,20 @@ import java.util.stream.Collectors;
 
 public class UserMapper {
 
-    public static UserResponseDTO mapUserEntityToUserResponseDTO(UserEntity userEntity){
+    public static UserResponseDTO mapToUserResponseDTO(UserEntity userEntity){
         return new UserResponseDTO(
                 userEntity.getId(),
                 userEntity.getName(),
                 userEntity.getUsername(),
                 userEntity.getEmail(),
-                mapUserRolesToStringSet(userEntity.getRoles()),
+                mapToStringSet(userEntity.getRoles()),
                 userEntity.getPhoto(),
                 userEntity.getCreatedAt(),
                 userEntity.getUpdatedAt()
         );
     }
 
-    public static UserEntity mapUserUpdateRequestDTOToUserEntity(UserUpdateRequestDTO userUpdateRequestDTO){
+    public static UserEntity mapToUserEntity(UserUpdateRequestDTO userUpdateRequestDTO){
         UserEntity userEntity = new UserEntity();
         userEntity.setName(userUpdateRequestDTO.getName());
         userEntity.setEmail(userUpdateRequestDTO.getEmail());
@@ -36,33 +36,33 @@ public class UserMapper {
         return userEntity;
     }
 
-    public static UserEntity mapUserRequestDTOToUserEntity(UserRequestDTO userRequestDTO){
+    public static UserEntity mapToUserEntity(UserRequestDTO userRequestDTO){
         UserEntity userEntity = new UserEntity();
         userEntity.setName(userRequestDTO.getName());
         userEntity.setEmail(userRequestDTO.getEmail());
         userEntity.setUsername(userRequestDTO.getUsername());
         userEntity.setPassword(userRequestDTO.getPassword());
         userEntity.setRoles(
-                mapStringSetToUserRoles(
+                mapToUserRoles(
                         userRequestDTO.getRoles()
                 )
         );
         return userEntity;
     }
 
-    public static List<UserResponseDTO> mapUserEntitiesToUserResponseDTOs(List<UserEntity> UserEntities){
-        return UserEntities.stream().map(UserMapper::mapUserEntityToUserResponseDTO).collect(Collectors.toList());
+    public static List<UserResponseDTO> mapToUserResponseDTOs(List<UserEntity> UserEntities){
+        return UserEntities.stream().map(UserMapper::mapToUserResponseDTO).collect(Collectors.toList());
     }
 
-    public static List<SimpleGrantedAuthority> mapRolesToGrantedAuthority(Set<UserRole> userRoles){
+    public static List<SimpleGrantedAuthority> mapToGrantedAuthority(Set<UserRole> userRoles){
         return userRoles.stream().map(userRole -> new SimpleGrantedAuthority(userRole.name())).collect(Collectors.toList());
     }
 
-    public static Set<String> mapUserRolesToStringSet(Set<UserRole> userRoles) {
+    public static Set<String> mapToStringSet(Set<UserRole> userRoles) {
         return userRoles.stream().map(Enum::name).collect(Collectors.toSet());
     }
 
-    public static Set<UserRole> mapStringSetToUserRoles(Set<String> roles) {
+    public static Set<UserRole> mapToUserRoles(Set<String> roles) {
         Set<UserRole> userRoles = new HashSet<>();
         for (String role: roles) {
             try{

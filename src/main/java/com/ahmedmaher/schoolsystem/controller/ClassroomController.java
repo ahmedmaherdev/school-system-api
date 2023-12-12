@@ -44,7 +44,7 @@ public class ClassroomController {
                 schoolId ,
                 appFeatures.splitPageable()
         );
-        List<ClassroomResponseDTO> classrooms = ClassroomMapper.mapClassroomEntitiesToClassroomResponseDTOs(classroomEntities);
+        List<ClassroomResponseDTO> classrooms = ClassroomMapper.mapToClassroomResponseDTOs(classroomEntities);
         long allCount = this.classroomService.getAllClassroomsCount(schoolId);
         int count = classrooms.size();
 
@@ -59,7 +59,7 @@ public class ClassroomController {
     public ResponseEntity<ClassroomResponseDTO> getClassroom(@PathVariable("classroomId") Long classroomId){
         ClassroomEntity classroom = this.classroomService.getOne(classroomId);
         return ResponseEntity.ok(
-                ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(classroom)
+                ClassroomMapper.mapToClassroomResponseDTO(classroom)
         );
     }
 
@@ -70,10 +70,10 @@ public class ClassroomController {
             @Valid @RequestBody ClassroomRequestDTO classroomRequestDTO
     ) {
         classroomRequestDTO.setSchoolId(schoolId);
-        ClassroomEntity classroomEntity = ClassroomMapper.mapClassroomRequestToClassroomEntity(classroomRequestDTO);
+        ClassroomEntity classroomEntity = ClassroomMapper.mapToClassroomEntity(classroomRequestDTO);
         this.classroomService.createOne(classroomEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(classroomEntity)
+                ClassroomMapper.mapToClassroomResponseDTO(classroomEntity)
         );
     }
     @RolesAllowed({UserRole.Names.ADMIN , UserRole.Names.SUPERADMIN})
@@ -84,13 +84,13 @@ public class ClassroomController {
             @PathVariable("schoolId") long schoolId
     ) {
         classroomRequestDTO.setSchoolId(schoolId);
-        ClassroomEntity classroomEntity = ClassroomMapper.mapClassroomRequestToClassroomEntity(classroomRequestDTO);
+        ClassroomEntity classroomEntity = ClassroomMapper.mapToClassroomEntity(classroomRequestDTO);
         this.classroomService.updateOne(
                 classroomId ,
                classroomEntity
         );
         return ResponseEntity.ok(
-                ClassroomMapper.mapClassroomEntityToClassroomResponseDTO(classroomEntity)
+                ClassroomMapper.mapToClassroomResponseDTO(classroomEntity)
         );
     }
 
@@ -100,7 +100,7 @@ public class ClassroomController {
     ) {
         Pageable pageable = PageRequest.of(0 , 10);
         return ResponseEntity.ok(
-                ClassroomMapper.mapClassroomEntitiesToClassroomResponseDTOs(
+                ClassroomMapper.mapToClassroomResponseDTOs(
                         this.classroomService.search(s , pageable)
                 )
         );

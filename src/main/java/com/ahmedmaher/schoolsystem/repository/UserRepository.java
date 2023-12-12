@@ -14,4 +14,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT u FROM UserEntity u WHERE u.name LIKE %:word% ORDER BY u.name")
     List<UserEntity> searchBy(String word, Pageable pageable);
+
+    @Query("SELECT u FROM UserEntity u JOIN FETCH u.classrooms WHERE u.id = :studentId")
+    UserEntity getStudentWithEnrollments(long studentId);
+
 }

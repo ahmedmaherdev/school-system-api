@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class SchoolMapper {
 
-    public static SchoolResponseDTO mapSchoolEntityToSchoolResponseDTO(SchoolEntity schoolEntity){
+    public static SchoolResponseDTO mapToSchoolResponseDTO(SchoolEntity schoolEntity){
         return new SchoolResponseDTO(schoolEntity.getId(),
                 schoolEntity.getName(),
                 schoolEntity.getAddress(),
@@ -17,15 +17,15 @@ public class SchoolMapper {
         );
     }
 
-    public static SchoolEntity mapSchoolRequestToSchoolEntity(SchoolRequestDTO schoolRequestDTO){
+    public static SchoolEntity mapToSchoolEntity(SchoolRequestDTO schoolRequestDTO){
         SchoolEntity schoolEntity = new SchoolEntity();
         schoolEntity.setName(schoolRequestDTO.getName());
         schoolEntity.setAddress(schoolRequestDTO.getAddress());
         return schoolEntity;
     }
 
-    public static List<SchoolResponseDTO> mapSchoolEntitiesToSchoolResponseDTOs(List<SchoolEntity> schoolEntities){
-        return schoolEntities.stream().map(SchoolMapper::mapSchoolEntityToSchoolResponseDTO).collect(Collectors.toList());
+    public static List<SchoolResponseDTO> mapToSchoolResponseDTOs(List<SchoolEntity> schoolEntities){
+        return schoolEntities.stream().map(SchoolMapper::mapToSchoolResponseDTO).collect(Collectors.toList());
     }
 
 }

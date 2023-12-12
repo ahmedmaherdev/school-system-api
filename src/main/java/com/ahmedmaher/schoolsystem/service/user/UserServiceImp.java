@@ -1,10 +1,11 @@
 package com.ahmedmaher.schoolsystem.service.user;
 
-
+import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
 import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.repository.UserRepository;
+import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -12,39 +13,40 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
+    private  final ClassroomService classroomService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImp(
-            UserRepository userRepository,
-            BCryptPasswordEncoder bCryptPasswordEncoder
-    ) {
+    public UserServiceImp(UserRepository userRepository, ClassroomService classroomService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
+        this.classroomService = classroomService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
+
+
+
     @Override
     public List<UserEntity> getAll(Pageable pageable) {
-        Page<UserEntity> users = this.userRepository.findAll(pageable);
+        Page<UserEntity> users = userRepository.findAll(pageable);
         return users.getContent();
     }
 
     @Override
     public UserEntity getOne(long id) throws NotFoundException {
-        UserEntity userEntity = this.userRepository.findById(id).orElse(null);
+        UserEntity userEntity = userRepository.findById(id).orElse(null);
         if(userEntity == null) throw new NotFoundException("User not found with id: " + id);
         return userEntity;
     }
 
     @Override
     public UserEntity getByUsername(String username) throws NotFoundException {
-        UserEntity userEntity = this.userRepository.findByUsername(username);
+        UserEntity userEntity = userRepository.findByUsername(username);
         if(userEntity == null) throw new NotFoundException("User not found with username: " + username);
         return userEntity;
     }
@@ -58,7 +60,7 @@ public class UserServiceImp implements UserService {
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
         try {
-            this.userRepository.save(entity);
+            userRepository.save(entity);
         }catch (DataIntegrityViolationException ex){
             throw new DuplicatedException("Duplicated fields: please, provide another value for username or email.");
         }
@@ -67,7 +69,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserEntity updateOne(long id, UserEntity entity) throws NotFoundException {
-        UserEntity userEntity = this.userRepository.findById(id).orElse(null);
+        UserEntity userEntity = userRepository.findById(id).orElse(null);
         if(userEntity == null)
             throw new NotFoundException("User not found with id: " + id);
         userEntity.setName(entity.getName());
@@ -75,7 +77,7 @@ public class UserServiceImp implements UserService {
         userEntity.setUsername(entity.getUsername());
         userEntity.setUpdatedAt(LocalDateTime.now());
         try {
-            this.userRepository.save(userEntity);
+            userRepository.save(userEntity);
         }catch (DataIntegrityViolationException ex){
             throw new DuplicatedException("Duplicated fields: please, provide another value for username or email.");
         }
@@ -84,18 +86,42 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void deleteOne(long id) throws NotFoundException {
-        UserEntity deletedUserEntity = this.userRepository.findById(id).orElse(null);
+        UserEntity deletedUserEntity = userRepository.findById(id).orElse(null);
         if(deletedUserEntity == null) throw new NotFoundException("User not found with id: " + id);
-        this.userRepository.delete(deletedUserEntity);
+        userRepository.delete(deletedUserEntity);
     }
 
     @Override
     public List<UserEntity> search(String word , Pageable pageable) {
-        return this.userRepository.searchBy(word, pageable);
+        return userRepository.searchBy(word, pageable);
     }
 
     @Override
     public long getAllUsersCount() {
-        return this.userRepository.count();
+        return userRepository.count();
+    }
+
+    @Override
+    public List<ClassroomEntity> getStudentEnrollments(long studentId) {
+        UserEntity userEntity = userRepository.getStudentWithEnrollments(studentId);
+        return userEntity.getClassrooms();
+    }
+
+    @Override
+    public void createStudentEnrollment(long studentId, long classroomId) {
+        UserEntity userEntity = userRepository.getStudentWithEnrollments(studentId);
+        ClassroomEntity classroomEntity =  classroomService.getOne(classroomId);
+        userEntity.addClassroom(classroomEntity);
+
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void deleteStudentEnrollment(long studentId, long classroomId) {
+        UserEntity userEntity = userRepository.getStudentWithEnrollments(studentId);
+        ClassroomEntity classroomEntity =  classroomService.getOne(classroomId);
+        userEntity.removeClassroom(classroomEntity);
+
+        userRepository.save(userEntity);
     }
 }

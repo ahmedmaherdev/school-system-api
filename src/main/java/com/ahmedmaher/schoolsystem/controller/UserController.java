@@ -8,6 +8,7 @@ import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
+import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
 import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -43,9 +44,9 @@ public class UserController {
     ) {
 
         AppFeatures appFeatures = new AppFeatures(sort , size , page);
-        List<UserEntity> userEntities = this.userService.getAll(appFeatures.splitPageable());
-        List<UserResponseDTO> users = UserMapper.mapUserEntitiesToUserResponseDTOs(userEntities);
-        long allCount = this.userService.getAllUsersCount();
+        List<UserEntity> userEntities = userService.getAll(appFeatures.splitPageable());
+        List<UserResponseDTO> users = UserMapper.mapToUserResponseDTOs(userEntities);
+        long allCount = userService.getAllUsersCount();
         int count = users.size();
 
         // handle response
@@ -58,8 +59,8 @@ public class UserController {
     @GetMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<UserResponseDTO> getUser(@PathVariable("userId") Long userId){
         return ResponseEntity.ok(
-                UserMapper.mapUserEntityToUserResponseDTO(
-                        this.userService.getOne(userId)
+                UserMapper.mapToUserResponseDTO(
+                        userService.getOne(userId)
                 )
         );
     }
@@ -67,9 +68,9 @@ public class UserController {
     @GetMapping("${app.config.backend.user.api.load-me-uri}")
     public ResponseEntity<UserResponseDTO> getMe(Authentication authentication) {
         String username = (String) authentication.getPrincipal();
-        UserEntity user = this.userService.getByUsername(username);
+        UserEntity user = userService.getByUsername(username);
         return ResponseEntity.ok(
-                UserMapper.mapUserEntityToUserResponseDTO(user)
+                UserMapper.mapToUserResponseDTO(user)
         );
     }
 
@@ -79,21 +80,21 @@ public class UserController {
             Authentication authentication
     ) {
         String username = (String) authentication.getPrincipal();
-        UserEntity userEntity = this.userService.getByUsername(username);
-        UserEntity user = UserMapper.mapUserUpdateRequestDTOToUserEntity(userUpdateRequestDTO);
+        UserEntity userEntity = userService.getByUsername(username);
+        UserEntity user = UserMapper.mapToUserEntity(userUpdateRequestDTO);
         return ResponseEntity.ok(
-                UserMapper.mapUserEntityToUserResponseDTO(
-                        this.userService.updateOne(userEntity.getId(), user)
+                UserMapper.mapToUserResponseDTO(
+                        userService.updateOne(userEntity.getId(), user)
                 )
         );
     }
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PostMapping("${app.config.backend.user.api.create-user-uri}")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
-        UserEntity userEntity = UserMapper.mapUserRequestDTOToUserEntity(userDTO);
+        UserEntity userEntity = UserMapper.mapToUserEntity(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                UserMapper.mapUserEntityToUserResponseDTO(
-                        this.userService.createOne(userEntity)
+                UserMapper.mapToUserResponseDTO(
+                        userService.createOne(userEntity)
                 )
         );
     }
@@ -104,10 +105,10 @@ public class UserController {
             @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
             @PathVariable("userId") long userId
     ) {
-        UserEntity user = UserMapper.mapUserUpdateRequestDTOToUserEntity(userUpdateRequestDTO);
+        UserEntity user = UserMapper.mapToUserEntity(userUpdateRequestDTO);
         return ResponseEntity.ok(
-                UserMapper.mapUserEntityToUserResponseDTO(
-                        this.userService.updateOne(userId , user)
+                UserMapper.mapToUserResponseDTO(
+                        userService.updateOne(userId , user)
                 )
         );
     }
@@ -115,7 +116,7 @@ public class UserController {
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @DeleteMapping("${app.config.backend.user.api.load-user-by-id-uri}")
     public ResponseEntity<?> deleteUser( @PathVariable("userId") long userId) {
-        this.userService.deleteOne(userId);
+        userService.deleteOne(userId);
         return ResponseEntity.noContent().build();
     }
 
@@ -125,9 +126,34 @@ public class UserController {
     ) {
         Pageable pageable = PageRequest.of(0 , 10);
         return ResponseEntity.ok(
-                UserMapper.mapUserEntitiesToUserResponseDTOs(
-                        this.userService.search(s , pageable)
+                UserMapper.mapToUserResponseDTOs(
+                        userService.search(s , pageable)
                 )
         );
+    }
+
+    @GetMapping("${app.config.backend.user.api.load-student-enrollments-uri}")
+    public ResponseEntity<?> getAllStudentEnrollments(@PathVariable("studentId") long studentId) {
+        return ResponseEntity.ok(
+                ClassroomMapper.mapToClassroomResponseDTOs(
+                        userService.getStudentEnrollments(studentId)
+                )
+        );
+    }
+    @PostMapping("${app.config.backend.user.api.create-student-enrollment-uri}")
+    public ResponseEntity<?> createStudentEnrollment(
+            @PathVariable("studentId") long studentId,
+            @PathVariable("classroomId") long classroomId
+    ) {
+        userService.createStudentEnrollment(studentId , classroomId);
+        return ResponseEntity.noContent().build();
+    }
+    @DeleteMapping("${app.config.backend.user.api.remove-student-enrollment-uri}")
+    public ResponseEntity<?> deleteStudentEnrollment(
+            @PathVariable("studentId") long studentId,
+            @PathVariable("classroomId") long classroomId
+    ) {
+        userService.deleteStudentEnrollment(studentId , classroomId);
+        return ResponseEntity.noContent().build();
     }
 }

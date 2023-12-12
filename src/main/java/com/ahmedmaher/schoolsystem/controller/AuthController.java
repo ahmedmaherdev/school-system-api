@@ -31,8 +31,8 @@ public class AuthController {
 
     @PostMapping("${app.config.backend.auth.api.signup-uri}")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupRequestDTO signupRequestDTO) {
-        UserEntity userEntity = AuthMapper.mapSignupDTOToUserEntity(signupRequestDTO);
-        UserResponseDTO user = UserMapper.mapUserEntityToUserResponseDTO(
+        UserEntity userEntity = AuthMapper.mapToUserEntity(signupRequestDTO);
+        UserResponseDTO user = UserMapper.mapToUserResponseDTO(
                 this.authService.registerUser(userEntity)
         );
         String token = jwtUtil.signToken(user);
@@ -41,8 +41,8 @@ public class AuthController {
 
     @PostMapping("${app.config.backend.auth.api.login-uri}")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
-        UserEntity userEntity = AuthMapper.mapLoginDTOToUserEntity(loginRequestDTO);
-        UserResponseDTO user = UserMapper.mapUserEntityToUserResponseDTO(
+        UserEntity userEntity = AuthMapper.mapToUserEntity(loginRequestDTO);
+        UserResponseDTO user = UserMapper.mapToUserResponseDTO(
                 this.authService.loginUser(userEntity)
         );
         String token = this.jwtUtil.signToken(user);

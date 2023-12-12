@@ -1,5 +1,6 @@
 package com.ahmedmaher.schoolsystem.service.user;
 
+import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
 import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.service.BaseService;
@@ -13,5 +14,11 @@ public interface UserService extends BaseService<UserEntity> {
     List<UserEntity> search(String word, Pageable pageable);
 
     long getAllUsersCount();
+
+    List<ClassroomEntity> getStudentEnrollments(long studentId);
+
+    void createStudentEnrollment(long studentId, long classroomId);
+
+    void deleteStudentEnrollment(long studentId, long classroomId);
 
 }

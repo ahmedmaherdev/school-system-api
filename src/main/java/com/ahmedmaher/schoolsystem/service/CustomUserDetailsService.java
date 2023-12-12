@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
-                .authorities(UserMapper.mapRolesToGrantedAuthority(userEntity.getRoles()))
+                .authorities(UserMapper.mapToGrantedAuthority(userEntity.getRoles()))
                 .build();
     }
 }
