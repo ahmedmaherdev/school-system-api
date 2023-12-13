@@ -132,28 +132,28 @@ public class UserController {
         );
     }
 
-    @GetMapping("${app.config.backend.user.api.load-student-enrollments-uri}")
-    public ResponseEntity<?> getAllStudentEnrollments(@PathVariable("studentId") long studentId) {
+    @GetMapping("${app.config.backend.user.api.load-user-enrollments-uri}")
+    public ResponseEntity<?> getAllStudentEnrollments(@PathVariable("userId") long userId) {
         return ResponseEntity.ok(
                 ClassroomMapper.mapToClassroomResponseDTOs(
-                        userService.getStudentEnrollments(studentId)
+                        userService.getStudentEnrollments(userId)
                 )
         );
     }
-    @PostMapping("${app.config.backend.user.api.create-student-enrollment-uri}")
+    @PostMapping("${app.config.backend.user.api.create-user-enrollment-uri}")
     public ResponseEntity<?> createStudentEnrollment(
-            @PathVariable("studentId") long studentId,
+            @PathVariable("userId") long userId,
             @PathVariable("classroomId") long classroomId
     ) {
-        userService.createStudentEnrollment(studentId , classroomId);
+        userService.createStudentEnrollment(userId , classroomId);
         return ResponseEntity.noContent().build();
     }
-    @DeleteMapping("${app.config.backend.user.api.remove-student-enrollment-uri}")
+    @DeleteMapping("${app.config.backend.user.api.remove-user-enrollment-uri}")
     public ResponseEntity<?> deleteStudentEnrollment(
-            @PathVariable("studentId") long studentId,
+            @PathVariable("userId") long userId,
             @PathVariable("classroomId") long classroomId
     ) {
-        userService.deleteStudentEnrollment(studentId , classroomId);
+        userService.deleteStudentEnrollment(userId , classroomId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -49,9 +49,9 @@ app:
           load-search-users-uri: /search
           create-user-uri: /createUser
           update-me-uri: /updateMe
-          load-student-enrollments-uri: /{studentId}/enrollments
-          create-student-enrollment-uri: /{studentId}/enrollments/{classroomId}
-          remove-student-enrollment-uri: /{studentId}/enrollments/{classroomId}
+          load-user-enrollments-uri: /{userId}/enrollments
+          create-user-enrollment-uri: /{userId}/enrollments/{classroomId}
+          remove-user-enrollment-uri: /{userId}/enrollments/{classroomId}
       school:
         base-uri: /api/v1/schools
         api:
@@ -59,6 +59,9 @@ app:
           load-school-by-id-uri: /{schoolId}
           load-search-schools-uri: /search
           create-school-uri: /createSchool
+          load-school-classrooms-uri: /{schoolId}/classrooms
+          create-school-classroom-uri: /{schoolId}/classrooms/{classroomId}
+          remove-school-classroom-uri: /{schoolId}/classrooms/{classroomId}
       classroom:
         base-uri: /api/v1/schools/{schoolId}/classrooms
         api:
@@ -66,7 +69,5 @@ app:
           load-classroom-by-id-uri: /{classroomId}
           load-search-classrooms-uri: /search
           create-classroom-uri: /createClassroom
-      enrollment:
-        base-uri: /api/v1/schools/{schoolId}/enrollments
-        api:
-          create-enrollment-uri: /createEnrollment
+          update-classroom-uri: /{classroomId}
+          remove-classroom-uri: /{classroomId}

@@ -3,10 +3,12 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolRequestDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
+import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.school.SchoolService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
+import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
 import com.ahmedmaher.schoolsystem.util.mapper.SchoolMapper;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -99,5 +101,13 @@ public class SchoolController {
                         this.schoolService.search(s , pageable)
                 )
         );
+    }
+
+    @GetMapping("${app.config.backend.school.api.load-school-classrooms-uri}")
+    public ResponseEntity<?> getAllSchoolClassrooms(
+            @PathVariable("schoolId") long schoolId
+    ){
+        List<ClassroomEntity> classrooms = schoolService.getSchoolClassrooms(schoolId);
+        return ResponseEntity.ok(ClassroomMapper.mapToClassroomResponseDTOs(classrooms));
     }
 }

@@ -15,10 +15,10 @@ public interface UserService extends BaseService<UserEntity> {
 
     long getAllUsersCount();
 
-    List<ClassroomEntity> getStudentEnrollments(long studentId);
+    List<ClassroomEntity> getStudentEnrollments(long userId);
 
-    void createStudentEnrollment(long studentId, long classroomId);
+    void createStudentEnrollment(long userId, long classroomId);
 
-    void deleteStudentEnrollment(long studentId, long classroomId);
+    void deleteStudentEnrollment(long userId, long classroomId);
 
 }

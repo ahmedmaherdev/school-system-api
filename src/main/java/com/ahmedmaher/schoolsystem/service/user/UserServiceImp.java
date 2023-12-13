@@ -102,23 +102,25 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<ClassroomEntity> getStudentEnrollments(long studentId) {
-        UserEntity userEntity = userRepository.getStudentWithEnrollments(studentId);
+    public List<ClassroomEntity> getStudentEnrollments(long userId) {
+        UserEntity userEntity = userRepository.getStudentWithEnrollments(userId);
         return userEntity.getClassrooms();
     }
 
+    @Transactional
     @Override
-    public void createStudentEnrollment(long studentId, long classroomId) {
-        UserEntity userEntity = userRepository.getStudentWithEnrollments(studentId);
+    public void createStudentEnrollment(long userId, long classroomId) {
+        UserEntity userEntity = this.getOne(userId);
         ClassroomEntity classroomEntity =  classroomService.getOne(classroomId);
         userEntity.addClassroom(classroomEntity);
 
         userRepository.save(userEntity);
     }
 
+    @Transactional
     @Override
-    public void deleteStudentEnrollment(long studentId, long classroomId) {
-        UserEntity userEntity = userRepository.getStudentWithEnrollments(studentId);
+    public void deleteStudentEnrollment(long userId, long classroomId) {
+        UserEntity userEntity = this.getOne(userId);
         ClassroomEntity classroomEntity =  classroomService.getOne(classroomId);
         userEntity.removeClassroom(classroomEntity);
 
