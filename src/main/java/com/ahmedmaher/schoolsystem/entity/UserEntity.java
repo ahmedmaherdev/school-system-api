@@ -1,5 +1,6 @@
 package com.ahmedmaher.schoolsystem.entity;
 
+import com.ahmedmaher.schoolsystem.base.BaseEntity;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,7 +37,7 @@ public class UserEntity extends BaseEntity {
     private StudentDetailEntity studentDetailEntity;
 
     @ManyToMany(cascade = {CascadeType.MERGE , CascadeType.MERGE , CascadeType.PERSIST , CascadeType.REFRESH})
-    @JoinTable(name = "enrollment" ,joinColumns = @JoinColumn(name = "student_id") ,
+    @JoinTable(name = "enrollment" ,joinColumns = @JoinColumn(name = "user_id") ,
             inverseJoinColumns = @JoinColumn(name = "classroom_id"))
     private List<ClassroomEntity> classrooms;
 

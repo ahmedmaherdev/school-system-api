@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.service;
+package com.ahmedmaher.schoolsystem.base;
 
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import org.springframework.data.domain.Pageable;

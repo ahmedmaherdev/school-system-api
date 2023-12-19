@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +89,21 @@ public class UserController {
                 )
         );
     }
+
+    @PutMapping("${app.config.backend.user.api.update-my-photo-uri}")
+    public ResponseEntity<UserResponseDTO> updateMyPhoto(
+            @Valid @RequestParam("photo") MultipartFile photoFile,
+            Authentication authentication
+    ) throws Exception {
+        String username = (String) authentication.getPrincipal();
+        UserEntity userEntity = userService.getByUsername(username);
+        return ResponseEntity.ok(
+                UserMapper.mapToUserResponseDTO(
+                        userService.updateUserPhoto(userEntity, photoFile)
+                )
+        );
+    }
+
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PostMapping("${app.config.backend.user.api.create-user-uri}")
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
@@ -132,7 +148,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("${app.config.backend.user.api.load-user-enrollments-uri}")
+    @GetMapping("${app.config.backend.user.api.load-all-enrollments-by-user-uri}")
     public ResponseEntity<?> getAllStudentEnrollments(@PathVariable("userId") long userId) {
         return ResponseEntity.ok(
                 ClassroomMapper.mapToClassroomResponseDTOs(

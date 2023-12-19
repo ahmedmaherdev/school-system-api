@@ -1,5 +1,6 @@
 package com.ahmedmaher.schoolsystem.entity;
 
+import com.ahmedmaher.schoolsystem.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

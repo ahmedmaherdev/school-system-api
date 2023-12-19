@@ -14,7 +14,6 @@ public interface ClassroomRepository extends JpaRepository<ClassroomEntity, Long
     @Query("SELECT c FROM ClassroomEntity c WHERE c.school.id = :schoolId")
     Page<ClassroomEntity> findAllClassroomsBySchoolId(long schoolId, Pageable pageable);
 
-
     @Query("SELECT c FROM ClassroomEntity c WHERE c.id = :classroomId AND c.school.id = :schoolId")
     ClassroomEntity findClassroomByIdAndSchoolId(long classroomId , long schoolId);
     @Query("SELECT COUNT(*) FROM ClassroomEntity c WHERE c.school.id = :schoolId")
@@ -22,4 +21,7 @@ public interface ClassroomRepository extends JpaRepository<ClassroomEntity, Long
 
     @Query("SELECT c FROM ClassroomEntity c WHERE c.name LIKE %:word% ORDER BY c.name")
     List<ClassroomEntity> searchBy(String word, Pageable pageable);
+
+    @Query("SELECT c FROM ClassroomEntity c JOIN FETCH c.users WHERE c.id = :classroomId")
+    ClassroomEntity findClassroomWithAllStudents(long classroomId);
 }

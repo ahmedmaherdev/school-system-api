@@ -1,5 +1,6 @@
 package com.ahmedmaher.schoolsystem.entity;
 
+import com.ahmedmaher.schoolsystem.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -26,8 +27,8 @@ public class ClassroomEntity extends BaseEntity {
 
     @ManyToMany(cascade = {CascadeType.MERGE , CascadeType.MERGE , CascadeType.PERSIST , CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinTable(name = "enrollment" ,joinColumns = @JoinColumn(name = "classroom_id") ,
-            inverseJoinColumns = @JoinColumn(name= "student_id"))
-    private List<UserEntity> students;
+            inverseJoinColumns = @JoinColumn(name= "user_id"))
+    private List<UserEntity> users;
 
     public Long getId() {
         return this.id;
@@ -38,8 +39,13 @@ public class ClassroomEntity extends BaseEntity {
 
 
     public void addStudent(UserEntity student) {
-        if(students == null) students = new ArrayList<>();
-        students.add(student);
+        if(users == null) users = new ArrayList<>();
+        users.add(student);
+    }
+
+    public void removeStudent(UserEntity student) {
+        if(users == null) users = new ArrayList<>();
+        users.remove(student);
     }
 
     public LocalDateTime getCreatedAt() {

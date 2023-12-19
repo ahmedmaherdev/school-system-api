@@ -40,6 +40,12 @@ public class ClassroomServiceImpl implements ClassroomService{
     }
 
     @Override
+    public List<UserEntity> getAllStudentsByClassroomId(long classroomId) {
+        ClassroomEntity classroomEntity = classroomRepository.findClassroomWithAllStudents(classroomId);
+        return classroomEntity.getUsers();
+    }
+
+    @Override
     public ClassroomEntity getOne(long id) throws NotFoundException {
         ClassroomEntity classroomEntity = this.classroomRepository.findById(id).orElse(null);
         if(classroomEntity == null) throw new NotFoundException("Classroom not found with id: " + id);
@@ -82,6 +88,7 @@ public class ClassroomServiceImpl implements ClassroomService{
     public void deleteOne(long id) throws NotFoundException {
         ClassroomEntity deletedClassroomEntity = this.classroomRepository.findById(id).orElse(null);
         if(deletedClassroomEntity == null) throw new NotFoundException("Classroom not found with id: " + id);
+        deletedClassroomEntity.setSchool(null);
         this.classroomRepository.delete(deletedClassroomEntity);
     }
 

@@ -45,7 +45,6 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers( authBaseURI + "/**").permitAll()
-                                .requestMatchers("/userPhotos/**").permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(httpConf ->
                         httpConf.sessionCreationPolicy(SessionCreationPolicy.STATELESS

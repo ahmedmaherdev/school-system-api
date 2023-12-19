@@ -5,14 +5,18 @@ import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.repository.UserRepository;
+import com.ahmedmaher.schoolsystem.service.FileUploadService;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,12 +25,17 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private  final ClassroomService classroomService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final FileUploadService fileUploadService;
+
+    @Value("${file.upload.user.dir}")
+    private String userUploadDir;
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository, ClassroomService classroomService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImp(UserRepository userRepository, ClassroomService classroomService, BCryptPasswordEncoder bCryptPasswordEncoder, FileUploadService fileUploadService) {
         this.userRepository = userRepository;
         this.classroomService = classroomService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.fileUploadService = fileUploadService;
     }
 
 
@@ -123,7 +132,14 @@ public class UserServiceImp implements UserService {
         UserEntity userEntity = this.getOne(userId);
         ClassroomEntity classroomEntity =  classroomService.getOne(classroomId);
         userEntity.removeClassroom(classroomEntity);
-
         userRepository.save(userEntity);
+    }
+
+    @Override
+    public UserEntity updateUserPhoto(UserEntity user, MultipartFile photoFile) throws Exception {
+        String photo = fileUploadService.saveFile(userUploadDir , photoFile);
+        user.setPhoto(photo);
+        userRepository.save(user);
+        return user;
     }
 }

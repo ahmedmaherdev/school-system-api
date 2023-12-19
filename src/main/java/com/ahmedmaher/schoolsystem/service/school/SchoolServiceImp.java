@@ -64,6 +64,10 @@ public class SchoolServiceImp implements SchoolService {
         SchoolEntity deletedSchoolEntity = schoolRepository.findById(id).orElse(null);
         if(deletedSchoolEntity == null)
             throw new NotFoundException("School not found with id: " + id);
+        List<ClassroomEntity> classrooms = getSchoolClassrooms(deletedSchoolEntity.getId());
+        for (ClassroomEntity classroom: classrooms) {
+            classroom.setSchool(null);
+        }
         schoolRepository.delete(deletedSchoolEntity);
     }
 

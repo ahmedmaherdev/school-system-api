@@ -49,7 +49,8 @@ app:
           load-search-users-uri: /search
           create-user-uri: /createUser
           update-me-uri: /updateMe
-          load-user-enrollments-uri: /{userId}/enrollments
+          update-my-photo-uri: /updateMyPhoto
+          load-all-enrollments-by-user-uri: /{userId}/enrollments
           create-user-enrollment-uri: /{userId}/enrollments/{classroomId}
           remove-user-enrollment-uri: /{userId}/enrollments/{classroomId}
       school:
@@ -59,7 +60,7 @@ app:
           load-school-by-id-uri: /{schoolId}
           load-search-schools-uri: /search
           create-school-uri: /createSchool
-          load-school-classrooms-uri: /{schoolId}/classrooms
+          load-all-classrooms-by-school-uri: /{schoolId}/classrooms
           create-school-classroom-uri: /{schoolId}/classrooms/{classroomId}
           remove-school-classroom-uri: /{schoolId}/classrooms/{classroomId}
       classroom:
@@ -71,3 +72,10 @@ app:
           create-classroom-uri: /createClassroom
           update-classroom-uri: /{classroomId}
           remove-classroom-uri: /{classroomId}
+          load-all-students-by-classroom-uri: /{classroomId}/students
+
+file:
+  upload:
+    base-dir: uploads
+    user:
+      dir: userPhotos

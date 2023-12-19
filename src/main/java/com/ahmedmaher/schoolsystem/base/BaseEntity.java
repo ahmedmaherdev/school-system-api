@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.entity;
+package com.ahmedmaher.schoolsystem.base;
 
 import jakarta.persistence.*;
 

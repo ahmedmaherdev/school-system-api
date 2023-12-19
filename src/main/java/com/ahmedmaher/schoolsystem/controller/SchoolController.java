@@ -103,7 +103,7 @@ public class SchoolController {
         );
     }
 
-    @GetMapping("${app.config.backend.school.api.load-school-classrooms-uri}")
+    @GetMapping("${app.config.backend.school.api.load-all-classrooms-by-school-uri}")
     public ResponseEntity<?> getAllSchoolClassrooms(
             @PathVariable("schoolId") long schoolId
     ){
