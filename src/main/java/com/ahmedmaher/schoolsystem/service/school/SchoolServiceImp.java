@@ -2,7 +2,6 @@ package com.ahmedmaher.schoolsystem.service.school;
 
 import com.ahmedmaher.schoolsystem.entity.ClassroomEntity;
 import com.ahmedmaher.schoolsystem.entity.SchoolEntity;
-import com.ahmedmaher.schoolsystem.entity.UserEntity;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +81,7 @@ public class SchoolServiceImp implements SchoolService {
 
     @Override
     public List<ClassroomEntity> getSchoolClassrooms(long schoolId) {
-        SchoolEntity schoolEntity = schoolRepository.getSchoolWithClassrooms(schoolId);
+        SchoolEntity schoolEntity = schoolRepository.findSchoolWithClassrooms(schoolId);
         return schoolEntity.getClassrooms();
     }
 }

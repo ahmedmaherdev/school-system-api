@@ -8,7 +8,6 @@ import com.ahmedmaher.schoolsystem.repository.UserRepository;
 import com.ahmedmaher.schoolsystem.service.FileUploadService;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -109,7 +108,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public List<ClassroomEntity> getStudentEnrollments(long userId) {
-        UserEntity userEntity = userRepository.getStudentWithEnrollments(userId);
+        UserEntity userEntity = userRepository.findStudentWithEnrollments(userId);
         return userEntity.getClassrooms();
     }
 
