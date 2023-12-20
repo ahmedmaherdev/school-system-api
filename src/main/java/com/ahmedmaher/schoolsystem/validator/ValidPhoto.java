@@ -1,9 +1,7 @@
 package com.ahmedmaher.schoolsystem.validator;
 
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-
 import java.lang.annotation.*;
 
 
@@ -13,7 +11,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = PhotoValidator.class)
 public @interface ValidPhoto {
 
-    String message() default "Not supported photo type.";
+    String message() default "Not supported photo format.";
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

@@ -1,20 +1,25 @@
 package com.ahmedmaher.schoolsystem.service;
 
+import com.ahmedmaher.schoolsystem.exception.BadRequestException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class FileUploadService {
+    private final List<String> SUPPORTED_PHOTO_FORMAT
+            = Arrays.asList("image/jpg" , "image/jpeg" , "image/png" , "image/webp");
 
     @Value("${file.upload.base-dir}")
     private String uploadDir;
@@ -23,11 +28,18 @@ public class FileUploadService {
     private String userUploadDir;
 
     public String saveUserPhoto(MultipartFile file) throws IOException {
+        if(file == null || file.isEmpty() || !SUPPORTED_PHOTO_FORMAT.contains(file.getContentType()))
+            throw new BadRequestException("Not supported photo format.");
         return saveFile(userUploadDir , file);
     }
 
     public Resource loadUserPhoto(String fileName) {
         return loadFile(userUploadDir , fileName);
+    }
+
+    public MediaType getPhotoMediaType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        return MediaType.parseMediaType("image/" + fileExtension);
     }
 
     public Resource loadFile(String folderName , String fileName) {

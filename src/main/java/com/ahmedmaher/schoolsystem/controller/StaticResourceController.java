@@ -16,9 +16,7 @@ public class StaticResourceController {
     private final FileUploadService fileUploadService;
 
     @Autowired
-
     public StaticResourceController(FileUploadService fileUploadService) {
-
         this.fileUploadService = fileUploadService;
     }
 
@@ -27,7 +25,7 @@ public class StaticResourceController {
     public ResponseEntity<Resource> getUserResource(@PathVariable String filename) {
         Resource resource = fileUploadService.loadUserPhoto(filename);
         return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentType(fileUploadService.getPhotoMediaType(filename))
                 .body(resource);
     }
 }

@@ -1,6 +1,7 @@
 package com.ahmedmaher.schoolsystem.advice;
 
 import com.ahmedmaher.schoolsystem.dto.CustomErrorResponseDTO;
+import com.ahmedmaher.schoolsystem.exception.BadRequestException;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
@@ -49,6 +50,13 @@ public class CustomExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<CustomErrorResponseDTO> handleBadCredentialsException(BadCredentialsException ex) {
+        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorResponseDTO);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<CustomErrorResponseDTO> handleBadCredentialsException(BadRequestException ex) {
         CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorResponseDTO);
     }
