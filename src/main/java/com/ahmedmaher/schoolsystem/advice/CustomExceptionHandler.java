@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 
 @ControllerAdvice
@@ -57,6 +58,13 @@ public class CustomExceptionHandler {
     public ResponseEntity<CustomErrorResponseDTO> handleAccessDeniedException(AccessDeniedException ex) {
         CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO("you do not have permission to make this action.", "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(customErrorResponseDTO);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<CustomErrorResponseDTO> handleMaxUploadFileException(MaxUploadSizeExceededException ex) {
+        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO(ex.getMessage() , "fail" ,System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorResponseDTO);
     }
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

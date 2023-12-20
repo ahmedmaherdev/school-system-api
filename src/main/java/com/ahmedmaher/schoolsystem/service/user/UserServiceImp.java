@@ -27,9 +27,6 @@ public class UserServiceImp implements UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final FileUploadService fileUploadService;
 
-    @Value("${file.upload.user.dir}")
-    private String userUploadDir;
-
     @Autowired
     public UserServiceImp(UserRepository userRepository, ClassroomService classroomService, BCryptPasswordEncoder bCryptPasswordEncoder, FileUploadService fileUploadService) {
         this.userRepository = userRepository;
@@ -137,7 +134,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserEntity updateUserPhoto(UserEntity user, MultipartFile photoFile) throws Exception {
-        String photo = fileUploadService.saveFile(userUploadDir , photoFile);
+        String photo = fileUploadService.saveUserPhoto(photoFile);
         user.setPhoto(photo);
         userRepository.save(user);
         return user;

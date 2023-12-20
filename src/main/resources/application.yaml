@@ -35,6 +35,8 @@ upload:
 app:
   config:
     backend:
+      resource:
+        user: /user/img/{filename:.+}
       auth:
         base-uri: /api/v1/auth
         api:

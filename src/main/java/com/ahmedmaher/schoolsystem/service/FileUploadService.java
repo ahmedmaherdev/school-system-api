@@ -1,10 +1,12 @@
 package com.ahmedmaher.schoolsystem.service;
 
+import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +19,30 @@ public class FileUploadService {
     @Value("${file.upload.base-dir}")
     private String uploadDir;
 
+    @Value("${file.upload.user.dir}")
+    private String userUploadDir;
+
+    public String saveUserPhoto(MultipartFile file) throws IOException {
+        return saveFile(userUploadDir , file);
+    }
+
+    public Resource loadUserPhoto(String fileName) {
+        return loadFile(userUploadDir , fileName);
+    }
+
+    public Resource loadFile(String folderName , String fileName) {
+        try {
+            Path path = Paths.get(uploadDir , folderName).resolve(fileName).normalize();
+            Resource resource = new UrlResource(path.toUri());
+
+            if(!resource.exists())
+                throw new NotFoundException("File not found.");
+            return resource;
+        }catch (Exception ex) {
+            throw new NotFoundException("File not found.");
+        }
+
+    }
     public String saveFile(String folderName , MultipartFile file) throws IOException {
         String fileName = generateUniqueFileName(file.getOriginalFilename());
         Path filePath = Paths.get(uploadDir , folderName , fileName);

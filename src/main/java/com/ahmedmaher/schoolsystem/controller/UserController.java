@@ -10,6 +10,7 @@ import com.ahmedmaher.schoolsystem.service.user.UserService;
 import com.ahmedmaher.schoolsystem.util.AppFeatures;
 import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
 import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
+import com.ahmedmaher.schoolsystem.validator.ValidPhoto;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +93,7 @@ public class UserController {
 
     @PutMapping("${app.config.backend.user.api.update-my-photo-uri}")
     public ResponseEntity<UserResponseDTO> updateMyPhoto(
-            @Valid @RequestParam("photo") MultipartFile photoFile,
+            @ValidPhoto @RequestParam("photo") MultipartFile photoFile,
             Authentication authentication
     ) throws Exception {
         String username = (String) authentication.getPrincipal();
