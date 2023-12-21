@@ -12,6 +12,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u FROM UserEntity u WHERE u.username = :username")
     UserEntity findByUsername(String username);
 
+    @Query("SELECT u FROM UserEntity u WHERE u.email = :email")
+    UserEntity findByEmail(String email);
+
     @Query("SELECT u FROM UserEntity u WHERE u.name LIKE %:word% ORDER BY u.name")
     List<UserEntity> searchBy(String word, Pageable pageable);
 

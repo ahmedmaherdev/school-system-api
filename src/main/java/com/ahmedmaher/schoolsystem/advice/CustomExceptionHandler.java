@@ -19,12 +19,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 @ControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<CustomErrorResponseDTO> handleNotFoundException(NotFoundException ex){
-        CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -38,13 +32,6 @@ public class CustomExceptionHandler {
     public ResponseEntity<CustomErrorResponseDTO> handleValidationException(DuplicatedException ex) {
         CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<CustomErrorResponseDTO> handleUnauthorizedException(UnauthorizedException ex) {
-        CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDTO);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -61,6 +48,28 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorResponseDTO);
     }
 
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<CustomErrorResponseDTO> handleMaxUploadFileException(MaxUploadSizeExceededException ex) {
+        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO(ex.getMessage() , "fail" ,System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorResponseDTO);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<CustomErrorResponseDTO> handleNotFoundException(NotFoundException ex){
+        CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDTO);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<CustomErrorResponseDTO> handleUnauthorizedException(UnauthorizedException ex) {
+        CustomErrorResponseDTO errorDTO = new CustomErrorResponseDTO(ex.getMessage(), "fail" , System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorDTO);
+    }
+
+
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<CustomErrorResponseDTO> handleAccessDeniedException(AccessDeniedException ex) {
@@ -68,12 +77,7 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(customErrorResponseDTO);
     }
 
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<CustomErrorResponseDTO> handleMaxUploadFileException(MaxUploadSizeExceededException ex) {
-        CustomErrorResponseDTO customErrorResponseDTO = new CustomErrorResponseDTO(ex.getMessage() , "fail" ,System.currentTimeMillis());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(customErrorResponseDTO);
-    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<CustomErrorResponseDTO> unhandleException(RuntimeException ex) {

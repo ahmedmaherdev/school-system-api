@@ -16,16 +16,12 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class JwtUtil {
 
-    private  String JWT_SECRET;
+    @Value("${jwt.secret}")
+    private String JWT_SECRET;
 
-    private final long JWT_EXPIRE_AT;
+    @Value("${jwt.expireAt}")
+    private long JWT_EXPIRE_AT;
 
-    public JwtUtil( @Value("${jwt.secret}")String jwtSecret,
-                   @Value("${jwt.expireAt}") long jwtExpireAt
-    ) {
-        this.JWT_SECRET = jwtSecret;
-        this.JWT_EXPIRE_AT = jwtExpireAt;
-    }
 
     public String signToken(UserResponseDTO user) {
         Claims claims = Jwts.claims().setSubject(user.getUsername());

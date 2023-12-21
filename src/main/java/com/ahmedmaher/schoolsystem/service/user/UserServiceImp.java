@@ -8,7 +8,6 @@ import com.ahmedmaher.schoolsystem.repository.UserRepository;
 import com.ahmedmaher.schoolsystem.service.FileUploadService;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -59,34 +58,36 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public UserEntity createOne(UserEntity entity) {
+        checkDuplicatedUserNameAndEmail(entity);
         String hashedPassword = bCryptPasswordEncoder.encode(entity.getPassword());
         entity.setPassword(hashedPassword);
         entity.setPhoto("default.jpg");
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
-        try {
-            userRepository.save(entity);
-        }catch (DataIntegrityViolationException ex){
-            throw new DuplicatedException("Duplicated fields: please, provide another value for username or email.");
-        }
+        userRepository.save(entity);
         return entity;
     }
 
     @Override
     public UserEntity updateOne(long id, UserEntity entity) throws NotFoundException {
-        UserEntity userEntity = userRepository.findById(id).orElse(null);
-        if(userEntity == null)
-            throw new NotFoundException("User not found with id: " + id);
+        UserEntity userEntity = getOne(id);
+        checkDuplicatedUserNameAndEmail(userEntity);
+
         userEntity.setName(entity.getName());
         userEntity.setEmail(entity.getEmail());
         userEntity.setUsername(entity.getUsername());
         userEntity.setUpdatedAt(LocalDateTime.now());
-        try {
-            userRepository.save(userEntity);
-        }catch (DataIntegrityViolationException ex){
-            throw new DuplicatedException("Duplicated fields: please, provide another value for username or email.");
-        }
+
+        userRepository.save(userEntity);
         return userEntity;
+    }
+
+    private void checkDuplicatedUserNameAndEmail(UserEntity userEntity) throws NotFoundException {
+        if(userRepository.findByEmail(userEntity.getEmail()) != null)
+            throw new DuplicatedException("Duplicated email value: " + userEntity.getEmail());
+
+        if(userRepository.findByUsername(userEntity.getUsername()) != null)
+            throw new DuplicatedException("Duplicated username value: " + userEntity.getUsername());
     }
 
     @Override
