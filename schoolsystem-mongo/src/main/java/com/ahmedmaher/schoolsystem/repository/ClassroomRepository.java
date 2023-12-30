@@ -1,0 +1,24 @@
+package com.ahmedmaher.schoolsystem.repository;
+
+import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
+import java.util.List;
+
+public interface ClassroomRepository extends MongoRepository<ClassroomDocument, String> {
+
+    @Query("{school: ?0}")
+    Page<ClassroomDocument> findAllClassroomsBySchoolId(String schoolId, Pageable pageable);
+
+    @Query(value = "{school: ?0}" , count = true)
+    long findAllCountBySchoolId(String schoolId);
+
+    @Query("{ $text: { $search: ?0 }}")
+    List<ClassroomDocument> searchBy(String word, Pageable pageable);
+
+    @Query("{id: ?0}")
+    ClassroomDocument findClassroomWithAllStudents(String classroomId);
+}
