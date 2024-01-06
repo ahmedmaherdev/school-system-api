@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequestDTO {
+
     @Size(min = 5, max = 60 , message = "username must more than 5 and less than 60.")
     @NotBlank(message = "username is required.")
     private String username;

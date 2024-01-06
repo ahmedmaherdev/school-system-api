@@ -35,15 +35,7 @@ public class ClassroomServiceImpl implements ClassroomService{
 
     @Override
     public List<ClassroomDocument> getAllBySchoolId(String schoolId, Pageable pageable) {
-        Page<ClassroomDocument> classrooms = this.classroomRepository.findAllClassroomsBySchoolId(schoolId , pageable);
-        return classrooms.getContent();
-    }
-
-    @Override
-    public List<UserDocument> getAllStudentsByClassroomId(String classroomId) {
-        ClassroomDocument classroomEntity = getOne(classroomId);
-
-        return classroomEntity.getUsers();
+        return this.classroomRepository.findBySchool(schoolId , pageable);
     }
 
     @Override
@@ -95,11 +87,11 @@ public class ClassroomServiceImpl implements ClassroomService{
 
     @Override
     public List<ClassroomDocument> search(String word , Pageable pageable) {
-        return this.classroomRepository.searchBy(word, pageable);
+        return this.classroomRepository.searchByName(word, pageable);
     }
 
     @Override
     public long getAllClassroomsCount(String schoolId) {
-        return this.classroomRepository.findAllCountBySchoolId(schoolId);
+        return this.classroomRepository.findCountBySchool(schoolId);
     }
 }

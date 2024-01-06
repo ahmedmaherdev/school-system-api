@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface SchoolRepository extends MongoRepository<SchoolDocument, String> {
     @Query("{ $text: { $search: ?0 }}")
-    List<SchoolDocument> searchBy(String word, Pageable pageable);
+    List<SchoolDocument> searchByName(String name, Pageable pageable);
 
-    @Query("{id: ?0}")
-    SchoolDocument findSchoolWithClassrooms(String schoolId);
 }

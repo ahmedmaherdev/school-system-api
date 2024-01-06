@@ -1,7 +1,6 @@
 package com.ahmedmaher.schoolsystem.util;
 
 import com.ahmedmaher.schoolsystem.document.UserDocument;
-import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
 import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,8 +19,8 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String JWT_SECRET;
 
-    @Value("${jwt.expireAt}")
-    private long JWT_EXPIRE_AT;
+    @Value("${jwt.expire-at-in-days}")
+    private long JWT_EXPIRE_AT_IN_DAYS;
 
 
     public String signToken(UserDocument user) {
@@ -29,7 +28,7 @@ public class JwtUtil {
         claims.put("name" , user.getName());
         claims.setId(user.getId());
         Date now = new Date();
-        Date expiredDate = new Date(now.getTime() + TimeUnit.DAYS.toMillis(this.JWT_EXPIRE_AT));
+        Date expiredDate = new Date(now.getTime() + TimeUnit.DAYS.toMillis(this.JWT_EXPIRE_AT_IN_DAYS));
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(expiredDate)

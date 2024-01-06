@@ -28,7 +28,9 @@ public class UserDocument extends BaseDocument {
 
     @TextIndexed
     private String name;
+
     private String password;
+
     private String photo;
 
     private Set<UserRole> roles;
@@ -37,6 +39,10 @@ public class UserDocument extends BaseDocument {
 
     @DBRef(lazy = true)
     private List<ClassroomDocument> classrooms;
+
+    private String passwordResetToken;
+
+    private LocalDateTime passwordResetExpire;
 
 
     public String getId() {

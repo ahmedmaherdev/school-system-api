@@ -12,7 +12,5 @@ import java.util.List;
 public interface ClassroomService extends BaseService<ClassroomDocument> {
     List<ClassroomDocument> getAllBySchoolId(String schoolId , Pageable pageable);
 
-    List<UserDocument> getAllStudentsByClassroomId(String classroomId);
-
     long getAllClassroomsCount(String schoolId);
 }

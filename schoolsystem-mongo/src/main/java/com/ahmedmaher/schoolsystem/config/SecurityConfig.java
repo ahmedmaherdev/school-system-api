@@ -27,7 +27,9 @@ public class SecurityConfig {
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @Value("${app.config.backend.auth.base-uri}")
-    private String authBaseURI;
+    private String AUTH_BASE_URI;
+    @Value("${app.config.backend.auth.api.update-password-uri}")
+    private String UPDATE_PASSWORD_URI;
     @Autowired
     public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.userDetailsService = userDetailsService;
@@ -44,7 +46,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers( authBaseURI + "/**").permitAll()
+                        auth.requestMatchers( AUTH_BASE_URI + "/**").permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(httpConf ->
                         httpConf.sessionCreationPolicy(SessionCreationPolicy.STATELESS

@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppFeatures {
+public class AppFeaturesUtil {
     private String sort;
     private  int size;
     private  int page;

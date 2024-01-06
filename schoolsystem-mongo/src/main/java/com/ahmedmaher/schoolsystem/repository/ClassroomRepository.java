@@ -11,14 +11,12 @@ import java.util.List;
 public interface ClassroomRepository extends MongoRepository<ClassroomDocument, String> {
 
     @Query("{school: ?0}")
-    Page<ClassroomDocument> findAllClassroomsBySchoolId(String schoolId, Pageable pageable);
+    List<ClassroomDocument> findBySchool(String school, Pageable pageable);
 
     @Query(value = "{school: ?0}" , count = true)
-    long findAllCountBySchoolId(String schoolId);
+    long findCountBySchool(String school);
 
     @Query("{ $text: { $search: ?0 }}")
-    List<ClassroomDocument> searchBy(String word, Pageable pageable);
+    List<ClassroomDocument> searchByName(String name, Pageable pageable);
 
-    @Query("{id: ?0}")
-    ClassroomDocument findClassroomWithAllStudents(String classroomId);
 }

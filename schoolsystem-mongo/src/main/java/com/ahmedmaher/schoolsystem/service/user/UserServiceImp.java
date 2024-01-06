@@ -1,12 +1,11 @@
 package com.ahmedmaher.schoolsystem.service.user;
 
-import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
 import com.ahmedmaher.schoolsystem.document.UserDocument;
 import com.ahmedmaher.schoolsystem.exception.DuplicatedException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
 import com.ahmedmaher.schoolsystem.repository.UserRepository;
 import com.ahmedmaher.schoolsystem.service.FileUploadService;
-import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
+import com.ahmedmaher.schoolsystem.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,15 +20,13 @@ import java.util.List;
 @Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
-    private  final ClassroomService classroomService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordUtil passwordUtil;
     private final FileUploadService fileUploadService;
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository, ClassroomService classroomService, BCryptPasswordEncoder bCryptPasswordEncoder, FileUploadService fileUploadService) {
+    public UserServiceImp(UserRepository userRepository, PasswordUtil passwordUtil, FileUploadService fileUploadService) {
         this.userRepository = userRepository;
-        this.classroomService = classroomService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordUtil = passwordUtil;
         this.fileUploadService = fileUploadService;
     }
 
@@ -43,24 +40,35 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDocument getOne(String id) throws NotFoundException {
-        UserDocument userEntity = userRepository.findById(id).orElse(null);
-        if(userEntity == null) throw new NotFoundException("User not found with id: " + id);
-        return userEntity;
+        UserDocument user = userRepository.findById(id).orElse(null);
+        if(user == null) throw new NotFoundException("User not found with id: " + id);
+        return user;
     }
 
     @Override
     public UserDocument getByUsername(String username) throws NotFoundException {
-        UserDocument userEntity = userRepository.findByUsername(username);
-        if(userEntity == null) throw new NotFoundException("User not found with username: " + username);
-        return userEntity;
+        UserDocument user = userRepository.findByUsername(username);
+        if(user == null) throw new NotFoundException("User not found with username: " + username);
+        return user;
+    }
+
+    @Override
+    public UserDocument getByEmail(String email) throws NotFoundException {
+        UserDocument user = userRepository.findByEmail(email);
+        if(user == null) throw new NotFoundException("User not found with email: " + email);
+        return user;
+    }
+
+    @Override
+    public UserDocument getByPasswordResetToken(String passwordResetToken) {
+        return userRepository.findByPasswordResetToken(passwordResetToken);
     }
 
     @Transactional
     @Override
     public UserDocument createOne(UserDocument document) {
         checkDuplicatedUserNameAndEmail(document);
-        String hashedPassword = bCryptPasswordEncoder.encode(document.getPassword());
-        document.setPassword(hashedPassword);
+        document.setPassword(passwordUtil.hashPassword(document.getPassword()));
         document.setPhoto("default.jpg");
         document.setCreatedAt(LocalDateTime.now());
         document.setUpdatedAt(LocalDateTime.now());
@@ -70,36 +78,36 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDocument updateOne(String id, UserDocument document) throws NotFoundException {
-        UserDocument userEntity = getOne(id);
-        checkDuplicatedUserNameAndEmail(userEntity);
+        UserDocument user = getOne(id);
+        checkDuplicatedUserNameAndEmail(document);
 
-        userEntity.setName(document.getName());
-        userEntity.setEmail(document.getEmail());
-        userEntity.setUsername(document.getUsername());
-        userEntity.setUpdatedAt(LocalDateTime.now());
+        user.setName(document.getName());
+        user.setEmail(document.getEmail());
+        user.setUsername(document.getUsername());
+        user.setUpdatedAt(LocalDateTime.now());
 
-        userRepository.save(userEntity);
-        return userEntity;
+        userRepository.save(user);
+        return user;
     }
 
-    private void checkDuplicatedUserNameAndEmail(UserDocument userEntity) throws NotFoundException {
-        if(userRepository.findByEmail(userEntity.getEmail()) != null)
-            throw new DuplicatedException("Duplicated email value: " + userEntity.getEmail());
+    private void checkDuplicatedUserNameAndEmail(UserDocument user) throws NotFoundException {
+        if(userRepository.findByEmail(user.getEmail()) != null)
+            throw new DuplicatedException("Duplicated email value: " + user.getEmail());
 
-        if(userRepository.findByUsername(userEntity.getUsername()) != null)
-            throw new DuplicatedException("Duplicated username value: " + userEntity.getUsername());
+        if(userRepository.findByUsername(user.getUsername()) != null)
+            throw new DuplicatedException("Duplicated username value: " + user.getUsername());
     }
 
     @Override
     public void deleteOne(String id) throws NotFoundException {
-        UserDocument deletedUserEntity = userRepository.findById(id).orElse(null);
-        if(deletedUserEntity == null) throw new NotFoundException("User not found with id: " + id);
-        userRepository.delete(deletedUserEntity);
+        UserDocument deletedUser = userRepository.findById(id).orElse(null);
+        if(deletedUser == null) throw new NotFoundException("User not found with id: " + id);
+        userRepository.delete(deletedUser);
     }
 
     @Override
-    public List<UserDocument> search(String word , Pageable pageable) {
-        return userRepository.searchBy(word, pageable);
+    public List<UserDocument> search(String name, Pageable pageable) {
+        return userRepository.searchByName(name, pageable);
     }
 
     @Override
@@ -107,11 +115,18 @@ public class UserServiceImp implements UserService {
         return userRepository.count();
     }
 
+
     @Override
     public UserDocument updateUserPhoto(UserDocument user, MultipartFile photoFile) throws Exception {
         String photo = fileUploadService.saveUserPhoto(photoFile);
         user.setPhoto(photo);
         userRepository.save(user);
         return user;
+    }
+
+    @Transactional
+    @Override
+    public UserDocument saveUser(UserDocument user) {
+        return userRepository.save(user);
     }
 }

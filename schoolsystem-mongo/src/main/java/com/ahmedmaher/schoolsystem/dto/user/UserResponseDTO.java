@@ -1,6 +1,5 @@
 package com.ahmedmaher.schoolsystem.dto.user;
 
-import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.Set;

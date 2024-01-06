@@ -3,23 +3,29 @@ package com.ahmedmaher.schoolsystem.service.school;
 import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
 import com.ahmedmaher.schoolsystem.document.SchoolDocument;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
+import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
 import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SchoolServiceImp implements SchoolService {
     private final SchoolRepository schoolRepository;
+    private final ClassroomRepository classroomRepository;
+
 
     @Autowired
-    public SchoolServiceImp(SchoolRepository schoolRepository){
+    public SchoolServiceImp(SchoolRepository schoolRepository, ClassroomRepository classroomRepository) {
         this.schoolRepository = schoolRepository;
+        this.classroomRepository = classroomRepository;
     }
 
     @Override
@@ -60,19 +66,13 @@ public class SchoolServiceImp implements SchoolService {
     @Transactional
     @Override
     public void deleteOne(String id) throws NotFoundException {
-        SchoolDocument deletedSchoolEntity = schoolRepository.findById(id).orElse(null);
-        if(deletedSchoolEntity == null)
-            throw new NotFoundException("School not found with id: " + id);
-        List<ClassroomDocument> classrooms = getSchoolClassrooms(deletedSchoolEntity.getId());
-        for (ClassroomDocument classroom: classrooms) {
-            classroom.setSchool(null);
-        }
+        SchoolDocument deletedSchoolEntity = getOne(id);
         schoolRepository.delete(deletedSchoolEntity);
     }
 
     @Override
     public List<SchoolDocument> search(String word , Pageable pageable) {
-        return schoolRepository.searchBy(word, pageable);
+        return schoolRepository.searchByName(word, pageable);
     }
     @Override
     public long getAllSchoolsCount() {
@@ -80,8 +80,8 @@ public class SchoolServiceImp implements SchoolService {
     }
 
     @Override
-    public List<ClassroomDocument> getSchoolClassrooms(String schoolId) {
-        SchoolDocument schoolEntity = schoolRepository.findSchoolWithClassrooms(schoolId);
-        return schoolEntity.getClassrooms();
+    public List<ClassroomDocument> getSchoolClassrooms(String schoolId , Pageable pageable) {
+        SchoolDocument school = getOne(schoolId);
+        return classroomRepository.findBySchool(school.getId() , pageable);
     }
 }

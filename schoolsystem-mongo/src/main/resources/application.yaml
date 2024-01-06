@@ -24,10 +24,13 @@ logging:
 
 jwt:
   secret: EDkSgdGptvg70eQXVrt3MPt46e3qG0
-  expireAt: 30
-upload:
-  location: /src/main/resources/static/userPhotos
+  expire-at-in-days: 30
 
+upload:
+  location: /uploads/userPhotos
+
+auth:
+  reset-token-expires-in-minutes: 10
 
 app:
   config:
@@ -39,6 +42,10 @@ app:
         api:
           login-uri: /login
           signup-uri: /signup
+          forget-password-uri: /forgetPassword
+          reset-password-uri: /resetPassword
+          update-password-uri: /updatePassword
+
       user:
         base-uri: /api/v1/users
         api:

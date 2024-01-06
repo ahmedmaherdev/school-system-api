@@ -7,7 +7,7 @@ import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
 import com.ahmedmaher.schoolsystem.document.SchoolDocument;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.school.SchoolService;
-import com.ahmedmaher.schoolsystem.util.AppFeatures;
+import com.ahmedmaher.schoolsystem.util.AppFeaturesUtil;
 import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
 import com.ahmedmaher.schoolsystem.util.mapper.SchoolMapper;
 import jakarta.annotation.security.RolesAllowed;
@@ -38,8 +38,8 @@ public class SchoolController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "-createdAt") String sort
     ) {
-        AppFeatures appFeatures = new AppFeatures(sort , size , page);
-        List<SchoolDocument> schoolEntities = this.schoolService.getAll(appFeatures.splitPageable());
+        AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
+        List<SchoolDocument> schoolEntities = this.schoolService.getAll(appFeaturesUtil.splitPageable());
         List<SchoolResponseDTO> schools = SchoolMapper.mapToSchoolResponseDTOs(schoolEntities);
         long allCount = this.schoolService.getAllSchoolsCount();
         int count = schools.size();
@@ -105,9 +105,13 @@ public class SchoolController {
 
     @GetMapping("${app.config.backend.school.api.load-all-classrooms-by-school-uri}")
     public ResponseEntity<?> getAllSchoolClassrooms(
-            @PathVariable("schoolId") String schoolId
+            @PathVariable("schoolId") String schoolId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "-createdAt") String sort
     ){
-        List<ClassroomDocument> classrooms = schoolService.getSchoolClassrooms(schoolId);
+        AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
+        List<ClassroomDocument> classrooms = schoolService.getSchoolClassrooms(schoolId , appFeaturesUtil.splitPageable());
         return ResponseEntity.ok(ClassroomMapper.mapToClassroomResponseDTOs(classrooms));
     }
 }

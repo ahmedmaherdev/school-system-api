@@ -8,8 +8,7 @@ import com.ahmedmaher.schoolsystem.document.UserDocument;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.enrollment.EnrollmentService;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
-import com.ahmedmaher.schoolsystem.util.AppFeatures;
-import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
+import com.ahmedmaher.schoolsystem.util.AppFeaturesUtil;
 import com.ahmedmaher.schoolsystem.util.mapper.UserMapper;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -46,8 +45,8 @@ public class UserController {
             @RequestParam(defaultValue = "createdAt") String sort
     ) {
 
-        AppFeatures appFeatures = new AppFeatures(sort , size , page);
-        List<UserDocument> userEntities = userService.getAll(appFeatures.splitPageable());
+        AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
+        List<UserDocument> userEntities = userService.getAll(appFeaturesUtil.splitPageable());
         List<UserResponseDTO> users = UserMapper.mapToUserResponseDTOs(userEntities);
         long allCount = userService.getAllUsersCount();
         int count = users.size();

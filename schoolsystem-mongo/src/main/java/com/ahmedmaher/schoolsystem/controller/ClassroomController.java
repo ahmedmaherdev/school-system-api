@@ -6,7 +6,7 @@ import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomResponseDTO;
 import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
-import com.ahmedmaher.schoolsystem.util.AppFeatures;
+import com.ahmedmaher.schoolsystem.util.AppFeaturesUtil;
 import com.ahmedmaher.schoolsystem.util.mapper.ClassroomMapper;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -39,10 +39,10 @@ public class ClassroomController {
             @RequestParam(defaultValue = "10" ) int size,
             @RequestParam(defaultValue = "createdAt") String sort
     ) {
-        AppFeatures appFeatures = new AppFeatures(sort , size , page);
+        AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
         List<ClassroomDocument> classroomEntities = this.classroomService.getAllBySchoolId(
                 schoolId ,
-                appFeatures.splitPageable()
+                appFeaturesUtil.splitPageable()
         );
         List<ClassroomResponseDTO> classrooms = ClassroomMapper.mapToClassroomResponseDTOs(classroomEntities);
         long allCount = this.classroomService.getAllClassroomsCount(schoolId);

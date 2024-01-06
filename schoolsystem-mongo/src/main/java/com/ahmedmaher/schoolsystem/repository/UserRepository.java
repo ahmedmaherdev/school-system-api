@@ -9,13 +9,12 @@ import java.util.List;
 
 public interface UserRepository extends MongoRepository<UserDocument, String> {
 
-    @Query("{username: ?0}")
     UserDocument findByUsername(String username);
 
-    @Query("{email: ?0}")
     UserDocument findByEmail(String email);
 
+    UserDocument findByPasswordResetToken(String passwordResetToken);
     @Query("{ $text: { $search: ?0 }}")
-    List<UserDocument> searchBy(String word, Pageable pageable);
+    List<UserDocument> searchByName(String name, Pageable pageable);
 
 }
