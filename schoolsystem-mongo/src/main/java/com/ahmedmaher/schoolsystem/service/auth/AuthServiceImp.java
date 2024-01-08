@@ -1,9 +1,8 @@
-package com.ahmedmaher.schoolsystem.service;
+package com.ahmedmaher.schoolsystem.service.auth;
 
 import com.ahmedmaher.schoolsystem.document.UserDocument;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.exception.BadRequestException;
-import com.ahmedmaher.schoolsystem.repository.UserRepository;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
 import com.ahmedmaher.schoolsystem.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +11,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
-public class AuthService {
+public class AuthServiceImp implements AuthService {
 
 
     @Value("${auth.reset-token-expires-in-minutes}")
@@ -32,10 +29,10 @@ public class AuthService {
     private final PasswordUtil passwordUtil;
 
     @Autowired
-    public AuthService(UserService userService,
-                       AuthenticationManager authenticationManager,
-                       PasswordUtil passwordUtil
-                     ) {
+    public AuthServiceImp(UserService userService,
+                          AuthenticationManager authenticationManager,
+                          PasswordUtil passwordUtil
+    ) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.passwordUtil = passwordUtil;
@@ -69,7 +66,7 @@ public class AuthService {
         LocalDateTime resetTokenExpires = LocalDateTime.now().plusMinutes(EXPIRES_IN_MINUTES);
 
         user.setPasswordResetToken(resetToken);
-        user.setPasswordResetExpire(resetTokenExpires);
+        user.setPasswordResetExpires(resetTokenExpires);
 
         userService.saveUser(user);
         System.out.println("https://localhost:3000/reset-password?token=" + resetToken);
@@ -77,15 +74,15 @@ public class AuthService {
 
     public UserDocument resetPassword(UserDocument userDocument) {
         UserDocument user = userService.getByPasswordResetToken(
-               userDocument.getPasswordResetToken()
+                userDocument.getPasswordResetToken()
         );
 
-        if(user == null || passwordUtil.isResetTokenExpired(user.getPasswordResetExpire()))
+        if(user == null || passwordUtil.isResetTokenExpired(user.getPasswordResetExpires()))
             throw new BadRequestException("Token is invalid or expired.");
 
         user.setPassword(passwordUtil.hashPassword(userDocument.getPassword()));
         user.setPasswordResetToken(null);
-        user.setPasswordResetExpire(null);
+        user.setPasswordResetExpires(null);
 
         return userService.saveUser(user);
     }

@@ -1,4 +1,5 @@
-package com.ahmedmaher.schoolsystem.dto.school;
+package com.ahmedmaher.schoolsystem.dto.classroom;
+
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SchoolRequestDTO {
+public class ClassroomReqDTO {
     @NotBlank(message = "name is required.")
     private String name;
 
-    @NotBlank(message = "address is required.")
-    private String address;
+    private String schoolId;
+
 }

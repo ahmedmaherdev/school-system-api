@@ -1,15 +1,15 @@
 package com.ahmedmaher.schoolsystem.util.mapper;
 
-import com.ahmedmaher.schoolsystem.dto.school.SchoolRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.school.SchoolReqDTO;
+import com.ahmedmaher.schoolsystem.dto.school.SchoolResDTO;
 import com.ahmedmaher.schoolsystem.document.SchoolDocument;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SchoolMapper {
 
-    public static SchoolResponseDTO mapToSchoolResponseDTO(SchoolDocument schoolDocument){
-        return new SchoolResponseDTO(schoolDocument.getId(),
+    public static SchoolResDTO mapToSchoolResponseDTO(SchoolDocument schoolDocument){
+        return new SchoolResDTO(schoolDocument.getId(),
                 schoolDocument.getName(),
                 schoolDocument.getAddress(),
                 schoolDocument.getCreatedAt(),
@@ -17,14 +17,14 @@ public class SchoolMapper {
         );
     }
 
-    public static SchoolDocument mapToSchoolDocument(SchoolRequestDTO schoolRequestDTO){
-        SchoolDocument schoolDocument = new SchoolDocument();
-        schoolDocument.setName(schoolRequestDTO.getName());
-        schoolDocument.setAddress(schoolRequestDTO.getAddress());
-        return schoolDocument;
+    public static SchoolDocument mapToSchoolDocument(SchoolReqDTO schoolReqDTO){
+        return SchoolDocument.builder()
+                .name(schoolReqDTO.getName())
+                .address(schoolReqDTO.getAddress())
+                .build();
     }
 
-    public static List<SchoolResponseDTO> mapToSchoolResponseDTOs(List<SchoolDocument> schoolDocuments){
+    public static List<SchoolResDTO> mapToSchoolResponseDTOs(List<SchoolDocument> schoolDocuments){
         return schoolDocuments.stream().map(SchoolMapper::mapToSchoolResponseDTO).collect(Collectors.toList());
     }
 

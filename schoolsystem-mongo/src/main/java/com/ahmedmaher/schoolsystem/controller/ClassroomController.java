@@ -1,8 +1,8 @@
 package com.ahmedmaher.schoolsystem.controller;
 
-import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomReqDTO;
+import com.ahmedmaher.schoolsystem.dto.CustomResDTO;
+import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomResDTO;
 import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
@@ -33,7 +33,7 @@ public class ClassroomController {
     }
 
     @GetMapping("${app.config.backend.classroom.api.load-all-classrooms-uri}")
-    public ResponseEntity<CustomResponseDTO<?>> getAllClassrooms(
+    public ResponseEntity<CustomResDTO<?>> getAllClassrooms(
             @PathVariable("schoolId") String schoolId ,
             @RequestParam(defaultValue = "0" ) int page ,
             @RequestParam(defaultValue = "10" ) int size,
@@ -44,19 +44,19 @@ public class ClassroomController {
                 schoolId ,
                 appFeaturesUtil.splitPageable()
         );
-        List<ClassroomResponseDTO> classrooms = ClassroomMapper.mapToClassroomResponseDTOs(classroomEntities);
+        List<ClassroomResDTO> classrooms = ClassroomMapper.mapToClassroomResponseDTOs(classroomEntities);
         long allCount = this.classroomService.getAllClassroomsCount(schoolId);
         int count = classrooms.size();
 
         // handle response
         Map<String , Object> res = new HashMap<>();
         res.put("classrooms" , classrooms);
-        CustomResponseDTO<Map<String , Object>> customResponseDTO = new CustomResponseDTO<>(res , count, allCount);
-        return ResponseEntity.ok(customResponseDTO);
+        CustomResDTO<Map<String , Object>> customResDTO = new CustomResDTO<>(res , count, allCount);
+        return ResponseEntity.ok(customResDTO);
     }
 
     @GetMapping("${app.config.backend.classroom.api.load-classroom-by-id-uri}")
-    public ResponseEntity<ClassroomResponseDTO> getClassroom(@PathVariable("classroomId") String classroomId){
+    public ResponseEntity<ClassroomResDTO> getClassroom(@PathVariable("classroomId") String classroomId){
         ClassroomDocument classroom = this.classroomService.getOne(classroomId);
         return ResponseEntity.ok(
                 ClassroomMapper.mapToClassroomResponseDTO(classroom)
@@ -65,12 +65,12 @@ public class ClassroomController {
 
     @RolesAllowed({UserRole.Names.ADMIN , UserRole.Names.SUPERADMIN})
     @PostMapping("${app.config.backend.classroom.api.create-classroom-uri}")
-    public ResponseEntity<ClassroomResponseDTO> createClassroom(
+    public ResponseEntity<ClassroomResDTO> createClassroom(
             @PathVariable("schoolId") String schoolId,
-            @Valid @RequestBody ClassroomRequestDTO classroomRequestDTO
+            @Valid @RequestBody ClassroomReqDTO classroomReqDTO
     ) {
-        classroomRequestDTO.setSchoolId(schoolId);
-        ClassroomDocument classroomEntity = ClassroomMapper.mapToClassroomDocument(classroomRequestDTO);
+        classroomReqDTO.setSchoolId(schoolId);
+        ClassroomDocument classroomEntity = ClassroomMapper.mapToClassroomDocument(classroomReqDTO);
         this.classroomService.createOne(classroomEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ClassroomMapper.mapToClassroomResponseDTO(classroomEntity)
@@ -78,13 +78,13 @@ public class ClassroomController {
     }
     @RolesAllowed({UserRole.Names.ADMIN , UserRole.Names.SUPERADMIN})
     @PutMapping("${app.config.backend.classroom.api.load-classroom-by-id-uri}")
-    public ResponseEntity<ClassroomResponseDTO> updateClassroom(
-            @Valid @RequestBody() ClassroomRequestDTO classroomRequestDTO,
+    public ResponseEntity<ClassroomResDTO> updateClassroom(
+            @Valid @RequestBody() ClassroomReqDTO classroomReqDTO,
             @PathVariable("classroomId") String classroomId,
             @PathVariable("schoolId") String schoolId
     ) {
-        classroomRequestDTO.setSchoolId(schoolId);
-        ClassroomDocument classroomEntity = ClassroomMapper.mapToClassroomDocument(classroomRequestDTO);
+        classroomReqDTO.setSchoolId(schoolId);
+        ClassroomDocument classroomEntity = ClassroomMapper.mapToClassroomDocument(classroomReqDTO);
         this.classroomService.updateOne(
                 classroomId ,
                classroomEntity
@@ -95,7 +95,7 @@ public class ClassroomController {
     }
 
     @GetMapping("${app.config.backend.classroom.api.load-search-classrooms-uri}")
-    public ResponseEntity<List<ClassroomResponseDTO>> searchSchool(
+    public ResponseEntity<List<ClassroomResDTO>> searchSchool(
             @RequestParam String s
     ) {
         Pageable pageable = PageRequest.of(0 , 10);

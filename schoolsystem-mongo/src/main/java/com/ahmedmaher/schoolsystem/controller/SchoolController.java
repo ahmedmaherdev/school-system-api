@@ -1,8 +1,8 @@
 package com.ahmedmaher.schoolsystem.controller;
 
-import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.school.SchoolRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.school.SchoolResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.CustomResDTO;
+import com.ahmedmaher.schoolsystem.dto.school.SchoolReqDTO;
+import com.ahmedmaher.schoolsystem.dto.school.SchoolResDTO;
 import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
 import com.ahmedmaher.schoolsystem.document.SchoolDocument;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
@@ -33,26 +33,26 @@ public class SchoolController {
     }
 
     @GetMapping("${app.config.backend.school.api.load-all-schools-uri}")
-    public ResponseEntity<CustomResponseDTO<?>> getAllSchools(
+    public ResponseEntity<CustomResDTO<?>> getAllSchools(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "-createdAt") String sort
     ) {
         AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
         List<SchoolDocument> schoolEntities = this.schoolService.getAll(appFeaturesUtil.splitPageable());
-        List<SchoolResponseDTO> schools = SchoolMapper.mapToSchoolResponseDTOs(schoolEntities);
+        List<SchoolResDTO> schools = SchoolMapper.mapToSchoolResponseDTOs(schoolEntities);
         long allCount = this.schoolService.getAllSchoolsCount();
         int count = schools.size();
 
         // handle response
         Map<String , Object> res = new HashMap<>();
         res.put("schools" , schools);
-        CustomResponseDTO<Map<String , Object>> customResponseDTO = new CustomResponseDTO<>(res , count, allCount);
-        return ResponseEntity.ok(customResponseDTO);
+        CustomResDTO<Map<String , Object>> customResDTO = new CustomResDTO<>(res , count, allCount);
+        return ResponseEntity.ok(customResDTO);
     }
 
     @GetMapping("${app.config.backend.school.api.load-school-by-id-uri}")
-    public ResponseEntity<SchoolResponseDTO> getSchool(@PathVariable("schoolId") String schoolId){
+    public ResponseEntity<SchoolResDTO> getSchool(@PathVariable("schoolId") String schoolId){
         SchoolDocument schoolEntity = this.schoolService.getOne(schoolId);
         return ResponseEntity.ok(
                 SchoolMapper.mapToSchoolResponseDTO(schoolEntity)
@@ -61,8 +61,8 @@ public class SchoolController {
 
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PostMapping("${app.config.backend.school.api.create-school-uri}")
-    public ResponseEntity<SchoolResponseDTO> createSchool(@Valid @RequestBody SchoolRequestDTO schoolRequestDTO) {
-        SchoolDocument schoolEntity = SchoolMapper.mapToSchoolDocument(schoolRequestDTO);
+    public ResponseEntity<SchoolResDTO> createSchool(@Valid @RequestBody SchoolReqDTO schoolReqDTO) {
+        SchoolDocument schoolEntity = SchoolMapper.mapToSchoolDocument(schoolReqDTO);
         this.schoolService.createOne(schoolEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 SchoolMapper.mapToSchoolResponseDTO(schoolEntity)
@@ -71,11 +71,11 @@ public class SchoolController {
 
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PutMapping("${app.config.backend.school.api.load-school-by-id-uri}")
-    public ResponseEntity<SchoolResponseDTO> updateSchool(
-            @Valid @RequestBody() SchoolRequestDTO schoolRequestDTO,
+    public ResponseEntity<SchoolResDTO> updateSchool(
+            @Valid @RequestBody() SchoolReqDTO schoolReqDTO,
             @PathVariable("schoolId") String schoolId
     ) {
-        SchoolDocument schoolEntity = SchoolMapper.mapToSchoolDocument(schoolRequestDTO);
+        SchoolDocument schoolEntity = SchoolMapper.mapToSchoolDocument(schoolReqDTO);
         this.schoolService.updateOne(
                 schoolId,
                 schoolEntity
@@ -92,7 +92,7 @@ public class SchoolController {
     }
 
     @GetMapping("${app.config.backend.school.api.load-search-schools-uri}")
-    public ResponseEntity<List<SchoolResponseDTO>> searchSchool(
+    public ResponseEntity<List<SchoolResDTO>> searchSchool(
             @RequestParam String s
     ) {
         Pageable pageable = PageRequest.of(0 , 10);

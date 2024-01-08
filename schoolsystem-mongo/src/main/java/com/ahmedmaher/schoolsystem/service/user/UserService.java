@@ -13,11 +13,8 @@ public interface UserService extends BaseService<UserDocument> {
     UserDocument getByUsername(String username) throws NotFoundException;
     UserDocument getByEmail(String email) throws NotFoundException;
     UserDocument getByPasswordResetToken(String passwordResetToken);
-    List<UserDocument> search(String name, Pageable pageable);
-
-    long getAllUsersCount();
-
     UserDocument updateUserPhoto(UserDocument user, MultipartFile photoFile) throws Exception;
-
     UserDocument saveUser(UserDocument user);
+    List<UserDocument> search(String name, Pageable pageable);
+    long getAllUsersCount();
 }

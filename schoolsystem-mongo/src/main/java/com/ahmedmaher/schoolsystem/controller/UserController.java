@@ -1,9 +1,9 @@
 package com.ahmedmaher.schoolsystem.controller;
 
-import com.ahmedmaher.schoolsystem.dto.CustomResponseDTO;
-import com.ahmedmaher.schoolsystem.dto.user.UserRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.user.UserUpdateRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.CustomResDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserReqDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserUpdateReqDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserResDTO;
 import com.ahmedmaher.schoolsystem.document.UserDocument;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.enrollment.EnrollmentService;
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("${app.config.backend.user.api.load-all-users-uri}")
-    public ResponseEntity<CustomResponseDTO<?>> getAllUsers(
+    public ResponseEntity<CustomResDTO<?>> getAllUsers(
             @RequestParam(defaultValue = "0" ) int page ,
             @RequestParam(defaultValue = "10" ) int size,
             @RequestParam(defaultValue = "createdAt") String sort
@@ -47,19 +47,19 @@ public class UserController {
 
         AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
         List<UserDocument> userEntities = userService.getAll(appFeaturesUtil.splitPageable());
-        List<UserResponseDTO> users = UserMapper.mapToUserResponseDTOs(userEntities);
+        List<UserResDTO> users = UserMapper.mapToUserResponseDTOs(userEntities);
         long allCount = userService.getAllUsersCount();
         int count = users.size();
 
         // handle response
         Map<String , Object> res = new HashMap<>();
         res.put("users" , users);
-        CustomResponseDTO<Map<String , Object>> customResponseDTO = new CustomResponseDTO<>(res , count, allCount);
-        return ResponseEntity.ok(customResponseDTO);
+        CustomResDTO<Map<String , Object>> customResDTO = new CustomResDTO<>(res , count, allCount);
+        return ResponseEntity.ok(customResDTO);
     }
 
     @GetMapping("${app.config.backend.user.api.load-user-by-id-uri}")
-    public ResponseEntity<UserResponseDTO> getUser(@PathVariable("userId") String userId){
+    public ResponseEntity<UserResDTO> getUser(@PathVariable("userId") String userId){
         return ResponseEntity.ok(
                 UserMapper.mapToUserResponseDTO(
                         userService.getOne(userId)
@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @GetMapping("${app.config.backend.user.api.load-me-uri}")
-    public ResponseEntity<UserResponseDTO> getMe(Authentication authentication) {
+    public ResponseEntity<UserResDTO> getMe(Authentication authentication) {
         String username = (String) authentication.getPrincipal();
         UserDocument user = userService.getByUsername(username);
         return ResponseEntity.ok(
@@ -77,13 +77,13 @@ public class UserController {
     }
 
     @PutMapping("${app.config.backend.user.api.update-me-uri}")
-    public ResponseEntity<UserResponseDTO> updateMe(
-            @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
+    public ResponseEntity<UserResDTO> updateMe(
+            @Valid @RequestBody() UserUpdateReqDTO userUpdateReqDTO,
             Authentication authentication
     ) {
         String username = (String) authentication.getPrincipal();
         UserDocument userEntity = userService.getByUsername(username);
-        UserDocument user = UserMapper.mapToUserEntity(userUpdateRequestDTO);
+        UserDocument user = UserMapper.mapToUserDocument(userUpdateReqDTO);
         return ResponseEntity.ok(
                 UserMapper.mapToUserResponseDTO(
                         userService.updateOne(userEntity.getId(), user)
@@ -92,7 +92,7 @@ public class UserController {
     }
 
     @PutMapping("${app.config.backend.user.api.update-my-photo-uri}")
-    public ResponseEntity<UserResponseDTO> updateMyPhoto(
+    public ResponseEntity<UserResDTO> updateMyPhoto(
             @RequestPart("photo") MultipartFile photoFile,
             Authentication authentication
     ) throws Exception {
@@ -107,8 +107,8 @@ public class UserController {
 
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PostMapping("${app.config.backend.user.api.create-user-uri}")
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userDTO) {
-        UserDocument userEntity = UserMapper.mapToUserEntity(userDTO);
+    public ResponseEntity<UserResDTO> createUser(@Valid @RequestBody UserReqDTO userDTO) {
+        UserDocument userEntity = UserMapper.mapToUserDocument(userDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 UserMapper.mapToUserResponseDTO(
                         userService.createOne(userEntity)
@@ -118,11 +118,11 @@ public class UserController {
 
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PutMapping("${app.config.backend.user.api.load-user-by-id-uri}")
-    public ResponseEntity<UserResponseDTO> updateUser(
-            @Valid @RequestBody() UserUpdateRequestDTO userUpdateRequestDTO,
+    public ResponseEntity<UserResDTO> updateUser(
+            @Valid @RequestBody() UserUpdateReqDTO userUpdateReqDTO,
             @PathVariable("userId") String userId
     ) {
-        UserDocument user = UserMapper.mapToUserEntity(userUpdateRequestDTO);
+        UserDocument user = UserMapper.mapToUserDocument(userUpdateReqDTO);
         return ResponseEntity.ok(
                 UserMapper.mapToUserResponseDTO(
                         userService.updateOne(userId , user)
@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @GetMapping("${app.config.backend.user.api.load-search-users-uri}")
-    public ResponseEntity<List<UserResponseDTO>> searchUser(
+    public ResponseEntity<List<UserResDTO>> searchUser(
             @RequestParam String s
     ) {
         Pageable pageable = PageRequest.of(0 , 10);

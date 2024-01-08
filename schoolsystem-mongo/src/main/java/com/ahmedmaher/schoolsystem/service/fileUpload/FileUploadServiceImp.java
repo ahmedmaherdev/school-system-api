@@ -1,4 +1,4 @@
-package com.ahmedmaher.schoolsystem.service;
+package com.ahmedmaher.schoolsystem.service.fileUpload;
 
 import com.ahmedmaher.schoolsystem.exception.BadRequestException;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
@@ -8,6 +8,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class FileUploadService {
+public class FileUploadServiceImp implements FileUploadService {
     private final List<String> SUPPORTED_PHOTO_FORMAT
             = Arrays.asList("image/jpg" , "image/jpeg" , "image/png" , "image/webp");
 
@@ -42,7 +43,7 @@ public class FileUploadService {
         return MediaType.parseMediaType("image/" + fileExtension);
     }
 
-    public Resource loadFile(String folderName , String fileName) {
+    private Resource loadFile(String folderName , String fileName) {
         try {
             Path path = Paths.get(uploadDir , folderName).resolve(fileName).normalize();
             Resource resource = new UrlResource(path.toUri());
@@ -55,7 +56,7 @@ public class FileUploadService {
         }
 
     }
-    public String saveFile(String folderName , MultipartFile file) throws IOException {
+    private String saveFile(String folderName , MultipartFile file) throws IOException {
         String fileName = generateUniqueFileName(file.getOriginalFilename());
         Path filePath = Paths.get(uploadDir , folderName , fileName);
         try {

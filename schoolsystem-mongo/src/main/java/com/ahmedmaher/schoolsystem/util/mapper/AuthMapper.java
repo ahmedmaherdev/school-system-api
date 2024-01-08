@@ -5,38 +5,38 @@ import com.ahmedmaher.schoolsystem.document.UserDocument;
 
 public class AuthMapper {
 
-    public static UserDocument mapToUserDocument(SignupRequestDTO signupRequestDTO){
-        UserDocument userEntity = new UserDocument();
-        userEntity.setName(signupRequestDTO.getName());
-        userEntity.setEmail(signupRequestDTO.getEmail());
-        userEntity.setUsername(signupRequestDTO.getUsername());
-        userEntity.setPassword(signupRequestDTO.getPassword());
-        return userEntity;
+    public static UserDocument mapToUserDocument(SignupReqDTO signupReqDTO){
+        return UserDocument.builder()
+                .name(signupReqDTO.getName())
+                .email(signupReqDTO.getEmail())
+                .username(signupReqDTO.getUsername())
+                .password(signupReqDTO.getPassword())
+                .build();
     }
 
-    public static UserDocument mapToUserDocument(ForgetPasswordRequestDTO forgetPasswordRequestDTO){
-        UserDocument userDocument = new UserDocument();
-        userDocument.setEmail(forgetPasswordRequestDTO.getEmail());
-        return userDocument;
+    public static UserDocument mapToUserDocument(ForgetPasswordReqDTO forgetPasswordReqDTO){
+        return UserDocument.builder()
+                .email(forgetPasswordReqDTO.getEmail())
+                .build();
     }
 
-    public static UserDocument mapToUserDocument(ResetPasswordRequestDTO resetPasswordRequestDTO){
-        UserDocument userDocument = new UserDocument();
-        userDocument.setPassword(resetPasswordRequestDTO.getPassword());
-        return userDocument;
+    public static UserDocument mapToUserDocument(ResetPasswordReqDTO resetPasswordReqDTO){
+        return UserDocument.builder()
+                .password(resetPasswordReqDTO.getPassword())
+                .build();
     }
 
-    public static UserDocument mapToUserDocument(UpdatePasswordRequestDTO updatePasswordRequestDTO){
-        UserDocument userDocument = new UserDocument();
-        userDocument.setPassword(updatePasswordRequestDTO.getPassword());
-        return userDocument;
+    public static UserDocument mapToUserDocument(UpdatePasswordReqDTO updatePasswordReqDTO){
+        return UserDocument.builder()
+                .password(updatePasswordReqDTO.getPassword())
+                .build();
     }
 
-    public static UserDocument mapToUserDocument(LoginRequestDTO loginRequestDTO){
-        UserDocument userEntity = new UserDocument();
-        userEntity.setUsername(loginRequestDTO.getUsername());
-        userEntity.setPassword(loginRequestDTO.getPassword());
-        return userEntity;
+    public static UserDocument mapToUserDocument(LoginReqDTO loginReqDTO){
+        return UserDocument.builder()
+                .username(loginReqDTO.getUsername())
+                .password(loginReqDTO.getPassword())
+                .build();
     }
 
 }

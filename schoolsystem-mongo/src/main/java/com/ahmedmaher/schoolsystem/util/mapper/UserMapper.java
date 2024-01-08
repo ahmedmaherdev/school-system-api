@@ -1,8 +1,8 @@
 package com.ahmedmaher.schoolsystem.util.mapper;
 
-import com.ahmedmaher.schoolsystem.dto.user.UserRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.user.UserUpdateRequestDTO;
-import com.ahmedmaher.schoolsystem.dto.user.UserResponseDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserReqDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserUpdateReqDTO;
+import com.ahmedmaher.schoolsystem.dto.user.UserResDTO;
 import com.ahmedmaher.schoolsystem.document.UserDocument;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 public class UserMapper {
 
-    public static UserResponseDTO mapToUserResponseDTO(UserDocument userEntity){
-        return new UserResponseDTO(
+    public static UserResDTO mapToUserResponseDTO(UserDocument userEntity){
+        return new UserResDTO(
                 userEntity.getId(),
                 userEntity.getName(),
                 userEntity.getUsername(),
@@ -27,30 +27,25 @@ public class UserMapper {
         );
     }
 
-    public static UserDocument mapToUserEntity(UserUpdateRequestDTO userUpdateRequestDTO){
-        UserDocument userEntity = new UserDocument();
-        userEntity.setName(userUpdateRequestDTO.getName());
-        userEntity.setEmail(userUpdateRequestDTO.getEmail());
-        userEntity.setUsername(userUpdateRequestDTO.getUsername());
-        userEntity.setName(userEntity.getName());
-        return userEntity;
+    public static UserDocument mapToUserDocument(UserUpdateReqDTO userUpdateReqDTO){
+        return UserDocument.builder()
+                .name(userUpdateReqDTO.getName())
+                .email(userUpdateReqDTO.getEmail())
+                .username(userUpdateReqDTO.getUsername())
+                .build();
     }
 
-    public static UserDocument mapToUserEntity(UserRequestDTO userRequestDTO){
-        UserDocument userEntity = new UserDocument();
-        userEntity.setName(userRequestDTO.getName());
-        userEntity.setEmail(userRequestDTO.getEmail());
-        userEntity.setUsername(userRequestDTO.getUsername());
-        userEntity.setPassword(userRequestDTO.getPassword());
-        userEntity.setRoles(
-                mapToUserRoles(
-                        userRequestDTO.getRoles()
-                )
-        );
-        return userEntity;
+    public static UserDocument mapToUserDocument(UserReqDTO userReqDTO){
+        return UserDocument.builder()
+                .name(userReqDTO.getName())
+                .email(userReqDTO.getEmail())
+                .username(userReqDTO.getUsername())
+                .password(userReqDTO.getPassword())
+                .roles(mapToUserRoles(userReqDTO.getRoles()))
+                .build();
     }
 
-    public static List<UserResponseDTO> mapToUserResponseDTOs(List<UserDocument> UserEntities){
+    public static List<UserResDTO> mapToUserResponseDTOs(List<UserDocument> UserEntities){
         return UserEntities.stream().map(UserMapper::mapToUserResponseDTO).collect(Collectors.toList());
     }
 

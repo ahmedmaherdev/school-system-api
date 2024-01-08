@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SchoolResponseDTO {
+public class SchoolResDTO {
     private String id;
     private String name;
     private String address;
