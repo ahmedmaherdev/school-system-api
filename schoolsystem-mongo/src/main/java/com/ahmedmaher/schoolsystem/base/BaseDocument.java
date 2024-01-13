@@ -1,6 +1,7 @@
 package com.ahmedmaher.schoolsystem.base;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public abstract class BaseDocument {
 
     @Id

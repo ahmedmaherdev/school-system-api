@@ -1,6 +1,6 @@
 package com.ahmedmaher.schoolsystem.service.auth;
 
-import com.ahmedmaher.schoolsystem.document.UserDocument;
+import com.ahmedmaher.schoolsystem.document.UserDoc;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.exception.BadRequestException;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
@@ -38,18 +38,18 @@ public class AuthServiceImp implements AuthService {
         this.passwordUtil = passwordUtil;
     }
 
-    public UserDocument registerUser(UserDocument userDocument) {
+    public UserDoc registerUser(UserDoc userDoc) {
         Set<UserRole> studentRole = new HashSet<>();
         studentRole.add(UserRole.STUDENT);
-        userDocument.setRoles(studentRole);
-        return userService.createOne(userDocument);
+        userDoc.setRoles(studentRole);
+        return userService.createOne(userDoc);
     }
 
-    public UserDocument loginUser(UserDocument userDocument){
+    public UserDoc loginUser(UserDoc userDoc){
         try {
             UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
-                    userDocument.getUsername(),
-                    userDocument.getPassword()
+                    userDoc.getUsername(),
+                    userDoc.getPassword()
             );
             Authentication authentication = authenticationManager.authenticate(usernamePassword);
             return userService.getByUsername(authentication.getName());
@@ -59,8 +59,8 @@ public class AuthServiceImp implements AuthService {
         }
     }
 
-    public void forgetPassword(UserDocument userDocument) {
-        UserDocument user = userService.getByEmail(userDocument.getEmail());
+    public void forgetPassword(UserDoc userDoc) {
+        UserDoc user = userService.getByEmail(userDoc.getEmail());
 
         String resetToken = passwordUtil.generateResetToken();
         LocalDateTime resetTokenExpires = LocalDateTime.now().plusMinutes(EXPIRES_IN_MINUTES);
@@ -72,25 +72,25 @@ public class AuthServiceImp implements AuthService {
         System.out.println("https://localhost:3000/reset-password?token=" + resetToken);
     }
 
-    public UserDocument resetPassword(UserDocument userDocument) {
-        UserDocument user = userService.getByPasswordResetToken(
-                userDocument.getPasswordResetToken()
+    public UserDoc resetPassword(UserDoc userDoc) {
+        UserDoc user = userService.getByPasswordResetToken(
+                userDoc.getPasswordResetToken()
         );
 
         if(user == null || passwordUtil.isResetTokenExpired(user.getPasswordResetExpires()))
             throw new BadRequestException("Token is invalid or expired.");
 
-        user.setPassword(passwordUtil.hashPassword(userDocument.getPassword()));
+        user.setPassword(passwordUtil.hashPassword(userDoc.getPassword()));
         user.setPasswordResetToken(null);
         user.setPasswordResetExpires(null);
 
         return userService.saveUser(user);
     }
 
-    public UserDocument updatePassword(UserDocument userDocument, String newPassword) {
-        UserDocument user = userService.getByUsername(userDocument.getUsername());
+    public UserDoc updatePassword(UserDoc userDoc, String newPassword) {
+        UserDoc user = userService.getByUsername(userDoc.getUsername());
 
-        if(!passwordUtil.correctPassword(userDocument.getPassword() , user.getPassword()))
+        if(!passwordUtil.correctPassword(userDoc.getPassword() , user.getPassword()))
             throw new BadRequestException("current password is not correct.");
 
         user.setPassword(passwordUtil.hashPassword(newPassword));

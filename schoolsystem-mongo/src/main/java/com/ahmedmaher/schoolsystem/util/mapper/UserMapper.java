@@ -3,7 +3,7 @@ package com.ahmedmaher.schoolsystem.util.mapper;
 import com.ahmedmaher.schoolsystem.dto.user.UserReqDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserUpdateReqDTO;
 import com.ahmedmaher.schoolsystem.dto.user.UserResDTO;
-import com.ahmedmaher.schoolsystem.document.UserDocument;
+import com.ahmedmaher.schoolsystem.document.UserDoc;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class UserMapper {
 
-    public static UserResDTO mapToUserResponseDTO(UserDocument userEntity){
+    public static UserResDTO mapToUserResponseDTO(UserDoc userEntity){
         return new UserResDTO(
                 userEntity.getId(),
                 userEntity.getName(),
@@ -27,16 +27,16 @@ public class UserMapper {
         );
     }
 
-    public static UserDocument mapToUserDocument(UserUpdateReqDTO userUpdateReqDTO){
-        return UserDocument.builder()
+    public static UserDoc mapToUserDocument(UserUpdateReqDTO userUpdateReqDTO){
+        return UserDoc.builder()
                 .name(userUpdateReqDTO.getName())
                 .email(userUpdateReqDTO.getEmail())
                 .username(userUpdateReqDTO.getUsername())
                 .build();
     }
 
-    public static UserDocument mapToUserDocument(UserReqDTO userReqDTO){
-        return UserDocument.builder()
+    public static UserDoc mapToUserDocument(UserReqDTO userReqDTO){
+        return UserDoc.builder()
                 .name(userReqDTO.getName())
                 .email(userReqDTO.getEmail())
                 .username(userReqDTO.getUsername())
@@ -45,7 +45,7 @@ public class UserMapper {
                 .build();
     }
 
-    public static List<UserResDTO> mapToUserResponseDTOs(List<UserDocument> UserEntities){
+    public static List<UserResDTO> mapToUserResponseDTOs(List<UserDoc> UserEntities){
         return UserEntities.stream().map(UserMapper::mapToUserResponseDTO).collect(Collectors.toList());
     }
 

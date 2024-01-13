@@ -1,5 +1,6 @@
-package com.ahmedmaher.schoolsystem.validator;
+package com.ahmedmaher.schoolsystem.validator.annotations;
 
+import com.ahmedmaher.schoolsystem.validator.validators.PhotoValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.*;

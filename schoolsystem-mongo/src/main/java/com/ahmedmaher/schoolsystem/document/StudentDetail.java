@@ -12,5 +12,5 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 public class StudentDetail {
 
     @DBRef
-    private SchoolDocument school;
+    private SchoolDoc school;
 }

@@ -3,8 +3,8 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.CustomResDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolReqDTO;
 import com.ahmedmaher.schoolsystem.dto.school.SchoolResDTO;
-import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
-import com.ahmedmaher.schoolsystem.document.SchoolDocument;
+import com.ahmedmaher.schoolsystem.document.ClassroomDoc;
+import com.ahmedmaher.schoolsystem.document.SchoolDoc;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.school.SchoolService;
 import com.ahmedmaher.schoolsystem.util.AppFeaturesUtil;
@@ -39,7 +39,7 @@ public class SchoolController {
             @RequestParam(defaultValue = "-createdAt") String sort
     ) {
         AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
-        List<SchoolDocument> schoolEntities = this.schoolService.getAll(appFeaturesUtil.splitPageable());
+        List<SchoolDoc> schoolEntities = this.schoolService.getAll(appFeaturesUtil.splitPageable());
         List<SchoolResDTO> schools = SchoolMapper.mapToSchoolResponseDTOs(schoolEntities);
         long allCount = this.schoolService.getAllSchoolsCount();
         int count = schools.size();
@@ -53,7 +53,7 @@ public class SchoolController {
 
     @GetMapping("${app.config.backend.school.api.load-school-by-id-uri}")
     public ResponseEntity<SchoolResDTO> getSchool(@PathVariable("schoolId") String schoolId){
-        SchoolDocument schoolEntity = this.schoolService.getOne(schoolId);
+        SchoolDoc schoolEntity = this.schoolService.getOne(schoolId);
         return ResponseEntity.ok(
                 SchoolMapper.mapToSchoolResponseDTO(schoolEntity)
         );
@@ -62,7 +62,7 @@ public class SchoolController {
     @RolesAllowed( UserRole.Names.SUPERADMIN)
     @PostMapping("${app.config.backend.school.api.create-school-uri}")
     public ResponseEntity<SchoolResDTO> createSchool(@Valid @RequestBody SchoolReqDTO schoolReqDTO) {
-        SchoolDocument schoolEntity = SchoolMapper.mapToSchoolDocument(schoolReqDTO);
+        SchoolDoc schoolEntity = SchoolMapper.mapToSchoolDocument(schoolReqDTO);
         this.schoolService.createOne(schoolEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 SchoolMapper.mapToSchoolResponseDTO(schoolEntity)
@@ -75,7 +75,7 @@ public class SchoolController {
             @Valid @RequestBody() SchoolReqDTO schoolReqDTO,
             @PathVariable("schoolId") String schoolId
     ) {
-        SchoolDocument schoolEntity = SchoolMapper.mapToSchoolDocument(schoolReqDTO);
+        SchoolDoc schoolEntity = SchoolMapper.mapToSchoolDocument(schoolReqDTO);
         this.schoolService.updateOne(
                 schoolId,
                 schoolEntity
@@ -111,7 +111,7 @@ public class SchoolController {
             @RequestParam(defaultValue = "-createdAt") String sort
     ){
         AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
-        List<ClassroomDocument> classrooms = schoolService.getSchoolClassrooms(schoolId , appFeaturesUtil.splitPageable());
+        List<ClassroomDoc> classrooms = schoolService.getSchoolClassrooms(schoolId , appFeaturesUtil.splitPageable());
         return ResponseEntity.ok(ClassroomMapper.mapToClassroomResponseDTOs(classrooms));
     }
 }

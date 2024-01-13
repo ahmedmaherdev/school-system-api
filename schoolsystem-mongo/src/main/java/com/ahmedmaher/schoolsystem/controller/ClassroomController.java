@@ -3,7 +3,7 @@ package com.ahmedmaher.schoolsystem.controller;
 import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomReqDTO;
 import com.ahmedmaher.schoolsystem.dto.CustomResDTO;
 import com.ahmedmaher.schoolsystem.dto.classroom.ClassroomResDTO;
-import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
+import com.ahmedmaher.schoolsystem.document.ClassroomDoc;
 import com.ahmedmaher.schoolsystem.enums.UserRole;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
 import com.ahmedmaher.schoolsystem.util.AppFeaturesUtil;
@@ -40,7 +40,7 @@ public class ClassroomController {
             @RequestParam(defaultValue = "createdAt") String sort
     ) {
         AppFeaturesUtil appFeaturesUtil = new AppFeaturesUtil(sort , size , page);
-        List<ClassroomDocument> classroomEntities = this.classroomService.getAllBySchoolId(
+        List<ClassroomDoc> classroomEntities = this.classroomService.getAllBySchoolId(
                 schoolId ,
                 appFeaturesUtil.splitPageable()
         );
@@ -57,7 +57,7 @@ public class ClassroomController {
 
     @GetMapping("${app.config.backend.classroom.api.load-classroom-by-id-uri}")
     public ResponseEntity<ClassroomResDTO> getClassroom(@PathVariable("classroomId") String classroomId){
-        ClassroomDocument classroom = this.classroomService.getOne(classroomId);
+        ClassroomDoc classroom = this.classroomService.getOne(classroomId);
         return ResponseEntity.ok(
                 ClassroomMapper.mapToClassroomResponseDTO(classroom)
         );
@@ -70,7 +70,7 @@ public class ClassroomController {
             @Valid @RequestBody ClassroomReqDTO classroomReqDTO
     ) {
         classroomReqDTO.setSchoolId(schoolId);
-        ClassroomDocument classroomEntity = ClassroomMapper.mapToClassroomDocument(classroomReqDTO);
+        ClassroomDoc classroomEntity = ClassroomMapper.mapToClassroomDocument(classroomReqDTO);
         this.classroomService.createOne(classroomEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ClassroomMapper.mapToClassroomResponseDTO(classroomEntity)
@@ -84,7 +84,7 @@ public class ClassroomController {
             @PathVariable("schoolId") String schoolId
     ) {
         classroomReqDTO.setSchoolId(schoolId);
-        ClassroomDocument classroomEntity = ClassroomMapper.mapToClassroomDocument(classroomReqDTO);
+        ClassroomDoc classroomEntity = ClassroomMapper.mapToClassroomDocument(classroomReqDTO);
         this.classroomService.updateOne(
                 classroomId ,
                classroomEntity

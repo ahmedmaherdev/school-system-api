@@ -1,87 +1,85 @@
 package com.ahmedmaher.schoolsystem.service.school;
 
-import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
-import com.ahmedmaher.schoolsystem.document.SchoolDocument;
+import com.ahmedmaher.schoolsystem.document.ClassroomDoc;
+import com.ahmedmaher.schoolsystem.document.SchoolDoc;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
-import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
-import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
+import com.ahmedmaher.schoolsystem.repository.ClassroomRepo;
+import com.ahmedmaher.schoolsystem.repository.SchoolRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SchoolServiceImp implements SchoolService {
-    private final SchoolRepository schoolRepository;
-    private final ClassroomRepository classroomRepository;
+    private final SchoolRepo schoolRepo;
+    private final ClassroomRepo classroomRepo;
 
 
     @Autowired
-    public SchoolServiceImp(SchoolRepository schoolRepository, ClassroomRepository classroomRepository) {
-        this.schoolRepository = schoolRepository;
-        this.classroomRepository = classroomRepository;
+    public SchoolServiceImp(SchoolRepo schoolRepo, ClassroomRepo classroomRepo) {
+        this.schoolRepo = schoolRepo;
+        this.classroomRepo = classroomRepo;
     }
 
     @Override
-    public List<SchoolDocument> getAll(Pageable pageable) {
-        Page<SchoolDocument> schools = schoolRepository.findAll(pageable);
+    public List<SchoolDoc> getAll(Pageable pageable) {
+        Page<SchoolDoc> schools = schoolRepo.findAll(pageable);
         return schools.getContent();
     }
 
     @Override
-    public SchoolDocument getOne(String id) throws NotFoundException {
-        SchoolDocument schoolEntity = schoolRepository.findById(id).orElse(null);
+    public SchoolDoc getOne(String id) throws NotFoundException {
+        SchoolDoc schoolEntity = schoolRepo.findById(id).orElse(null);
         if(schoolEntity == null) throw new NotFoundException("School not found with id: " + id);
         return schoolEntity;
     }
 
     @Transactional
     @Override
-    public SchoolDocument createOne(SchoolDocument document) {
+    public SchoolDoc createOne(SchoolDoc document) {
         document.setCreatedAt(LocalDateTime.now());
         document.setUpdatedAt(LocalDateTime.now());
-        schoolRepository.save(document);
+        schoolRepo.save(document);
         return document;
     }
 
     @Transactional
     @Override
-    public SchoolDocument updateOne(String id, SchoolDocument entity) throws NotFoundException {
-        SchoolDocument schoolEntity = schoolRepository.findById(id).orElse(null);
+    public SchoolDoc updateOne(String id, SchoolDoc entity) throws NotFoundException {
+        SchoolDoc schoolEntity = schoolRepo.findById(id).orElse(null);
         if(schoolEntity == null)
             throw new NotFoundException("School not found with id: " + id);
         entity.setId(id);
         entity.setUpdatedAt(LocalDateTime.now());
         entity.setCreatedAt(schoolEntity.getCreatedAt());
-        schoolRepository.save(entity);
+        schoolRepo.save(entity);
         return entity;
     }
 
     @Transactional
     @Override
     public void deleteOne(String id) throws NotFoundException {
-        SchoolDocument deletedSchoolEntity = getOne(id);
-        schoolRepository.delete(deletedSchoolEntity);
+        SchoolDoc deletedSchoolEntity = getOne(id);
+        schoolRepo.delete(deletedSchoolEntity);
     }
 
     @Override
-    public List<SchoolDocument> search(String word , Pageable pageable) {
-        return schoolRepository.searchByName(word, pageable);
+    public List<SchoolDoc> search(String word , Pageable pageable) {
+        return schoolRepo.searchByName(word, pageable);
     }
     @Override
     public long getAllSchoolsCount() {
-        return schoolRepository.count();
+        return schoolRepo.count();
     }
 
     @Override
-    public List<ClassroomDocument> getSchoolClassrooms(String schoolId , Pageable pageable) {
-        SchoolDocument school = getOne(schoolId);
-        return classroomRepository.findBySchool(school.getId() , pageable);
+    public List<ClassroomDoc> getSchoolClassrooms(String schoolId , Pageable pageable) {
+        SchoolDoc school = getOne(schoolId);
+        return classroomRepo.findBySchool(school.getId() , pageable);
     }
 }

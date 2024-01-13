@@ -1,6 +1,6 @@
 package com.ahmedmaher.schoolsystem.util;
 
-import com.ahmedmaher.schoolsystem.document.UserDocument;
+import com.ahmedmaher.schoolsystem.document.UserDoc;
 import com.ahmedmaher.schoolsystem.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,7 +23,7 @@ public class JwtUtil {
     private long JWT_EXPIRE_AT_IN_DAYS;
 
 
-    public String signToken(UserDocument user) {
+    public String signToken(UserDoc user) {
         Claims claims = Jwts.claims().setSubject(user.getUsername());
         claims.put("name" , user.getName());
         claims.setId(user.getId());

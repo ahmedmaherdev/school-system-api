@@ -1,7 +1,7 @@
 package com.ahmedmaher.schoolsystem.controller;
 
 import com.ahmedmaher.schoolsystem.dto.auth.*;
-import com.ahmedmaher.schoolsystem.document.UserDocument;
+import com.ahmedmaher.schoolsystem.document.UserDoc;
 import com.ahmedmaher.schoolsystem.service.auth.AuthService;
 import com.ahmedmaher.schoolsystem.util.UserTokenUtil;
 import com.ahmedmaher.schoolsystem.util.mapper.AuthMapper;
@@ -28,15 +28,15 @@ public class AuthController {
 
     @PostMapping("${app.config.backend.auth.api.signup-uri}")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupReqDTO signupReqDTO) {
-        UserDocument userDocument = AuthMapper.mapToUserDocument(signupReqDTO);
-        UserDocument user = this.authService.registerUser(userDocument);
+        UserDoc userDoc = AuthMapper.mapToUserDocument(signupReqDTO);
+        UserDoc user = this.authService.registerUser(userDoc);
         return userTokenUtil.generateUserTokenResponse(user);
     }
 
     @PostMapping("${app.config.backend.auth.api.login-uri}")
     public ResponseEntity<?> login(@Valid @RequestBody LoginReqDTO loginReqDTO) {
-        UserDocument userDocument = AuthMapper.mapToUserDocument(loginReqDTO);
-        UserDocument user = this.authService.loginUser(userDocument);
+        UserDoc userDoc = AuthMapper.mapToUserDocument(loginReqDTO);
+        UserDoc user = this.authService.loginUser(userDoc);
         return userTokenUtil.generateUserTokenResponse(user);
 
     }
@@ -55,9 +55,9 @@ public class AuthController {
     public ResponseEntity<?> resetPassword(
             @Valid @RequestBody ResetPasswordReqDTO resetPasswordReqDTO,
             @RequestParam("token") String token) {
-        UserDocument userDocument = AuthMapper.mapToUserDocument(resetPasswordReqDTO);
-        userDocument.setPasswordResetToken(token);
-        UserDocument user = authService.resetPassword(userDocument);
+        UserDoc userDoc = AuthMapper.mapToUserDocument(resetPasswordReqDTO);
+        userDoc.setPasswordResetToken(token);
+        UserDoc user = authService.resetPassword(userDoc);
         return userTokenUtil.generateUserTokenResponse(user);
     }
 
@@ -65,11 +65,10 @@ public class AuthController {
     public ResponseEntity<?> updatePassword(
             @Valid @RequestBody UpdatePasswordReqDTO updatePasswordReqDTO,
             Authentication authentication) {
+        UserDoc userDoc = AuthMapper.mapToUserDocument(updatePasswordReqDTO);
+        userDoc.setUsername((String) authentication.getPrincipal());
 
-        UserDocument userDocument = AuthMapper.mapToUserDocument(updatePasswordReqDTO);
-        userDocument.setUsername((String) authentication.getPrincipal());
-
-        UserDocument user = authService.updatePassword(userDocument , updatePasswordReqDTO.getNewPassword());
+        UserDoc user = authService.updatePassword(userDoc, updatePasswordReqDTO.getPassword());
         return userTokenUtil.generateUserTokenResponse(user);
     }
 }

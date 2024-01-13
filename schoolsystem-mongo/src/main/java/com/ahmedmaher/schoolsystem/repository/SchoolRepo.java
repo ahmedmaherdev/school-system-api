@@ -1,14 +1,14 @@
 package com.ahmedmaher.schoolsystem.repository;
 
-import com.ahmedmaher.schoolsystem.document.SchoolDocument;
+import com.ahmedmaher.schoolsystem.document.SchoolDoc;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface SchoolRepository extends MongoRepository<SchoolDocument, String> {
+public interface SchoolRepo extends MongoRepository<SchoolDoc, String> {
     @Query("{ $text: { $search: ?0 }}")
-    List<SchoolDocument> searchByName(String name, Pageable pageable);
+    List<SchoolDoc> searchByName(String name, Pageable pageable);
 
 }

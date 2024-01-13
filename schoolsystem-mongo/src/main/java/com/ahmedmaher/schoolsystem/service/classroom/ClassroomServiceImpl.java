@@ -1,11 +1,10 @@
 package com.ahmedmaher.schoolsystem.service.classroom;
 
-import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
-import com.ahmedmaher.schoolsystem.document.SchoolDocument;
-import com.ahmedmaher.schoolsystem.document.UserDocument;
+import com.ahmedmaher.schoolsystem.document.ClassroomDoc;
+import com.ahmedmaher.schoolsystem.document.SchoolDoc;
 import com.ahmedmaher.schoolsystem.exception.NotFoundException;
-import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
-import com.ahmedmaher.schoolsystem.repository.SchoolRepository;
+import com.ahmedmaher.schoolsystem.repository.ClassroomRepo;
+import com.ahmedmaher.schoolsystem.repository.SchoolRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,80 +17,80 @@ import java.util.List;
 
 @Service
 public class ClassroomServiceImpl implements ClassroomService{
-    private final ClassroomRepository classroomRepository;
-    private final SchoolRepository schoolRepository;
+    private final ClassroomRepo classroomRepo;
+    private final SchoolRepo schoolRepo;
 
     @Autowired
-    public ClassroomServiceImpl(ClassroomRepository classroomRepository , SchoolRepository schoolRepository){
-        this.classroomRepository = classroomRepository;
-        this.schoolRepository = schoolRepository;
+    public ClassroomServiceImpl(ClassroomRepo classroomRepo, SchoolRepo schoolRepo){
+        this.classroomRepo = classroomRepo;
+        this.schoolRepo = schoolRepo;
     }
 
     @Override
-    public List<ClassroomDocument> getAll(Pageable pageable) {
-        Page<ClassroomDocument> classrooms = this.classroomRepository.findAll(pageable);
+    public List<ClassroomDoc> getAll(Pageable pageable) {
+        Page<ClassroomDoc> classrooms = this.classroomRepo.findAll(pageable);
         return classrooms.getContent();
     }
 
     @Override
-    public List<ClassroomDocument> getAllBySchoolId(String schoolId, Pageable pageable) {
-        return this.classroomRepository.findBySchool(schoolId , pageable);
+    public List<ClassroomDoc> getAllBySchoolId(String schoolId, Pageable pageable) {
+        return this.classroomRepo.findBySchool(schoolId , pageable);
     }
 
     @Override
-    public ClassroomDocument getOne(String id) throws NotFoundException {
-        ClassroomDocument classroomEntity = this.classroomRepository.findById(id).orElse(null);
-        if(classroomEntity == null) throw new NotFoundException("Classroom not found with id: " + id);
-        return classroomEntity;
+    public ClassroomDoc getOne(String id) throws NotFoundException {
+        ClassroomDoc classroomDoc = this.classroomRepo.findById(id).orElse(null);
+        if(classroomDoc == null) throw new NotFoundException("Classroom not found with id: " + id);
+        return classroomDoc;
     }
 
     @Transactional
     @Override
-    public ClassroomDocument createOne(ClassroomDocument document) {
+    public ClassroomDoc createOne(ClassroomDoc document) {
         String schoolId = document.getSchool().getId();
-        SchoolDocument schoolEntity = this.schoolRepository.findById(schoolId).orElse(null);
-        if(schoolEntity == null) throw new NotFoundException("School not found with id: " + schoolId);
+        SchoolDoc schoolDoc = this.schoolRepo.findById(schoolId).orElse(null);
+        if(schoolDoc == null) throw new NotFoundException("School not found with id: " + schoolId);
 
         document.setCapacity(0);
-        document.setSchool(schoolEntity);
+        document.setSchool(schoolDoc);
         document.setCreatedAt(LocalDateTime.now());
         document.setUpdatedAt(LocalDateTime.now());
 
-        this.classroomRepository.save(document);
+        this.classroomRepo.save(document);
         return document;
     }
 
     @Override
-    public ClassroomDocument updateOne(String id, ClassroomDocument entity) throws NotFoundException {
-        ClassroomDocument selectedClassroomEntity = this.classroomRepository.findById(id).orElse(null);
-        if(selectedClassroomEntity == null) throw new NotFoundException("Classroom not found with id: " + id);
+    public ClassroomDoc updateOne(String id, ClassroomDoc document) throws NotFoundException {
+        ClassroomDoc selectedClassroomDoc = this.classroomRepo.findById(id).orElse(null);
+        if(selectedClassroomDoc == null) throw new NotFoundException("Classroom not found with id: " + id);
 
-        String schoolId = selectedClassroomEntity.getSchool().getId();
-        if(!this.schoolRepository.existsById(schoolId))
+        String schoolId = selectedClassroomDoc.getSchool().getId();
+        if(!this.schoolRepo.existsById(schoolId))
             throw new NotFoundException("School not found with id: " + schoolId);
 
-        entity.setId(id);
-        entity.setUpdatedAt(LocalDateTime.now());
-        entity.setCreatedAt(selectedClassroomEntity.getCreatedAt());
-        this.classroomRepository.save(entity);
-        return entity;
+        document.setId(id);
+        document.setUpdatedAt(LocalDateTime.now());
+        document.setCreatedAt(selectedClassroomDoc.getCreatedAt());
+        this.classroomRepo.save(document);
+        return document;
     }
 
     @Override
     public void deleteOne(String id) throws NotFoundException {
-        ClassroomDocument deletedClassroomEntity = this.classroomRepository.findById(id).orElse(null);
-        if(deletedClassroomEntity == null) throw new NotFoundException("Classroom not found with id: " + id);
-        deletedClassroomEntity.setSchool(null);
-        this.classroomRepository.delete(deletedClassroomEntity);
+        ClassroomDoc deletedClassroomDoc = this.classroomRepo.findById(id).orElse(null);
+        if(deletedClassroomDoc == null) throw new NotFoundException("Classroom not found with id: " + id);
+        deletedClassroomDoc.setSchool(null);
+        this.classroomRepo.delete(deletedClassroomDoc);
     }
 
     @Override
-    public List<ClassroomDocument> search(String word , Pageable pageable) {
-        return this.classroomRepository.searchByName(word, pageable);
+    public List<ClassroomDoc> search(String name , Pageable pageable) {
+        return this.classroomRepo.searchByName(name, pageable);
     }
 
     @Override
     public long getAllClassroomsCount(String schoolId) {
-        return this.classroomRepository.findCountBySchool(schoolId);
+        return this.classroomRepo.findCountBySchool(schoolId);
     }
 }

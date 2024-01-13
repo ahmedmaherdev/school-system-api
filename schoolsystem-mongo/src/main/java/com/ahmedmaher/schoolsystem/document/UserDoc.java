@@ -16,8 +16,9 @@ import java.util.Set;
 
 @Data
 @SuperBuilder
+@NoArgsConstructor
 @Document(collection = "users")
-public class UserDocument extends BaseDocument {
+public class UserDoc extends BaseDocument {
 
     @Indexed(unique = true)
     private String username;
@@ -37,16 +38,16 @@ public class UserDocument extends BaseDocument {
     private StudentDetail student;
 
     @DBRef(lazy = true)
-    private List<ClassroomDocument> classrooms;
+    private List<ClassroomDoc> classrooms;
 
     private String passwordResetToken;
 
     private LocalDateTime passwordResetExpires;
-    public void addClassroom(ClassroomDocument classroom) {
+    public void addClassroom(ClassroomDoc classroom) {
         if(classrooms == null) classrooms = new ArrayList<>();
         classrooms.add(classroom);
     }
-    public void removeClassroom(ClassroomDocument classroom) {
+    public void removeClassroom(ClassroomDoc classroom) {
         classrooms.remove(classroom);
     }
 }

@@ -1,12 +1,12 @@
 package com.ahmedmaher.schoolsystem.util.mapper;
 
 import com.ahmedmaher.schoolsystem.dto.auth.*;
-import com.ahmedmaher.schoolsystem.document.UserDocument;
+import com.ahmedmaher.schoolsystem.document.UserDoc;
 
 public class AuthMapper {
 
-    public static UserDocument mapToUserDocument(SignupReqDTO signupReqDTO){
-        return UserDocument.builder()
+    public static UserDoc mapToUserDocument(SignupReqDTO signupReqDTO){
+        return UserDoc.builder()
                 .name(signupReqDTO.getName())
                 .email(signupReqDTO.getEmail())
                 .username(signupReqDTO.getUsername())
@@ -14,26 +14,26 @@ public class AuthMapper {
                 .build();
     }
 
-    public static UserDocument mapToUserDocument(ForgetPasswordReqDTO forgetPasswordReqDTO){
-        return UserDocument.builder()
+    public static UserDoc mapToUserDocument(ForgetPasswordReqDTO forgetPasswordReqDTO){
+        return UserDoc.builder()
                 .email(forgetPasswordReqDTO.getEmail())
                 .build();
     }
 
-    public static UserDocument mapToUserDocument(ResetPasswordReqDTO resetPasswordReqDTO){
-        return UserDocument.builder()
+    public static UserDoc mapToUserDocument(ResetPasswordReqDTO resetPasswordReqDTO){
+        return UserDoc.builder()
                 .password(resetPasswordReqDTO.getPassword())
                 .build();
     }
 
-    public static UserDocument mapToUserDocument(UpdatePasswordReqDTO updatePasswordReqDTO){
-        return UserDocument.builder()
-                .password(updatePasswordReqDTO.getPassword())
+    public static UserDoc mapToUserDocument(UpdatePasswordReqDTO updatePasswordReqDTO){
+        return UserDoc.builder()
+                .password(updatePasswordReqDTO.getOldPassword())
                 .build();
     }
 
-    public static UserDocument mapToUserDocument(LoginReqDTO loginReqDTO){
-        return UserDocument.builder()
+    public static UserDoc mapToUserDocument(LoginReqDTO loginReqDTO){
+        return UserDoc.builder()
                 .username(loginReqDTO.getUsername())
                 .password(loginReqDTO.getPassword())
                 .build();

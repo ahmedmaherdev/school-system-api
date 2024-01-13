@@ -18,12 +18,16 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
-
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<CustomErrorResDTO> handleValidationException(MethodArgumentNotValidException ex) {
-        CustomErrorResDTO errorDTO = new CustomErrorResDTO(ex.getBindingResult().getFieldError().getDefaultMessage(), "fail" , System.currentTimeMillis());
+        String errorMsg = "validation error.";
+        if(ex.getBindingResult().getFieldError() != null)
+            errorMsg = ex.getBindingResult().getFieldError().getDefaultMessage();
+        else if(ex.hasErrors()) {
+            errorMsg = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        }
+        CustomErrorResDTO errorDTO = new CustomErrorResDTO(errorMsg, "fail" , System.currentTimeMillis());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
     }
 

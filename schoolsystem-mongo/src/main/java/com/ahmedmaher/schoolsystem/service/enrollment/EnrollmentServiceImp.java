@@ -1,30 +1,28 @@
 package com.ahmedmaher.schoolsystem.service.enrollment;
 
-import com.ahmedmaher.schoolsystem.document.ClassroomDocument;
-import com.ahmedmaher.schoolsystem.document.UserDocument;
-import com.ahmedmaher.schoolsystem.repository.ClassroomRepository;
-import com.ahmedmaher.schoolsystem.repository.UserRepository;
+import com.ahmedmaher.schoolsystem.document.ClassroomDoc;
+import com.ahmedmaher.schoolsystem.document.UserDoc;
+import com.ahmedmaher.schoolsystem.repository.ClassroomRepo;
+import com.ahmedmaher.schoolsystem.repository.UserRepo;
 import com.ahmedmaher.schoolsystem.service.classroom.ClassroomService;
 import com.ahmedmaher.schoolsystem.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
 public class EnrollmentServiceImp implements EnrollmentService {
 
-    private final UserRepository userRepository;
-    private final ClassroomRepository classroomRepository;
-
+    private final UserRepo userRepo;
+    private final ClassroomRepo classroomRepo;
     private final ClassroomService classroomService;
     private final UserService userService;
 
     @Autowired
-    public EnrollmentServiceImp(UserRepository userRepository, ClassroomRepository classroomRepository, ClassroomService classroomService, UserService userService) {
-        this.userRepository = userRepository;
-        this.classroomRepository = classroomRepository;
+    public EnrollmentServiceImp(UserRepo userRepo, ClassroomRepo classroomRepo, ClassroomService classroomService, UserService userService) {
+        this.userRepo = userRepo;
+        this.classroomRepo = classroomRepo;
         this.classroomService = classroomService;
         this.userService = userService;
     }
@@ -33,31 +31,37 @@ public class EnrollmentServiceImp implements EnrollmentService {
     @Transactional
     @Override
     public void createEnrollment(String userId, String classroomId) {
-        UserDocument userEntity = userService.getOne(userId);
-        ClassroomDocument classroomEntity =  classroomService.getOne(classroomId);
+        UserDoc userDoc = userService.getOne(userId);
+        ClassroomDoc classroomDoc =  classroomService.getOne(classroomId);
 
-        userEntity.addClassroom(classroomEntity);
-        classroomEntity.addUser(userEntity);
+        userDoc.addClassroom(classroomDoc);
+        classroomDoc.addUser(userDoc);
 
-        classroomRepository.save(classroomEntity);
-        userRepository.save(userEntity);
+        classroomRepo.save(classroomDoc);
+        userRepo.save(userDoc);
     }
 
     @Transactional
     @Override
     public void deleteEnrollment(String userId, String classroomId) {
-        UserDocument userEntity = userService.getOne(userId);
-        ClassroomDocument classroomEntity =  classroomService.getOne(classroomId);
+        UserDoc userDoc = userService.getOne(userId);
+        ClassroomDoc classroomDoc =  classroomService.getOne(classroomId);
 
-        userEntity.removeClassroom(classroomEntity);
-        classroomEntity.removeUser(userEntity);
+        userDoc.removeClassroom(classroomDoc);
+        classroomDoc.removeUser(userDoc);
 
-        classroomRepository.save(classroomEntity);
-        userRepository.save(userEntity);
+        classroomRepo.save(classroomDoc);
+        userRepo.save(userDoc);
     }
 
-    public List<ClassroomDocument> getUserEnrollments(String userId) {
-        UserDocument userEntity = userService.getOne(userId);
-        return userEntity.getClassrooms();
+    public List<ClassroomDoc> getUserEnrollments(String userId) {
+        UserDoc userDoc = userService.getOne(userId);
+        return userDoc.getClassrooms();
+    }
+
+    @Override
+    public List<UserDoc> getClassroomUsers(String classroomId) {
+        ClassroomDoc classroom = classroomService.getOne(classroomId);
+        return  classroom.getUsers();
     }
 }
